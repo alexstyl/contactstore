@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Contact Store (sample)</string>
+    <string name="title_activity_contact_list">ContactListActivity</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="permission_required">Contact permission is required</string>
+    <string name="contacts">Contacts</string>
+</resources>

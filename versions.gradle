@@ -4,7 +4,7 @@ ext {
     patchVersion = 0
     libraryVersionName = "${majorVersion}.${minVersion}.${patchVersion}"
     libraryVersionCode = majorVersion * 1000 + minVersion * 100 + patchVersion
-    
+
     javaVersion = JavaVersion.VERSION_11
 
     androidCompileSdkVersion = 30
@@ -24,4 +24,5 @@ ext {
     accompanistVersion = '0.18.0'
     testCoreVersion = '1.4.0'
     composeVersion = '1.0.2'
+    gradleNexusVersion = '1.1.0'
 }

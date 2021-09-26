@@ -15,7 +15,9 @@ the developer and the team.
 Contact Store is a modern contacts Android API written in Kotlin. It utilises Coroutine's Flow to
 notify the developer for updates happening to the Contacts database.
 
-## Installation (🚨 [Coming Soon](https://github.com/alexstyl/contactstore/issues/3) 🚨)
+## Installation
+
+You can download an aar from GitHub's [releases page](https://github.com/alexstyl/contactstore/releases).
 
 Using Gradle:
 

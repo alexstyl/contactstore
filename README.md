@@ -17,8 +17,6 @@ notify the developer for updates happening to the Contacts database.
 
 ## Installation
 
-You can download an aar from GitHub's [releases page](https://github.com/alexstyl/contactstore/releases).
-
 Using Gradle:
 
 ```gradle

@@ -3,7 +3,7 @@ apply plugin: 'signing'
 
 task androidSourcesJar(type: Jar) {
     archiveClassifier.set('sources')
-    if (project.plugins.findPlugin("com.android.library")) {
+    if (project.plugins.findPlugin('com.android.library')) {
         // For Android libraries
         from android.sourceSets.main.java.srcDirs
         from android.sourceSets.main.kotlin.srcDirs
@@ -29,7 +29,7 @@ afterEvaluate {
                 artifactId PUBLISH_ARTIFACT_ID
                 version PUBLISH_VERSION
 
-                if (project.plugins.findPlugin("com.android.library")) {
+                if (project.plugins.findPlugin('com.android.library')) {
                     from components.release
                 } else {
                     from components.java

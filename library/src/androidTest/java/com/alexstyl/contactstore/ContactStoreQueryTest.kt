@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore
 
+import com.alexstyl.contactstore.ContactPredicate.NameLookup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -84,6 +85,14 @@ class ContactStoreQueryTest : ContactStoreTestBase() {
                 )
             ).first()
         val expected = listOf(kimClay())
+
+        assertThat(actual, equalTo(expected))
+    }
+
+    @Test
+    fun lookupContactByName() = runBlocking {
+        val actual = store.fetchContacts(NameLookup("Melendez")).first()
+        val expected = listOf(paoloMelendez())
 
         assertThat(actual, equalTo(expected))
     }

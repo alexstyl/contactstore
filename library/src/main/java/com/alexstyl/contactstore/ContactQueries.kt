@@ -24,6 +24,7 @@ import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
+import com.alexstyl.contactstore.ContactPredicate.NameLookup
 import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
 import com.alexstyl.contactstore.utils.DateParser
 import com.alexstyl.contactstore.utils.get
@@ -67,6 +68,27 @@ internal class ContactQueries(
             is ContactLookup -> fetchContactsMatchingPredicate(predicate)
             is MailLookup -> lookupFromMail(predicate.mailAddress)
             is PhoneLookup -> lookupFromPhone(predicate.phoneNumber)
+            is NameLookup -> lookupFromName(predicate.partOfName)
+        }
+    }
+
+    private fun lookupFromName(name: String): Flow<List<PartialContact>> {
+        return contentResolver.runQueryFlow(
+            contentUri = Contacts.CONTENT_FILTER_URI.buildUpon()
+                .appendEncodedPath(name)
+                .build(),
+            projection = SimpleQuery.PROJECTION,
+            selection = null,
+            sortOrder = Contacts.DISPLAY_NAME_PRIMARY
+        ).map { cursor ->
+            cursor.mapEachRow {
+                PartialContact(
+                    contactId = SimpleQuery.getContactId(it),
+                    displayName = SimpleQuery.getDisplayName(it),
+                    isStarred = SimpleQuery.getIsStarred(it),
+                    columns = emptyList()
+                )
+            }
         }
     }
 
@@ -131,7 +153,6 @@ internal class ContactQueries(
     }
 
     private fun lookupFromPhone(phoneNumber: PhoneNumber): Flow<List<PartialContact>> {
-
         return contentResolver.runQueryFlow(
             contentUri = ContactsContract.PhoneLookup.CONTENT_FILTER_URI.buildUpon()
                 .appendEncodedPath(phoneNumber.raw)

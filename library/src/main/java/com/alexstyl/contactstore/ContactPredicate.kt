@@ -6,6 +6,5 @@ sealed class ContactPredicate {
     data class ContactLookup(
         val inContactIds: List<Long>? = null,
         val isFavorite: Boolean? = null,
-        val organization: String? = null
     ) : ContactPredicate()
 }

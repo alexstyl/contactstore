@@ -66,7 +66,7 @@ interface Contact {
     val phoneticLastName: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.NICKNAME]
      */
     val nickname: String?
 

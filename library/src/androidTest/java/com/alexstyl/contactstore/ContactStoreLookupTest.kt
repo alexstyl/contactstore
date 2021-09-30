@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class ContactStoreQueryTest : ContactStoreTestBase() {
+class ContactStoreLookupTest : ContactStoreTestBase() {
 
     @Before
     override fun before(): Unit = runBlocking {
@@ -45,20 +45,8 @@ class ContactStoreQueryTest : ContactStoreTestBase() {
         })
     }
 
-    private suspend fun paoloMelendez(): Contact {
-        return store.fetchContacts().first().first {
-            it.displayName == "Paolo Melendez"
-        }
-    }
-
-    private suspend fun kimClay(): Contact {
-        return store.fetchContacts().first().first {
-            it.displayName == "Kim Clay"
-        }
-    }
-
     @Test
-    fun searchForPhoneNumber(): Unit = runBlocking {
+    fun lookupByPhoneNumber(): Unit = runBlocking {
         val actual =
             store.fetchContacts(
                 ContactPredicate.PhoneLookup(
@@ -75,7 +63,7 @@ class ContactStoreQueryTest : ContactStoreTestBase() {
 
 
     @Test
-    fun searchForMailAddress(): Unit = runBlocking {
+    fun lookupByMail(): Unit = runBlocking {
         val actual =
             store.fetchContacts(
                 ContactPredicate.MailLookup(
@@ -90,10 +78,22 @@ class ContactStoreQueryTest : ContactStoreTestBase() {
     }
 
     @Test
-    fun lookupContactByName() = runBlocking {
+    fun lookupByName() = runBlocking {
         val actual = store.fetchContacts(NameLookup("Melendez")).first()
         val expected = listOf(paoloMelendez())
 
         assertThat(actual, equalTo(expected))
+    }
+
+    private suspend fun paoloMelendez(): Contact {
+        return store.fetchContacts().first().first {
+            it.displayName == "Paolo Melendez"
+        }
+    }
+
+    private suspend fun kimClay(): Contact {
+        return store.fetchContacts().first().first {
+            it.displayName == "Kim Clay"
+        }
     }
 }

@@ -19,7 +19,7 @@ interface ContactStore {
      * Returns a [Flow] that emits the contacts of the device matching the given [predicate].
      *
      * The Flow will continue emitting once a change is detected (i.e. an other app adds a new contact or a Content Provider syncs a new account) and never completes.
-     * This might take some seconds to take place, as it is done using Android's ContentObserver.
+     * Changes caused by other apps might take some seconds to register, as the underlying implementation uses Android's ContentObserver.
      *
      * @param predicate The conditions that a contact need to meet in order to be fetched
      * @param columnsToFetch The columns of the contact you need to be fetched

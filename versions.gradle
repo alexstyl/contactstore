@@ -15,7 +15,7 @@ ext {
     hiltVersion = '1.0.0'
     hiltNavigationComposeVersion = '1.0.0-alpha03'
     navigationVersion = '2.4.0-alpha04'
-    kotlinVersion = '1.5.21'
+    kotlinVersion = '1.5.31'
     coroutinesVersion = '1.5.1'
     junitVersion = '4.13.2'
     testRunnerVersion = '1.4.0'
@@ -25,4 +25,5 @@ ext {
     testCoreVersion = '1.4.0'
     composeVersion = '1.0.2'
     gradleNexusVersion = '1.1.0'
+    assertjVersion = '3.21.0'
 }

@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    compileSdk 30
-    buildToolsVersion "31.0.0"
+    compileSdk androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
         applicationId "com.alexstyl.contactstore.sample"
-        minSdk 23
-        targetSdk 30
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidCompileSdkVersion
+        versionCode libraryVersionCode
+        versionName libraryVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

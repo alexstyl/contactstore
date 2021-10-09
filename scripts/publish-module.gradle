@@ -36,7 +36,6 @@ afterEvaluate {
                 }
 
                 artifact androidSourcesJar
-//                artifact javadocJar
 
                 pom {
                     name = PUBLISH_ARTIFACT_ID

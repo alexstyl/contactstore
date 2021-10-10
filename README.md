@@ -26,7 +26,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alexstyl:contactstore:0.3.0'
+    implementation 'com.alexstyl:contactstore:0.3.1'
+    
+    // optional dependency for tests
+    testImplementation 'com.alexstyl:contactstore-test:0.3.1'
 }
 ```
 
@@ -145,6 +148,12 @@ store.execute(SaveRequest().apply {
     delete(contactId = 5L)
 })
 ```
+
+### Using ContactStore in unit tests (experimental)
+
+The optional `com.alexstyl:contactstore-test` dependency provides a pure Kotlin implementation of `ContactStore`, named `TestContactStore`. 
+
+This implementation is meant for unit testing purposes without the need of running the tests on a real Android device or the use of frameworks such as Robolectric. 
 
 ## Getting Help
 

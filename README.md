@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alexstyl:contactstore:0.2.0'
+    implementation 'com.alexstyl:contactstore:0.3.0'
 }
 ```
 

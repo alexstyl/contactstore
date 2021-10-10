@@ -9,6 +9,8 @@ ext {
     PUBLISH_ARTIFACT_ID = 'contactstore-test'
 }
 
+apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
+
 android {
     kotlinOptions.useIR = true
     compileSdkVersion androidCompileSdkVersion

@@ -1,7 +1,7 @@
 ext {
     majorVersion = 0
     minVersion = 3
-    patchVersion = 1
+    patchVersion = 2
     libraryVersionName = "${majorVersion}.${minVersion}.${patchVersion}"
     libraryVersionCode = majorVersion * 1000 + minVersion * 100 + patchVersion
 

@@ -143,8 +143,11 @@ interface Contact {
      */
     val jobTitle: String?
     val isStarred: Boolean
-    fun containsColumn(column: ContactColumn): Boolean
-    val columns: List<ContactColumn> // TODO hide
+    val columns: List<ContactColumn>
+}
+
+fun Contact.containsColumn(column: ContactColumn): Boolean {
+    return columns.any { it == column }
 }
 
 fun Contact.containsLinkedAccountColumns(): Boolean {

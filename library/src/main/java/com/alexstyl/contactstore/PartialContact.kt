@@ -64,10 +64,6 @@ class PartialContact constructor(
     override val linkedAccountValues by requireAnyLinkedAccountColumn(linkedAccountValues)
     override val groups: List<GroupMembership> by requireColumn(GroupMemberships, groups)
 
-    override fun containsColumn(column: ContactColumn): Boolean {
-        return columns.contains(column)
-    }
-
     override fun equals(other: Any?): Boolean {
         return equalContacts(other as? Contact)
     }

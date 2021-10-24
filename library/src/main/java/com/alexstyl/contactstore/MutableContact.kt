@@ -121,10 +121,6 @@ class MutableContact internal constructor(
             }
         }
 
-    override fun containsColumn(column: ContactColumn): Boolean {
-        return columns.contains(column)
-    }
-
     override fun equals(other: Any?): Boolean {
         return equalContacts(other as Contact?)
     }

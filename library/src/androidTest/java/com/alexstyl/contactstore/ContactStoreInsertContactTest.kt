@@ -131,7 +131,6 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Events)).first()
         val expected = contact(
-            displayName = "",
             columns = listOf(Events),
             events = listOf(
                 LabeledValue(
@@ -226,7 +225,6 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
         val actual = store.fetchContacts(columnsToFetch = listOf(WebAddresses)).first()
         val expected = contact(
-            displayName = "",
             columns = listOf(WebAddresses),
             webAddresses = listOf(
                 LabeledValue(

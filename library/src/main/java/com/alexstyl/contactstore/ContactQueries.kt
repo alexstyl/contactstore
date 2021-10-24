@@ -57,9 +57,7 @@ internal class ContactQueries(
                 if (columnsToFetch.isEmpty()) {
                     contacts
                 } else {
-                    // TODO forward contacts instead of just the ids and keep displayname + stars
-                    val contactIds = contacts.map { it.contactId }
-                    fetchAdditionalColumns(contactIds, columnsToFetch)
+                    fetchAdditionalColumns(contacts, columnsToFetch)
                 }
             }
     }
@@ -198,10 +196,11 @@ internal class ContactQueries(
     }
 
     private fun fetchAdditionalColumns(
-        forContactIds: List<Long>,
+        forContacts: List<PartialContact>,
         columnsToFetch: List<ContactColumn>
     ): List<Contact> {
-        return forContactIds.map { contactId ->
+        return forContacts.map { contact ->
+            val contactId = contact.contactId
             var firstName: String? = null
             var middleName: String? = null
             var lastName: String? = null
@@ -222,8 +221,6 @@ internal class ContactQueries(
             var organization: String? = null
             var jobTitle: String? = null
             var note: Note? = null
-            var displayName: String? = null
-            var isStarred = false
             val groupIds = mutableListOf<GroupMembership>()
             val linkedAccountValues = mutableListOf<LinkedAccountValue>()
 
@@ -232,8 +229,6 @@ internal class ContactQueries(
                 selection = buildColumnsToFetchSelection(contactId, columnsToFetch),
                 selectionArgs = buildSelectionArgs(columnsToFetch)
             ).iterate { row ->
-                displayName = row[Data.DISPLAY_NAME]
-                isStarred = row[Data.STARRED].toInt() == 1
 
                 when (row[Contacts.Data.MIMETYPE]) {
                     NicknameColumns.CONTENT_ITEM_TYPE -> {
@@ -372,8 +367,8 @@ internal class ContactQueries(
             PartialContact(
                 contactId = contactId,
                 columns = columnsToFetch,
-                isStarred = isStarred,
-                displayName = displayName.orEmpty(),
+                isStarred = contact.isStarred,
+                displayName = contact.displayName,
                 firstName = firstName,
                 lastName = lastName,
                 imageData = imageData,

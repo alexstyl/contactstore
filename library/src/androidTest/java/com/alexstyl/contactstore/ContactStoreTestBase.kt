@@ -58,7 +58,7 @@ abstract class ContactStoreTestBase {
     protected open val context: Application = ApplicationProvider.getApplicationContext()
 
     protected fun contact(
-        displayName: String = "",
+        displayName: String? = null,
         firstName: String? = null,
         lastName: String? = null,
         organization: String? = null,

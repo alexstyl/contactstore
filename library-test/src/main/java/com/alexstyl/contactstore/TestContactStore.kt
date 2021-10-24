@@ -287,7 +287,7 @@ class TestContactStore(
         }
     }
 
-    private fun displayName(it: StoredContact): String { // TODO copy paste form MutableContact
+    private fun displayName(it: StoredContact): String {
         return with(it) {
             buildString {
                 prefix?.let { append(it) }

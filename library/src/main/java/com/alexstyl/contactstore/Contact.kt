@@ -12,7 +12,7 @@ import android.provider.ContactsContract.PhoneticNameStyle
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.Image
-import com.alexstyl.contactstore.ContactColumn.LinkedAccountColumn
+import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactColumn.Nickname
@@ -124,7 +124,7 @@ interface Contact {
     val webAddresses: List<LabeledValue<WebAddress>>
 
     /**
-     * Requires : [ContactColumn.LinkedAccountColumn]
+     * Requires : [ContactColumn.LinkedAccountValues]
      */
     val linkedAccountValues: List<LinkedAccountValue>
 
@@ -151,7 +151,7 @@ fun Contact.containsColumn(column: ContactColumn): Boolean {
 }
 
 fun Contact.containsLinkedAccountColumns(): Boolean {
-    return columns.any { it is LinkedAccountColumn }
+    return columns.any { it is LinkedAccountValues }
 }
 
 /**

@@ -2,6 +2,7 @@ package com.alexstyl.contactstore
 
 data class LinkedAccountValue(
     val id: Long,
+    val accountType: String,
     val mimetype: String,
     val data1: String,
     val data2: String,
@@ -18,5 +19,4 @@ data class LinkedAccountValue(
     val data13: String,
     val data14: String,
     val data15: String,
-    val accountType: String,
 )

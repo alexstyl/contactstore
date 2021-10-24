@@ -409,7 +409,7 @@ internal class ContactQueries(
     }
 
     private fun buildSelectionArgs(columnsToFetch: List<ContactColumn>): Array<String> {
-        val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountColumn>()
+        val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountValues>()
         val standardColumns = columnsToFetch - linkedAccountColumns
         return standardColumns.map { column ->
             when (column) {
@@ -424,12 +424,10 @@ internal class ContactQueries(
                 Organization -> OrganizationColumns.CONTENT_ITEM_TYPE
                 Nickname -> NicknameColumns.CONTENT_ITEM_TYPE
                 GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
-                is LinkedAccountColumn ->
+                is LinkedAccountValues ->
                     error("Tried to map a LinkedAccountColumn as standard column")
             }
-        }.toTypedArray() + linkedAccountColumns.map {
-            it.packageName
-        }.toTypedArray()
+        }.toTypedArray() + linkedAccountColumns.map { it.accountType }.toTypedArray()
     }
 
     private fun buildColumnsToFetchSelection(
@@ -437,7 +435,7 @@ internal class ContactQueries(
         columnsToFetch: List<ContactColumn>
     ): String {
         val columnsQuery = buildString {
-            val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountColumn>()
+            val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountValues>()
             val standardColumns = columnsToFetch - linkedAccountColumns
 
             if (standardColumns.isNotEmpty()) {
@@ -445,7 +443,7 @@ internal class ContactQueries(
                     " ${Data.MIMETYPE} IN ${
                         valueIn(standardColumns.map { column ->
                             when (column) {
-                                is LinkedAccountColumn ->
+                                is LinkedAccountValues ->
                                     error("Tried to map a LinkedAccountColumn as standard column")
                                 else -> "?"
                             }

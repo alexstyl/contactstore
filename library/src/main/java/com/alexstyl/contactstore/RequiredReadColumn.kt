@@ -1,6 +1,6 @@
 package com.alexstyl.contactstore
 
-import com.alexstyl.contactstore.ContactColumn.LinkedAccountColumn
+import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -31,7 +31,7 @@ internal class RequiredReadColumnA<T>(
     private val value: T
 ) {
     operator fun getValue(contact: Contact, property: KProperty<*>): T {
-        return if (contact.columns.any { it is LinkedAccountColumn }) {
+        return if (contact.columns.any { it is LinkedAccountValues }) {
             value
         } else {
             error(

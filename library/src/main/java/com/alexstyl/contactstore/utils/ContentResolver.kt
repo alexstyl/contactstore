@@ -44,5 +44,5 @@ internal fun ContentResolver.runQueryFlow(
 }
 
 fun valueIn(values: List<Any>): String {
-    return values.joinToString(",", prefix = "(", postfix = ")", transform = { "'$it'" })
+    return values.joinToString(",", prefix = "(", postfix = ")")
 }

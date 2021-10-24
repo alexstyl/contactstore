@@ -43,7 +43,7 @@ object ContactFixtures {
     val PAOLO_MELENDEZ = PartialContact(
         contactId = 0L,
         displayName = "Prefix Paolo Mid Melendez, Suffix",
-        columns = ContactColumn.values().toList(),
+        columns = standardColumns(),
         isStarred = false,
         firstName = "Paolo",
         lastName = "Melendez",

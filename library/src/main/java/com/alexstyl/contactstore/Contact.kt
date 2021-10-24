@@ -12,6 +12,7 @@ import android.provider.ContactsContract.PhoneticNameStyle
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.LinkedAccountColumn
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactColumn.Nickname
@@ -123,6 +124,11 @@ interface Contact {
     val webAddresses: List<LabeledValue<WebAddress>>
 
     /**
+     * Requires : [ContactColumn.LinkedAccountColumn]
+     */
+    val linkedAccountValues: List<LinkedAccountValue>
+
+    /**
      * Requires: [ContactColumn.Note]
      */
     val note: com.alexstyl.contactstore.Note?
@@ -138,7 +144,11 @@ interface Contact {
     val jobTitle: String?
     val isStarred: Boolean
     fun containsColumn(column: ContactColumn): Boolean
-    val columns: List<ContactColumn>
+    val columns: List<ContactColumn> // TODO hide
+}
+
+fun Contact.containsLinkedAccountColumns(): Boolean {
+    return columns.any { it is LinkedAccountColumn }
 }
 
 /**
@@ -179,6 +189,11 @@ fun Contact.mutableCopy(): MutableContact {
         groups = if (containsColumn(GroupMemberships)) groups.toMutableList() else mutableListOf(),
         fullNameStyle = if (containsColumn(Names)) phoneticNameStyle else FullNameStyle.UNDEFINED,
         nickname = if (containsColumn(Nickname)) nickname else null,
+        linkedAccountValues = if (containsLinkedAccountColumns()) {
+            linkedAccountValues
+        } else {
+            emptyList()
+        },
     )
 }
 

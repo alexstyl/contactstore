@@ -22,6 +22,7 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
+import com.alexstyl.contactstore.ContactColumn.*
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
 import com.alexstyl.contactstore.ContactPredicate.NameLookup
@@ -56,6 +57,7 @@ internal class ContactQueries(
                 if (columnsToFetch.isEmpty()) {
                     contacts
                 } else {
+                    // TODO forward contacts instead of just the ids and keep displayname + stars
                     val contactIds = contacts.map { it.contactId }
                     fetchAdditionalColumns(contactIds, columnsToFetch)
                 }
@@ -96,7 +98,7 @@ internal class ContactQueries(
         return contentResolver.runQueryFlow(
             contentUri = Contacts.CONTENT_URI,
             projection = SimpleQuery.PROJECTION,
-            selection = buildSelection(predicate),
+            selection = buildColumnsToFetchSelection(predicate),
             sortOrder = Contacts.DISPLAY_NAME_PRIMARY
         ).map { cursor ->
             cursor.mapEachRow {
@@ -134,7 +136,7 @@ internal class ContactQueries(
         }
     }
 
-    private fun buildSelection(predicate: ContactLookup): String {
+    private fun buildColumnsToFetchSelection(predicate: ContactLookup): String {
         return buildString {
             append("${Contacts.IN_VISIBLE_GROUP} = 1")
             predicate.inContactIds?.let { contactIds ->
@@ -223,15 +225,17 @@ internal class ContactQueries(
             var displayName: String? = null
             var isStarred = false
             val groupIds = mutableListOf<GroupMembership>()
+            val linkedAccountValues = mutableListOf<LinkedAccountValue>()
 
             contentResolver.runQuery(
                 contentUri = Data.CONTENT_URI,
-                selection = buildSelection(contactId, columnsToFetch)
+                selection = buildColumnsToFetchSelection(contactId, columnsToFetch),
+                selectionArgs = buildSelectionArgs(columnsToFetch)
             ).iterate { row ->
                 displayName = row[Data.DISPLAY_NAME]
                 isStarred = row[Data.STARRED].toInt() == 1
 
-                when (val mimeType = row[Contacts.Data.MIMETYPE]) {
+                when (row[Contacts.Data.MIMETYPE]) {
                     NicknameColumns.CONTENT_ITEM_TYPE -> {
                         nickname = row[NicknameColumns.NAME]
                     }
@@ -339,7 +343,30 @@ internal class ContactQueries(
                         organization = row[OrganizationColumns.COMPANY]
                         jobTitle = row[OrganizationColumns.TITLE]
                     }
-                    else -> error("No mapping found for $mimeType")
+                    else -> {
+                        val mimetype = LinkedAccountValue(
+                            id = row[Contacts.Data._ID].toLong(),
+                            accountType = row[ContactsContract.RawContacts.ACCOUNT_TYPE],
+                            mimetype = row[Contacts.Data.MIMETYPE],
+                            data1 = row[Contacts.Data.DATA1],
+                            data2 = row[Contacts.Data.DATA2],
+                            data3 = row[Contacts.Data.DATA3],
+                            data4 = row[Contacts.Data.DATA4],
+                            data5 = row[Contacts.Data.DATA5],
+                            data6 = row[Contacts.Data.DATA6],
+                            data7 = row[Contacts.Data.DATA7],
+                            data8 = row[Contacts.Data.DATA8],
+                            data9 = row[Contacts.Data.DATA9],
+                            data10 = row[Contacts.Data.DATA10],
+                            data11 = row[Contacts.Data.DATA11],
+                            data12 = row[Contacts.Data.DATA12],
+                            data13 = row[Contacts.Data.DATA13],
+                            data14 = row[Contacts.Data.DATA14],
+                            data15 = row[Contacts.Data.DATA15],
+                        )
+                        linkedAccountValues.add(mimetype)
+                        Unit
+                    }
                 }
             }
             PartialContact(
@@ -367,7 +394,8 @@ internal class ContactQueries(
                 nickname = nickname,
                 phoneticMiddleName = phoneticMiddleName,
                 phoneticNameStyle = phoneticNameStyle,
-                groups = groupIds
+                groups = groupIds.toList(),
+                linkedAccountValues = linkedAccountValues.toList()
             )
         }
     }
@@ -385,30 +413,64 @@ internal class ContactQueries(
         return buffered().use { it.readBytes() }
     }
 
-    private fun buildSelection(
+    private fun buildSelectionArgs(columnsToFetch: List<ContactColumn>): Array<String> {
+        val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountColumn>()
+        val standardColumns = columnsToFetch - linkedAccountColumns
+        return standardColumns.map { column ->
+            when (column) {
+                Phones -> PhoneColumns.CONTENT_ITEM_TYPE
+                Mails -> EmailColumns.CONTENT_ITEM_TYPE
+                Note -> NoteColumns.CONTENT_ITEM_TYPE
+                Events -> EventColumns.CONTENT_ITEM_TYPE
+                PostalAddresses -> PostalColumns.CONTENT_ITEM_TYPE
+                Image -> PhotoColumns.CONTENT_ITEM_TYPE
+                Names -> NameColumns.CONTENT_ITEM_TYPE
+                WebAddresses -> WebColumns.CONTENT_ITEM_TYPE
+                Organization -> OrganizationColumns.CONTENT_ITEM_TYPE
+                Nickname -> NicknameColumns.CONTENT_ITEM_TYPE
+                GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
+                is LinkedAccountColumn ->
+                    error("Tried to map a LinkedAccountColumn as standard column")
+            }
+        }.toTypedArray() + linkedAccountColumns.map {
+            it.packageName
+        }.toTypedArray()
+    }
+
+    private fun buildColumnsToFetchSelection(
         forContactId: Long,
         columnsToFetch: List<ContactColumn>
     ): String {
-        return "${Data.CONTACT_ID} = $forContactId" +
-                " AND ${Data.MIMETYPE} IN ${
-                    valueIn(
-                        columnsToFetch.map { col ->
-                            when (col) {
-                                ContactColumn.Phones -> PhoneColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.Mails -> EmailColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.Note -> NoteColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.Events -> EventColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.PostalAddresses -> PostalColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.Image -> PhotoColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.Names -> NameColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.WebAddresses -> WebColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.Organization -> OrganizationColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.Nickname -> NicknameColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
+        val columnsQuery = buildString {
+            val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountColumn>()
+            val standardColumns = columnsToFetch - linkedAccountColumns
+
+            if (standardColumns.isNotEmpty()) {
+                append(
+                    " ${Data.MIMETYPE} IN ${
+                        valueIn(standardColumns.map { column ->
+                            when (column) {
+                                is LinkedAccountColumn ->
+                                    error("Tried to map a LinkedAccountColumn as standard column")
+                                else -> "?"
                             }
-                        }
-                    )
-                }"
+                        })
+                    }"
+                )
+            }
+            if (linkedAccountColumns.isNotEmpty()) {
+                if (isNotBlank()) {
+                    append(" OR ")
+                }
+                append(
+                    " ${ContactsContract.RawContacts.ACCOUNT_TYPE} IN ${
+                        valueIn(linkedAccountColumns.map { "?" })
+                    }"
+                )
+            }
+        }
+
+        return "${Data.CONTACT_ID} = $forContactId AND ($columnsQuery)"
     }
 
     private fun postalAddressLabelFrom(cursor: Cursor): Label {

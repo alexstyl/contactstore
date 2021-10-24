@@ -19,7 +19,7 @@ class ExecuteTestContactStoreTest {
             }
         )
         val actual = store.fetchContacts(
-            columnsToFetch = ContactColumn.values().toList()
+            columnsToFetch = standardColumns()
         ).first()
         assertThat(actual).containsOnly(
             ContactFixtures.PAOLO_MELENDEZ

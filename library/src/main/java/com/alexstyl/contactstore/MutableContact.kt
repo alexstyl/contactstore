@@ -1,7 +1,6 @@
 package com.alexstyl.contactstore
 
 import android.provider.ContactsContract
-import com.alexstyl.contactstore.ContactColumn.Companion.standardColumns
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.Image
@@ -37,20 +36,25 @@ class MutableContact internal constructor(
     organization: String?,
     jobTitle: String?,
     groups: MutableList<GroupMembership>,
+    linkedAccountValues: List<LinkedAccountValue>,
     override val columns: List<ContactColumn>,
 ) : Contact {
 
     override var imageData: ImageData? by readWriteField(Image, imageData)
-    override val phones: MutableList<LabeledValue<PhoneNumber>> by readField(Phones, phones)
-    override val mails: MutableList<LabeledValue<MailAddress>> by readField(Mails, mails)
-    override val events: MutableList<LabeledValue<EventDate>> by readField(Events, events)
+    override val phones: MutableList<LabeledValue<PhoneNumber>> by requireColumn(Phones, phones)
+    override val mails: MutableList<LabeledValue<MailAddress>> by requireColumn(Mails, mails)
+    override val events: MutableList<LabeledValue<EventDate>> by requireColumn(Events, events)
     override val postalAddresses: MutableList<LabeledValue<PostalAddress>>
-            by readField(PostalAddresses, postalAddresses)
+            by requireColumn(PostalAddresses, postalAddresses)
     override val webAddresses: MutableList<LabeledValue<WebAddress>>
-            by readField(WebAddresses, webAddresses)
+            by requireColumn(WebAddresses, webAddresses)
+
+    override val linkedAccountValues: List<LinkedAccountValue>
+            by requireAnyLinkedAccountColumn(linkedAccountValues)
+
     override var note: com.alexstyl.contactstore.Note? by readWriteField(Note, note)
 
-    override val groups: MutableList<GroupMembership> by readField(GroupMemberships, groups)
+    override val groups: MutableList<GroupMembership> by requireColumn(GroupMemberships, groups)
 
     override var organization: String? by readWriteField(Organization, organization)
     override var jobTitle: String? by readWriteField(Organization, jobTitle)
@@ -90,6 +94,7 @@ class MutableContact internal constructor(
         organization = null,
         jobTitle = null,
         groups = mutableListOf(),
+        linkedAccountValues = emptyList(),
         columns = standardColumns() // allow editing of all columns for new contacts
     )
 

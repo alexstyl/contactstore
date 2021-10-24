@@ -1,11 +1,17 @@
 package com.alexstyl.contactstore
 
+import com.alexstyl.contactstore.ContactColumn.LinkedAccountColumn
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 @Suppress("unused") // used for scoping
-internal fun <T> Contact.readField(column: ContactColumn, property: T): RequiredReadColumn<T> {
+internal fun <T> Contact.requireColumn(column: ContactColumn, property: T): RequiredReadColumn<T> {
     return RequiredReadColumn(column, property)
+}
+
+@Suppress("unused") //used for scoping
+internal fun <T> Contact.requireAnyLinkedAccountColumn(property: T): RequiredReadColumnA<T> {
+    return RequiredReadColumnA(property)
 }
 
 internal class RequiredReadColumn<T>(
@@ -17,6 +23,21 @@ internal class RequiredReadColumn<T>(
             value
         } else {
             error("Tried to get ${property.name}, but the contact did not contain column $column")
+        }
+    }
+}
+
+internal class RequiredReadColumnA<T>(
+    private val value: T
+) {
+    operator fun getValue(contact: Contact, property: KProperty<*>): T {
+        return if (contact.columns.any { it is LinkedAccountColumn }) {
+            value
+        } else {
+            error(
+                "Tried to get ${property.name}, but the contact did not contain any linked" +
+                        " account columns"
+            )
         }
     }
 }

@@ -12,22 +12,22 @@ sealed class ContactColumn {
     object WebAddresses : ContactColumn()
     object Organization : ContactColumn()
     object GroupMemberships : ContactColumn()
-
-    companion object {
-        internal fun standardColumns(): List<ContactColumn> {
-            return listOf(
-                Phones,
-                Mails,
-                Note,
-                Events,
-                PostalAddresses,
-                Image,
-                Names,
-                Nickname,
-                WebAddresses,
-                Organization,
-                GroupMemberships
-            )
-        }
-    }
+    data class LinkedAccountColumn(val packageName: String) : ContactColumn()
 }
+
+fun standardColumns(): List<ContactColumn> {
+    return listOf(
+        ContactColumn.Phones,
+        ContactColumn.Mails,
+        ContactColumn.Note,
+        ContactColumn.Events,
+        ContactColumn.PostalAddresses,
+        ContactColumn.Image,
+        ContactColumn.Names,
+        ContactColumn.Nickname,
+        ContactColumn.WebAddresses,
+        ContactColumn.Organization,
+        ContactColumn.GroupMemberships
+    )
+}
+

@@ -1,5 +1,13 @@
-package com.alexstyl.contactstore
+package com.alexstyl.contactstore.test
 
+import com.alexstyl.contactstore.ContactFixtures
+import com.alexstyl.contactstore.ExperimentalContactStoreApi
+import com.alexstyl.contactstore.MutableContact
+import com.alexstyl.contactstore.PartialContact
+import com.alexstyl.contactstore.SaveRequest
+import com.alexstyl.contactstore.SnapshotFixtures
+import com.alexstyl.contactstore.mutableCopy
+import com.alexstyl.contactstore.standardColumns
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat

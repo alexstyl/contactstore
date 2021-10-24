@@ -1,5 +1,7 @@
 package com.alexstyl.contactstore
 
+import com.alexstyl.contactstore.test.StoredContact
+
 object SnapshotFixtures {
     val KIM_CLAY = StoredContact(
         contactId = 1,

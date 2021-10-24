@@ -1,6 +1,15 @@
-package com.alexstyl.contactstore
+package com.alexstyl.contactstore.test
 
 import android.provider.ContactsContract
+import com.alexstyl.contactstore.EventDate
+import com.alexstyl.contactstore.GroupMembership
+import com.alexstyl.contactstore.ImageData
+import com.alexstyl.contactstore.LabeledValue
+import com.alexstyl.contactstore.MailAddress
+import com.alexstyl.contactstore.Note
+import com.alexstyl.contactstore.PhoneNumber
+import com.alexstyl.contactstore.PostalAddress
+import com.alexstyl.contactstore.WebAddress
 
 data class StoredContact(
     val contactId: Long,

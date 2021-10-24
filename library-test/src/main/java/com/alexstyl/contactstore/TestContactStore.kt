@@ -2,17 +2,17 @@ package com.alexstyl.contactstore
 
 import android.provider.ContactsContract
 import android.provider.ContactsContract.FullNameStyle
-import com.alexstyl.contactstore.ContactColumn.EVENTS
-import com.alexstyl.contactstore.ContactColumn.GROUP_MEMBERSHIPS
-import com.alexstyl.contactstore.ContactColumn.IMAGE
-import com.alexstyl.contactstore.ContactColumn.MAILS
-import com.alexstyl.contactstore.ContactColumn.NAMES
-import com.alexstyl.contactstore.ContactColumn.NICKNAME
-import com.alexstyl.contactstore.ContactColumn.NOTE
-import com.alexstyl.contactstore.ContactColumn.ORGANIZATION
-import com.alexstyl.contactstore.ContactColumn.PHONES
-import com.alexstyl.contactstore.ContactColumn.POSTAL_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.WEB_ADDRESSES
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Nickname
+import com.alexstyl.contactstore.ContactColumn.Note
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.ContactOperation.Delete
 import com.alexstyl.contactstore.ContactOperation.Insert
 import com.alexstyl.contactstore.ContactOperation.Update
@@ -68,32 +68,32 @@ class TestContactStore(
                         StoredContact(
                             contactId = current.size.toLong(),
                             isStarred = contact.isStarred,
-                            prefix = contact.takeIfContains(NAMES) { contact.prefix },
-                            firstName = contact.takeIfContains(NAMES) { contact.firstName },
-                            middleName = contact.takeIfContains(NAMES) { contact.middleName },
-                            lastName = contact.takeIfContains(NAMES) { contact.lastName },
-                            suffix = contact.takeIfContains(NAMES) { contact.suffix },
-                            phoneticMiddleName = contact.takeIfContains(NAMES) { contact.phoneticMiddleName },
-                            phoneticFirstName = contact.takeIfContains(NAMES) { contact.phoneticFirstName },
-                            phoneticLastName = contact.takeIfContains(NAMES) { contact.phoneticLastName },
-                            phoneticNameStyle = contact.takeIfContains(NAMES) { contact.phoneticNameStyle }
+                            prefix = contact.takeIfContains(Names) { contact.prefix },
+                            firstName = contact.takeIfContains(Names) { contact.firstName },
+                            middleName = contact.takeIfContains(Names) { contact.middleName },
+                            lastName = contact.takeIfContains(Names) { contact.lastName },
+                            suffix = contact.takeIfContains(Names) { contact.suffix },
+                            phoneticMiddleName = contact.takeIfContains(Names) { contact.phoneticMiddleName },
+                            phoneticFirstName = contact.takeIfContains(Names) { contact.phoneticFirstName },
+                            phoneticLastName = contact.takeIfContains(Names) { contact.phoneticLastName },
+                            phoneticNameStyle = contact.takeIfContains(Names) { contact.phoneticNameStyle }
                                 ?: ContactsContract.PhoneticNameStyle.UNDEFINED,
-                            imageData = contact.takeIfContains(IMAGE) { contact.imageData },
-                            organization = contact.takeIfContains(ORGANIZATION) { contact.organization },
-                            jobTitle = contact.takeIfContains(ORGANIZATION) { contact.jobTitle },
-                            webAddresses = contact.takeIfContains(WEB_ADDRESSES) { contact.webAddresses }
+                            imageData = contact.takeIfContains(Image) { contact.imageData },
+                            organization = contact.takeIfContains(Organization) { contact.organization },
+                            jobTitle = contact.takeIfContains(Organization) { contact.jobTitle },
+                            webAddresses = contact.takeIfContains(WebAddresses) { contact.webAddresses }
                                 .orEmpty(),
-                            phones = contact.takeIfContains(PHONES) { contact.phones }.orEmpty(),
-                            mails = contact.takeIfContains(MAILS) { contact.mails }.orEmpty(),
-                            events = contact.takeIfContains(EVENTS) { contact.events }.orEmpty(),
-                            postalAddresses = contact.takeIfContains(POSTAL_ADDRESSES) { contact.postalAddresses }
+                            phones = contact.takeIfContains(Phones) { contact.phones }.orEmpty(),
+                            mails = contact.takeIfContains(Mails) { contact.mails }.orEmpty(),
+                            events = contact.takeIfContains(Events) { contact.events }.orEmpty(),
+                            postalAddresses = contact.takeIfContains(PostalAddresses) { contact.postalAddresses }
                                 .orEmpty(),
-                            note = contact.takeIfContains(NOTE) { contact.note },
-                            nickname = contact.takeIfContains(NICKNAME) { contact.nickname },
+                            note = contact.takeIfContains(Note) { contact.note },
+                            nickname = contact.takeIfContains(Nickname) { contact.nickname },
                             groups = contact
-                                .takeIfContains(GROUP_MEMBERSHIPS) { contact.groups }
+                                .takeIfContains(GroupMemberships) { contact.groups }
                                 .orEmpty(),
-                            fullNameStyle = contact.takeIfContains(NAMES) { contact.fullNameStyle }
+                            fullNameStyle = contact.takeIfContains(Names) { contact.fullNameStyle }
                                 ?: FullNameStyle.UNDEFINED
                         )
                     )
@@ -114,48 +114,48 @@ class TestContactStore(
         val currentContact = snapshot.value
             .find { it.contactId == contact.contactId } ?: return
         val updatedContact = currentContact.copy(
-            firstName = contact.takeIfContains(NAMES) { contact.firstName }
+            firstName = contact.takeIfContains(Names) { contact.firstName }
                 ?: currentContact.firstName,
             isStarred = contact.isStarred,
-            prefix = contact.takeIfContains(NAMES) { contact.prefix }
+            prefix = contact.takeIfContains(Names) { contact.prefix }
                 ?: currentContact.prefix,
-            middleName = contact.takeIfContains(NAMES) { contact.middleName }
+            middleName = contact.takeIfContains(Names) { contact.middleName }
                 ?: currentContact.middleName,
-            lastName = contact.takeIfContains(NAMES) { contact.lastName }
+            lastName = contact.takeIfContains(Names) { contact.lastName }
                 ?: currentContact.lastName,
-            suffix = contact.takeIfContains(NAMES) { contact.suffix }
+            suffix = contact.takeIfContains(Names) { contact.suffix }
                 ?: currentContact.suffix,
-            phoneticMiddleName = contact.takeIfContains(NAMES) { contact.phoneticMiddleName }
+            phoneticMiddleName = contact.takeIfContains(Names) { contact.phoneticMiddleName }
                 ?: currentContact.phoneticMiddleName,
-            phoneticFirstName = contact.takeIfContains(NAMES) { contact.phoneticFirstName }
+            phoneticFirstName = contact.takeIfContains(Names) { contact.phoneticFirstName }
                 ?: currentContact.phoneticFirstName,
-            phoneticLastName = contact.takeIfContains(NAMES) { contact.phoneticLastName }
+            phoneticLastName = contact.takeIfContains(Names) { contact.phoneticLastName }
                 ?: currentContact.phoneticLastName,
-            phoneticNameStyle = contact.takeIfContains(NAMES) { contact.phoneticNameStyle }
+            phoneticNameStyle = contact.takeIfContains(Names) { contact.phoneticNameStyle }
                 ?: currentContact.phoneticNameStyle,
-            imageData = contact.takeIfContains(IMAGE) { contact.imageData }
+            imageData = contact.takeIfContains(Image) { contact.imageData }
                 ?: currentContact.imageData,
-            organization = contact.takeIfContains(ORGANIZATION) { contact.organization }
+            organization = contact.takeIfContains(Organization) { contact.organization }
                 ?: currentContact.organization,
-            jobTitle = contact.takeIfContains(ORGANIZATION) { contact.jobTitle }
+            jobTitle = contact.takeIfContains(Organization) { contact.jobTitle }
                 ?: currentContact.jobTitle,
-            webAddresses = contact.takeIfContains(WEB_ADDRESSES) { contact.webAddresses }
+            webAddresses = contact.takeIfContains(WebAddresses) { contact.webAddresses }
                 ?: currentContact.webAddresses,
-            phones = contact.takeIfContains(PHONES) { contact.phones }
+            phones = contact.takeIfContains(Phones) { contact.phones }
                 ?: currentContact.phones,
-            mails = contact.takeIfContains(MAILS) { contact.mails }
+            mails = contact.takeIfContains(Mails) { contact.mails }
                 ?: currentContact.mails,
-            events = contact.takeIfContains(EVENTS) { contact.events }
+            events = contact.takeIfContains(Events) { contact.events }
                 ?: currentContact.events,
-            postalAddresses = contact.takeIfContains(POSTAL_ADDRESSES) { contact.postalAddresses }
+            postalAddresses = contact.takeIfContains(PostalAddresses) { contact.postalAddresses }
                 ?: currentContact.postalAddresses,
-            note = contact.takeIfContains(NOTE) { contact.note } ?: currentContact.note,
-            nickname = contact.takeIfContains(NICKNAME) { contact.nickname }
+            note = contact.takeIfContains(Note) { contact.note } ?: currentContact.note,
+            nickname = contact.takeIfContains(Nickname) { contact.nickname }
                 ?: currentContact.nickname,
             groups = contact
-                .takeIfContains(GROUP_MEMBERSHIPS) { contact.groups }
+                .takeIfContains(GroupMemberships) { contact.groups }
                 ?: currentContact.groups,
-            fullNameStyle = contact.takeIfContains(NAMES) { contact.fullNameStyle }
+            fullNameStyle = contact.takeIfContains(Names) { contact.fullNameStyle }
                 ?: currentContact.fullNameStyle
         )
         val newList = snapshot.value.toMutableList()
@@ -239,49 +239,49 @@ class TestContactStore(
                 columns = columnsToFetch,
                 isStarred = it.isStarred,
 
-                firstName = valueIfPresent(columnsToFetch, NAMES) { it.firstName },
-                lastName = valueIfPresent(columnsToFetch, NAMES) { it.lastName },
-                prefix = valueIfPresent(columnsToFetch, NAMES) { it.prefix },
-                middleName = valueIfPresent(columnsToFetch, NAMES) { it.middleName },
-                suffix = valueIfPresent(columnsToFetch, NAMES) { it.suffix },
+                firstName = valueIfPresent(columnsToFetch, Names) { it.firstName },
+                lastName = valueIfPresent(columnsToFetch, Names) { it.lastName },
+                prefix = valueIfPresent(columnsToFetch, Names) { it.prefix },
+                middleName = valueIfPresent(columnsToFetch, Names) { it.middleName },
+                suffix = valueIfPresent(columnsToFetch, Names) { it.suffix },
                 phoneticFirstName = valueIfPresent(
                     columnsToFetch,
-                    NAMES
+                    Names
                 ) { it.phoneticFirstName },
                 phoneticMiddleName = valueIfPresent(
                     columnsToFetch,
-                    NAMES
+                    Names
                 ) { it.phoneticMiddleName },
                 phoneticLastName = valueIfPresent(
                     columnsToFetch,
-                    NAMES
+                    Names
                 ) { it.phoneticLastName },
-                fullNameStyle = valueIfPresent(columnsToFetch, NAMES) { it.fullNameStyle }
+                fullNameStyle = valueIfPresent(columnsToFetch, Names) { it.fullNameStyle }
                     ?: FullNameStyle.UNDEFINED,
                 phoneticNameStyle = valueIfPresent(
                     columnsToFetch,
-                    NAMES
+                    Names
                 ) { it.phoneticNameStyle }
                     ?: FullNameStyle.UNDEFINED,
-                imageData = valueIfPresent(columnsToFetch, IMAGE) { it.imageData },
-                organization = valueIfPresent(columnsToFetch, ORGANIZATION) { it.organization },
-                jobTitle = valueIfPresent(columnsToFetch, ORGANIZATION) { it.jobTitle },
+                imageData = valueIfPresent(columnsToFetch, Image) { it.imageData },
+                organization = valueIfPresent(columnsToFetch, Organization) { it.organization },
+                jobTitle = valueIfPresent(columnsToFetch, Organization) { it.jobTitle },
                 webAddresses = valueIfPresent(
                     columnsToFetch,
-                    WEB_ADDRESSES
+                    WebAddresses
                 ) { it.webAddresses }.orEmpty(),
-                phones = valueIfPresent(columnsToFetch, PHONES) { it.phones }.orEmpty(),
-                mails = valueIfPresent(columnsToFetch, MAILS) { it.mails }.orEmpty(),
-                events = valueIfPresent(columnsToFetch, EVENTS) { it.events }.orEmpty(),
+                phones = valueIfPresent(columnsToFetch, Phones) { it.phones }.orEmpty(),
+                mails = valueIfPresent(columnsToFetch, Mails) { it.mails }.orEmpty(),
+                events = valueIfPresent(columnsToFetch, Events) { it.events }.orEmpty(),
                 postalAddresses = valueIfPresent(
                     columnsToFetch,
-                    POSTAL_ADDRESSES
+                    PostalAddresses
                 ) { it.postalAddresses }.orEmpty(),
-                note = valueIfPresent(columnsToFetch, NOTE) { it.note },
-                nickname = valueIfPresent(columnsToFetch, NICKNAME) { it.nickname },
+                note = valueIfPresent(columnsToFetch, Note) { it.note },
+                nickname = valueIfPresent(columnsToFetch, Nickname) { it.nickname },
                 groups = valueIfPresent(
                     columnsToFetch,
-                    GROUP_MEMBERSHIPS
+                    GroupMemberships
                 ) { it.groups }.orEmpty()
             )
         }

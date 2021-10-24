@@ -1,17 +1,17 @@
 package com.alexstyl.contactstore
 
 import android.provider.ContactsContract
-import com.alexstyl.contactstore.ContactColumn.EVENTS
-import com.alexstyl.contactstore.ContactColumn.GROUP_MEMBERSHIPS
-import com.alexstyl.contactstore.ContactColumn.IMAGE
-import com.alexstyl.contactstore.ContactColumn.MAILS
-import com.alexstyl.contactstore.ContactColumn.NAMES
-import com.alexstyl.contactstore.ContactColumn.NOTE
-import com.alexstyl.contactstore.ContactColumn.ORGANIZATION
-import com.alexstyl.contactstore.ContactColumn.PHONES
-import com.alexstyl.contactstore.ContactColumn.POSTAL_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.WEB_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.values
+import com.alexstyl.contactstore.ContactColumn.Companion.standardColumns
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Note
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class MutableContact internal constructor(
     override var contactId: Long = -1L,
@@ -21,7 +21,7 @@ class MutableContact internal constructor(
     events: MutableList<LabeledValue<EventDate>>,
     postalAddresses: MutableList<LabeledValue<PostalAddress>>,
     webAddresses: MutableList<LabeledValue<WebAddress>>,
-    note: Note?,
+    note: com.alexstyl.contactstore.Note?,
     override var isStarred: Boolean,
     firstName: String?,
     lastName: String?,
@@ -40,31 +40,31 @@ class MutableContact internal constructor(
     override val columns: List<ContactColumn>,
 ) : Contact {
 
-    override var imageData: ImageData? by readWriteField(IMAGE, imageData)
-    override val phones: MutableList<LabeledValue<PhoneNumber>> by readField(PHONES, phones)
-    override val mails: MutableList<LabeledValue<MailAddress>> by readField(MAILS, mails)
-    override val events: MutableList<LabeledValue<EventDate>> by readField(EVENTS, events)
+    override var imageData: ImageData? by readWriteField(Image, imageData)
+    override val phones: MutableList<LabeledValue<PhoneNumber>> by readField(Phones, phones)
+    override val mails: MutableList<LabeledValue<MailAddress>> by readField(Mails, mails)
+    override val events: MutableList<LabeledValue<EventDate>> by readField(Events, events)
     override val postalAddresses: MutableList<LabeledValue<PostalAddress>>
-            by readField(POSTAL_ADDRESSES, postalAddresses)
+            by readField(PostalAddresses, postalAddresses)
     override val webAddresses: MutableList<LabeledValue<WebAddress>>
-            by readField(WEB_ADDRESSES, webAddresses)
-    override var note: Note? by readWriteField(NOTE, note)
+            by readField(WebAddresses, webAddresses)
+    override var note: com.alexstyl.contactstore.Note? by readWriteField(Note, note)
 
-    override val groups: MutableList<GroupMembership> by readField(GROUP_MEMBERSHIPS, groups)
+    override val groups: MutableList<GroupMembership> by readField(GroupMemberships, groups)
 
-    override var organization: String? by readWriteField(ORGANIZATION, organization)
-    override var jobTitle: String? by readWriteField(ORGANIZATION, jobTitle)
-    override var firstName: String? by readWriteField(NAMES, firstName)
-    override var lastName: String? by readWriteField(NAMES, lastName)
-    override var middleName: String? by readWriteField(NAMES, middleName)
-    override var prefix: String? by readWriteField(NAMES, prefix)
-    override var suffix: String? by readWriteField(NAMES, suffix)
-    override var phoneticLastName: String? by readWriteField(NAMES, phoneticLastName)
-    override var phoneticFirstName: String? by readWriteField(NAMES, phoneticFirstName)
-    override var phoneticMiddleName: String? by readWriteField(NAMES, phoneticMiddleName)
-    override var fullNameStyle: Int by readWriteField(NAMES, fullNameStyle)
-    override var phoneticNameStyle: Int by readWriteField(NAMES, phoneticNameStyle)
-    override var nickname: String? by readWriteField(NAMES, nickname)
+    override var organization: String? by readWriteField(Organization, organization)
+    override var jobTitle: String? by readWriteField(Organization, jobTitle)
+    override var firstName: String? by readWriteField(Names, firstName)
+    override var lastName: String? by readWriteField(Names, lastName)
+    override var middleName: String? by readWriteField(Names, middleName)
+    override var prefix: String? by readWriteField(Names, prefix)
+    override var suffix: String? by readWriteField(Names, suffix)
+    override var phoneticLastName: String? by readWriteField(Names, phoneticLastName)
+    override var phoneticFirstName: String? by readWriteField(Names, phoneticFirstName)
+    override var phoneticMiddleName: String? by readWriteField(Names, phoneticMiddleName)
+    override var fullNameStyle: Int by readWriteField(Names, fullNameStyle)
+    override var phoneticNameStyle: Int by readWriteField(Names, phoneticNameStyle)
+    override var nickname: String? by readWriteField(Names, nickname)
 
     constructor() : this(
         contactId = -1L,
@@ -90,7 +90,7 @@ class MutableContact internal constructor(
         organization = null,
         jobTitle = null,
         groups = mutableListOf(),
-        columns = values().toList() // allow editing of all columns for new contacts
+        columns = standardColumns() // allow editing of all columns for new contacts
     )
 
     override val displayName: String

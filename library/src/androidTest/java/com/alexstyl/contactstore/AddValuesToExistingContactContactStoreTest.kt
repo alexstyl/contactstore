@@ -1,13 +1,13 @@
 package com.alexstyl.contactstore
 
-import com.alexstyl.contactstore.ContactColumn.EVENTS
-import com.alexstyl.contactstore.ContactColumn.MAILS
-import com.alexstyl.contactstore.ContactColumn.NAMES
-import com.alexstyl.contactstore.ContactColumn.NOTE
-import com.alexstyl.contactstore.ContactColumn.ORGANIZATION
-import com.alexstyl.contactstore.ContactColumn.PHONES
-import com.alexstyl.contactstore.ContactColumn.POSTAL_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.WEB_ADDRESSES
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Note
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -17,7 +17,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun updatesNames(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES) {
+        val contact = buildStoreContact(Names) {
             firstName = "Paolo"
             lastName = "Melendez"
         }
@@ -38,7 +38,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun addsNewPhones(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES, PHONES) {
+        val contact = buildStoreContact(Names, Phones) {
             firstName = "Paolo"
             lastName = "Melendez"
         }
@@ -61,7 +61,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun addsNewMails(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES, MAILS) {
+        val contact = buildStoreContact(Names, Mails) {
             firstName = "Paolo"
             lastName = "Melendez"
         }
@@ -84,7 +84,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun addsNewEvents(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES, EVENTS) {
+        val contact = buildStoreContact(Names, Events) {
             firstName = "Paolo"
             lastName = "Melendez"
         }
@@ -107,7 +107,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun addsNewPostalAddress(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES, POSTAL_ADDRESSES) {
+        val contact = buildStoreContact(Names, PostalAddresses) {
             firstName = "Paolo"
             lastName = "Melendez"
         }
@@ -130,7 +130,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun addsNewWebAddress(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES, WEB_ADDRESSES) {
+        val contact = buildStoreContact(Names, WebAddresses) {
             firstName = "Paolo"
             lastName = "Melendez"
         }
@@ -153,7 +153,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun updatesOrganization(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES, ORGANIZATION) {
+        val contact = buildStoreContact(Names, Organization) {
             firstName = "Paolo"
             lastName = "Melendez"
         }
@@ -172,7 +172,7 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun updatesNote(): Unit = runBlocking {
-        val contact = buildStoreContact(NAMES, NOTE) {
+        val contact = buildStoreContact(Names, Note) {
             firstName = "Paolo"
             lastName = "Melendez"
         }

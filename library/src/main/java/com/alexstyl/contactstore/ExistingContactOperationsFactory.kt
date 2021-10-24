@@ -20,16 +20,16 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Contactables
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.RawContacts
-import com.alexstyl.contactstore.ContactColumn.EVENTS
-import com.alexstyl.contactstore.ContactColumn.GROUP_MEMBERSHIPS
-import com.alexstyl.contactstore.ContactColumn.IMAGE
-import com.alexstyl.contactstore.ContactColumn.MAILS
-import com.alexstyl.contactstore.ContactColumn.NAMES
-import com.alexstyl.contactstore.ContactColumn.NOTE
-import com.alexstyl.contactstore.ContactColumn.ORGANIZATION
-import com.alexstyl.contactstore.ContactColumn.PHONES
-import com.alexstyl.contactstore.ContactColumn.POSTAL_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.WEB_ADDRESSES
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Note
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.utils.get
 import com.alexstyl.contactstore.utils.runQuery
 import kotlinx.coroutines.flow.first
@@ -66,7 +66,7 @@ internal class ExistingContactOperationsFactory(
         newContact: MutableContact,
         oldContact: Contact
     ): List<ContentProviderOperation> {
-        if (newContact.containsColumn(GROUP_MEMBERSHIPS).not()) return emptyList()
+        if (newContact.containsColumn(GroupMemberships).not()) return emptyList()
 
         val forContactId = newContact.contactId
         val added = valuesAdded(old = oldContact.groups, new = newContact.groups)
@@ -92,7 +92,7 @@ internal class ExistingContactOperationsFactory(
     }
 
     private fun replaceOrganization(contact: MutableContact): List<ContentProviderOperation> {
-        if (contact.containsColumn(ORGANIZATION).not()) return emptyList()
+        if (contact.containsColumn(Organization).not()) return emptyList()
         val contactId = requireNotNull(contact.contactId)
         val rawId = findRawContactId(contactId)
         val deletePrevious = newDelete(Data.CONTENT_URI)
@@ -117,7 +117,7 @@ internal class ExistingContactOperationsFactory(
     }
 
     private fun noteOperationsFor(contact: MutableContact): List<ContentProviderOperation> {
-        if (contact.containsColumn(NOTE).not()) return emptyList()
+        if (contact.containsColumn(Note).not()) return emptyList()
         val rawContactId = findRawContactId(contact.contactId)
         val deleteOldNotes = newDelete(Data.CONTENT_URI)
             .withSelection(
@@ -152,7 +152,7 @@ internal class ExistingContactOperationsFactory(
     }
 
     private fun updatesNames(contact: MutableContact): List<ContentProviderOperation> {
-        if (contact.containsColumn(NAMES).not()) return emptyList()
+        if (contact.containsColumn(Names).not()) return emptyList()
         val contactId = requireNotNull(contact.contactId)
         val rawContactId = findRawContactId(contactId)
         return listOf(
@@ -173,7 +173,7 @@ internal class ExistingContactOperationsFactory(
     }
 
     private fun replacePhoto(contact: MutableContact): List<ContentProviderOperation> {
-        if (contact.containsColumn(IMAGE).not()) return emptyList()
+        if (contact.containsColumn(Image).not()) return emptyList()
         val contactId = requireNotNull(contact.contactId)
         val rawId = findRawContactId(contactId)
         val imageData = contact.imageData
@@ -197,7 +197,7 @@ internal class ExistingContactOperationsFactory(
         newContact: Contact,
         oldContact: Contact
     ): List<ContentProviderOperation> {
-        if (newContact.containsColumn(PHONES).not()) return emptyList()
+        if (newContact.containsColumn(Phones).not()) return emptyList()
 
         return buildOperations(
             forContactId = newContact.contactId,
@@ -231,7 +231,7 @@ internal class ExistingContactOperationsFactory(
         newContact: MutableContact,
         oldContact: Contact
     ): List<ContentProviderOperation> {
-        if (newContact.containsColumn(MAILS).not()) return emptyList()
+        if (newContact.containsColumn(Mails).not()) return emptyList()
 
         return buildOperations(
             forContactId = newContact.contactId,
@@ -248,7 +248,7 @@ internal class ExistingContactOperationsFactory(
         newContact: MutableContact,
         oldContact: Contact
     ): List<ContentProviderOperation> {
-        if (newContact.containsColumn(EVENTS).not()) return emptyList()
+        if (newContact.containsColumn(Events).not()) return emptyList()
         return buildOperations(
             forContactId = newContact.contactId,
             mimeType = EventColumns.CONTENT_ITEM_TYPE,
@@ -264,7 +264,7 @@ internal class ExistingContactOperationsFactory(
         newContact: MutableContact,
         oldContact: Contact
     ): List<ContentProviderOperation> {
-        if (newContact.containsColumn(POSTAL_ADDRESSES).not()) {
+        if (newContact.containsColumn(PostalAddresses).not()) {
             return emptyList()
         }
         return buildOperations(
@@ -327,7 +327,7 @@ internal class ExistingContactOperationsFactory(
         newContact: MutableContact,
         oldContact: Contact
     ): List<ContentProviderOperation> {
-        if (newContact.containsColumn(WEB_ADDRESSES).not()) return emptyList()
+        if (newContact.containsColumn(WebAddresses).not()) return emptyList()
         return buildOperations(
             forContactId = newContact.contactId,
             mimeType = WebAddressColumns.CONTENT_ITEM_TYPE,

@@ -1,16 +1,16 @@
 package com.alexstyl.contactstore
 
-import com.alexstyl.contactstore.ContactColumn.EVENTS
-import com.alexstyl.contactstore.ContactColumn.IMAGE
-import com.alexstyl.contactstore.ContactColumn.MAILS
-import com.alexstyl.contactstore.ContactColumn.NAMES
-import com.alexstyl.contactstore.ContactColumn.NICKNAME
-import com.alexstyl.contactstore.ContactColumn.NOTE
-import com.alexstyl.contactstore.ContactColumn.ORGANIZATION
-import com.alexstyl.contactstore.ContactColumn.PHONES
-import com.alexstyl.contactstore.ContactColumn.POSTAL_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.WEB_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.values
+import com.alexstyl.contactstore.ContactColumn.Companion.standardColumns
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Nickname
+import com.alexstyl.contactstore.ContactColumn.Note
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeDiagnosingMatcher
@@ -32,7 +32,7 @@ class EqualContentsContactMatcher(
                 append("Columns: ${columns(contact)}")
                 append(" displayName = ${contact.displayName}")
 
-                if (containsColumn(NAMES)) {
+                if (containsColumn(Names)) {
                     putCommaIfNeeded()
                     append(
                         "prefix = $prefix" +
@@ -42,39 +42,39 @@ class EqualContentsContactMatcher(
                                 ", suffix = $suffix"
                     )
                 }
-                if (containsColumn(IMAGE)) {
+                if (containsColumn(Image)) {
                     putCommaIfNeeded()
                     append("image = $imageData")
                 }
-                if (containsColumn(PHONES)) {
+                if (containsColumn(Phones)) {
                     putCommaIfNeeded()
                     append("phones = ${labeledValues(phones)}")
                 }
-                if (containsColumn(MAILS)) {
+                if (containsColumn(Mails)) {
                     putCommaIfNeeded()
                     append("mails = ${labeledValues(mails)}")
                 }
-                if (containsColumn(ORGANIZATION)) {
+                if (containsColumn(Organization)) {
                     putCommaIfNeeded()
                     append("organization = $organization, jobTitle = $jobTitle")
                 }
-                if (containsColumn(NICKNAME)) {
+                if (containsColumn(Nickname)) {
                     putCommaIfNeeded()
                     append("nickname = $nickname")
                 }
-                if (containsColumn(WEB_ADDRESSES)) {
+                if (containsColumn(WebAddresses)) {
                     putCommaIfNeeded()
                     append("webAddresses = ${labeledValues(webAddresses)}")
                 }
-                if (containsColumn(EVENTS)) {
+                if (containsColumn(Events)) {
                     putCommaIfNeeded()
                     append("events = ${labeledValues(events)}")
                 }
-                if (containsColumn(POSTAL_ADDRESSES)) {
+                if (containsColumn(PostalAddresses)) {
                     putCommaIfNeeded()
                     append("postalAddresses = ${labeledValues(postalAddresses)}")
                 }
-                if (containsColumn(NOTE)) {
+                if (containsColumn(Note)) {
                     putCommaIfNeeded()
                     append("note = $note")
                 }
@@ -82,7 +82,7 @@ class EqualContentsContactMatcher(
         }
     }
 
-    private fun labeledValues(list: List<com.alexstyl.contactstore.LabeledValue<*>>): String {
+    private fun labeledValues(list: List<LabeledValue<*>>): String {
         return list.joinToString(", ", prefix = "[", postfix = "]") { labeledValue ->
             "label = ${labeledValue.label}, value = ${labeledValue.value}"
         }
@@ -147,7 +147,7 @@ class EqualContentsContactMatcher(
     }
 
     private fun namesAreDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(NAMES).not()) {
+        if (expected.containsColumn(Names).not()) {
             return false
         }
         return actual.prefix != expected.prefix
@@ -158,7 +158,7 @@ class EqualContentsContactMatcher(
     }
 
     private fun notesAreDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(NOTE).not()) {
+        if (expected.containsColumn(Note).not()) {
             return false
         }
         return actual.note != expected.note
@@ -168,20 +168,20 @@ class EqualContentsContactMatcher(
         return columns(expected) != columns(item)
     }
 
-    private fun columns(item: Contact): List<com.alexstyl.contactstore.ContactColumn> {
-        return values().toList()
+    private fun columns(item: Contact): List<ContactColumn> {
+        return standardColumns()
             .filter { item.containsColumn(it) }
     }
 
     private fun phonesAreDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(PHONES).not()) {
+        if (expected.containsColumn(Phones).not()) {
             return false
         }
         return areLabeledValuesDifferentIgnoringId(actual.phones, expected.phones)
     }
 
     private fun organizationIsDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(ORGANIZATION).not()) {
+        if (expected.containsColumn(Organization).not()) {
             return false
         }
         return expected.organization != actual.organization ||
@@ -189,36 +189,36 @@ class EqualContentsContactMatcher(
     }
 
     private fun mailsAreDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(MAILS).not()) {
+        if (expected.containsColumn(Mails).not()) {
             return false
         }
         return areLabeledValuesDifferentIgnoringId(actual.mails, expected.mails)
     }
 
     private fun eventsAreDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(EVENTS).not()) {
+        if (expected.containsColumn(Events).not()) {
             return false
         }
         return areLabeledValuesDifferentIgnoringId(actual.events, expected.events)
     }
 
     private fun postalAreDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(POSTAL_ADDRESSES).not()) {
+        if (expected.containsColumn(PostalAddresses).not()) {
             return false
         }
         return areLabeledValuesDifferentIgnoringId(actual.postalAddresses, expected.postalAddresses)
     }
 
     private fun webAddressesAreDifferent(actual: Contact): Boolean {
-        if (expected.containsColumn(WEB_ADDRESSES).not()) {
+        if (expected.containsColumn(WebAddresses).not()) {
             return false
         }
         return areLabeledValuesDifferentIgnoringId(actual.webAddresses, expected.webAddresses)
     }
 
     private fun <T : Any> areLabeledValuesDifferentIgnoringId(
-        one: List<com.alexstyl.contactstore.LabeledValue<T>>,
-        other: List<com.alexstyl.contactstore.LabeledValue<T>>
+        one: List<LabeledValue<T>>,
+        other: List<LabeledValue<T>>
     ): Boolean {
         val map = one.map { it.copy(id = 0) }
         val map1 = other.map { it.copy(id = 0) }

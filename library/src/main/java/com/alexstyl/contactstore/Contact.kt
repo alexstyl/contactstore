@@ -9,88 +9,88 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Contacts.Photo
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
-import com.alexstyl.contactstore.ContactColumn.EVENTS
-import com.alexstyl.contactstore.ContactColumn.GROUP_MEMBERSHIPS
-import com.alexstyl.contactstore.ContactColumn.IMAGE
-import com.alexstyl.contactstore.ContactColumn.MAILS
-import com.alexstyl.contactstore.ContactColumn.NAMES
-import com.alexstyl.contactstore.ContactColumn.NICKNAME
-import com.alexstyl.contactstore.ContactColumn.NOTE
-import com.alexstyl.contactstore.ContactColumn.ORGANIZATION
-import com.alexstyl.contactstore.ContactColumn.PHONES
-import com.alexstyl.contactstore.ContactColumn.POSTAL_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.WEB_ADDRESSES
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Nickname
+import com.alexstyl.contactstore.ContactColumn.Note
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 interface Contact {
     val contactId: Long
     val displayName: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val prefix: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val firstName: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val middleName: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val lastName: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val suffix: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val phoneticFirstName: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val phoneticMiddleName: String?
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      */
     val phoneticLastName: String?
 
     /**
-     * Requires: [ContactColumn.NICKNAME]
+     * Requires: [ContactColumn.Nickname]
      */
     val nickname: String?
 
     /**
-     * Requires: [ContactColumn.GROUP_MEMBERSHIPS]
+     * Requires: [ContactColumn.GroupMemberships]
      */
     val groups: List<GroupMembership>
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      *
      * See [ContactsContract.FullNameStyle]
      */
     val fullNameStyle: Int
 
     /**
-     * Requires: [ContactColumn.NAMES]
+     * Requires: [ContactColumn.Names]
      *
      * See [ContactsContract.PhoneticNameStyle]
      */
     val phoneticNameStyle: Int
 
     /**
-     * Requires: [ContactColumn.IMAGE]
+     * Requires: [ContactColumn.Image]
      *
      * *NOTE*: If you need the contact image for UI purposes, you probably need [Contact.imageUri] instead.
      * [ImageData] contains the raw [ByteArray] of the image, which might consume a lot of memory.
@@ -98,42 +98,42 @@ interface Contact {
     val imageData: ImageData?
 
     /**
-     * Requires: [ContactColumn.PHONES]
+     * Requires: [ContactColumn.Phones]
      */
     val phones: List<LabeledValue<PhoneNumber>>
 
     /**
-     * Requires: [ContactColumn.MAILS]
+     * Requires: [ContactColumn.Mails]
      */
     val mails: List<LabeledValue<MailAddress>>
 
     /**
-     * Requires: [ContactColumn.EVENTS]
+     * Requires: [ContactColumn.Events]
      */
     val events: List<LabeledValue<EventDate>>
 
     /**
-     * Requires: [ContactColumn.POSTAL_ADDRESSES]
+     * Requires: [ContactColumn.PostalAddresses]
      */
     val postalAddresses: List<LabeledValue<PostalAddress>>
 
     /**
-     * Requires: [ContactColumn.WEB_ADDRESSES]
+     * Requires: [ContactColumn.WebAddresses]
      */
     val webAddresses: List<LabeledValue<WebAddress>>
 
     /**
-     * Requires: [ContactColumn.NOTE]
+     * Requires: [ContactColumn.Note]
      */
-    val note: Note?
+    val note: com.alexstyl.contactstore.Note?
 
     /**
-     * Requires: [ContactColumn.ORGANIZATION]
+     * Requires: [ContactColumn.Organization]
      */
     val organization: String?
 
     /**
-     * Requires: [ContactColumn.ORGANIZATION]
+     * Requires: [ContactColumn.Organization]
      */
     val jobTitle: String?
     val isStarred: Boolean
@@ -150,35 +150,35 @@ interface Contact {
 fun Contact.mutableCopy(): MutableContact {
     return MutableContact(
         contactId = contactId,
-        firstName = if (containsColumn(NAMES)) firstName else null,
-        organization = if (containsColumn(ORGANIZATION)) organization else null,
-        jobTitle = if (containsColumn(ORGANIZATION)) jobTitle else null,
-        lastName = if (containsColumn(NAMES)) lastName else null,
+        firstName = if (containsColumn(Names)) firstName else null,
+        organization = if (containsColumn(Organization)) organization else null,
+        jobTitle = if (containsColumn(Organization)) jobTitle else null,
+        lastName = if (containsColumn(Names)) lastName else null,
         isStarred = isStarred,
-        imageData = if (containsColumn(IMAGE)) imageData else null,
-        phones = if (containsColumn(PHONES)) phones.toMutableList() else mutableListOf(),
-        mails = if (containsColumn(MAILS)) mails.toMutableList() else mutableListOf(),
-        events = if (containsColumn(EVENTS)) events.toMutableList() else mutableListOf(),
-        postalAddresses = if (containsColumn(POSTAL_ADDRESSES))
+        imageData = if (containsColumn(Image)) imageData else null,
+        phones = if (containsColumn(Phones)) phones.toMutableList() else mutableListOf(),
+        mails = if (containsColumn(Mails)) mails.toMutableList() else mutableListOf(),
+        events = if (containsColumn(Events)) events.toMutableList() else mutableListOf(),
+        postalAddresses = if (containsColumn(PostalAddresses))
             postalAddresses.toMutableList()
         else
             mutableListOf(),
-        webAddresses = if (containsColumn(WEB_ADDRESSES))
+        webAddresses = if (containsColumn(WebAddresses))
             webAddresses.toMutableList()
         else
             mutableListOf(),
-        note = if (containsColumn(NOTE)) note else null,
+        note = if (containsColumn(Note)) note else null,
         columns = columns,
-        middleName = if (containsColumn(NAMES)) middleName else null,
-        prefix = if (containsColumn(NAMES)) prefix else null,
-        suffix = if (containsColumn(NAMES)) suffix else null,
-        phoneticNameStyle = if (containsColumn(NAMES)) phoneticNameStyle else PhoneticNameStyle.UNDEFINED,
-        phoneticFirstName = if (containsColumn(NAMES)) phoneticFirstName else null,
-        phoneticLastName = if (containsColumn(NAMES)) phoneticLastName else null,
-        phoneticMiddleName = if (containsColumn(NAMES)) phoneticMiddleName else null,
-        groups = if (containsColumn(GROUP_MEMBERSHIPS)) groups.toMutableList() else mutableListOf(),
-        fullNameStyle = if (containsColumn(NAMES)) phoneticNameStyle else FullNameStyle.UNDEFINED,
-        nickname = if (containsColumn(NICKNAME)) nickname else null,
+        middleName = if (containsColumn(Names)) middleName else null,
+        prefix = if (containsColumn(Names)) prefix else null,
+        suffix = if (containsColumn(Names)) suffix else null,
+        phoneticNameStyle = if (containsColumn(Names)) phoneticNameStyle else PhoneticNameStyle.UNDEFINED,
+        phoneticFirstName = if (containsColumn(Names)) phoneticFirstName else null,
+        phoneticLastName = if (containsColumn(Names)) phoneticLastName else null,
+        phoneticMiddleName = if (containsColumn(Names)) phoneticMiddleName else null,
+        groups = if (containsColumn(GroupMemberships)) groups.toMutableList() else mutableListOf(),
+        fullNameStyle = if (containsColumn(Names)) phoneticNameStyle else FullNameStyle.UNDEFINED,
+        nickname = if (containsColumn(Nickname)) nickname else null,
     )
 }
 

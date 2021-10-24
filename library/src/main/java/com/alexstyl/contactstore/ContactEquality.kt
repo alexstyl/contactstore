@@ -1,14 +1,14 @@
 package com.alexstyl.contactstore
 
-import com.alexstyl.contactstore.ContactColumn.EVENTS
-import com.alexstyl.contactstore.ContactColumn.IMAGE
-import com.alexstyl.contactstore.ContactColumn.MAILS
-import com.alexstyl.contactstore.ContactColumn.NAMES
-import com.alexstyl.contactstore.ContactColumn.NOTE
-import com.alexstyl.contactstore.ContactColumn.ORGANIZATION
-import com.alexstyl.contactstore.ContactColumn.PHONES
-import com.alexstyl.contactstore.ContactColumn.POSTAL_ADDRESSES
-import com.alexstyl.contactstore.ContactColumn.WEB_ADDRESSES
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Note
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 @Suppress("ReturnCount")
 internal fun Contact.equalContacts(other: Contact?): Boolean {
@@ -20,17 +20,17 @@ internal fun Contact.equalContacts(other: Contact?): Boolean {
     if (isStarred != other.isStarred) return false
     if (displayName != other.displayName) return false
 
-    if (containsColumn(NAMES) && firstName != other.firstName) return false
-    if (containsColumn(NAMES) && lastName != other.lastName) return false
-    if (containsColumn(IMAGE) && imageData != other.imageData) return false
-    if (containsColumn(PHONES) && phones != other.phones) return false
-    if (containsColumn(MAILS) && mails != other.mails) return false
-    if (containsColumn(EVENTS) && events != other.events) return false
-    if (containsColumn(POSTAL_ADDRESSES) && postalAddresses != other.postalAddresses) return false
-    if (containsColumn(NOTE) && note != other.note) return false
-    if (containsColumn(WEB_ADDRESSES) && webAddresses != other.webAddresses) return false
-    if (containsColumn(ORGANIZATION) && organization != other.organization) return false
-    if (containsColumn(ORGANIZATION) && jobTitle != other.jobTitle) return false
+    if (containsColumn(Names) && firstName != other.firstName) return false
+    if (containsColumn(Names) && lastName != other.lastName) return false
+    if (containsColumn(Image) && imageData != other.imageData) return false
+    if (containsColumn(Phones) && phones != other.phones) return false
+    if (containsColumn(Mails) && mails != other.mails) return false
+    if (containsColumn(Events) && events != other.events) return false
+    if (containsColumn(PostalAddresses) && postalAddresses != other.postalAddresses) return false
+    if (containsColumn(Note) && note != other.note) return false
+    if (containsColumn(WebAddresses) && webAddresses != other.webAddresses) return false
+    if (containsColumn(Organization) && organization != other.organization) return false
+    if (containsColumn(Organization) && jobTitle != other.jobTitle) return false
 
     return true
 }
@@ -41,18 +41,18 @@ internal fun Contact.contactHashCode(): Int {
     result = 31 * result + columns.hashCode()
     result = 31 * result + isStarred.hashCode()
     result = 31 * result + displayName.hashCode()
-    result = 31 * result + hashIfContains(NAMES) { (firstName?.hashCode() ?: 0) }
-    result = 31 * result + hashIfContains(NAMES) { (lastName?.hashCode() ?: 0) }
-    result = 31 * result + hashIfContains(IMAGE) { (imageData?.hashCode() ?: 0) }
-    result = 31 * result + hashIfContains(PHONES) { phones.hashCode() }
-    result = 31 * result + hashIfContains(MAILS) { mails.hashCode() }
-    result = 31 * result + hashIfContains(EVENTS) { events.hashCode() }
+    result = 31 * result + hashIfContains(Names) { (firstName?.hashCode() ?: 0) }
+    result = 31 * result + hashIfContains(Names) { (lastName?.hashCode() ?: 0) }
+    result = 31 * result + hashIfContains(Image) { (imageData?.hashCode() ?: 0) }
+    result = 31 * result + hashIfContains(Phones) { phones.hashCode() }
+    result = 31 * result + hashIfContains(Mails) { mails.hashCode() }
+    result = 31 * result + hashIfContains(Events) { events.hashCode() }
     result =
-        31 * result + hashIfContains(POSTAL_ADDRESSES) { postalAddresses.hashCode() }
-    result = 31 * result + hashIfContains(NOTE) { (note?.hashCode() ?: 0) }
-    result = 31 * result + hashIfContains(WEB_ADDRESSES) { webAddresses.hashCode() }
-    result = 31 * result + hashIfContains(ORGANIZATION) { (organization?.hashCode() ?: 0) }
-    result = 31 * result + hashIfContains(ORGANIZATION) { (jobTitle?.hashCode() ?: 0) }
+        31 * result + hashIfContains(PostalAddresses) { postalAddresses.hashCode() }
+    result = 31 * result + hashIfContains(Note) { (note?.hashCode() ?: 0) }
+    result = 31 * result + hashIfContains(WebAddresses) { webAddresses.hashCode() }
+    result = 31 * result + hashIfContains(Organization) { (organization?.hashCode() ?: 0) }
+    result = 31 * result + hashIfContains(Organization) { (jobTitle?.hashCode() ?: 0) }
     return result
 }
 
@@ -69,16 +69,16 @@ internal fun Contact.toFullString(): String {
             " displayName=$displayName," +
             " isStarred=$isStarred," +
             " columns=$columns," +
-            " firstName=${withValue(NAMES, value = { firstName })}," +
-            " lastName=${withValue(NAMES, value = { lastName })}," +
-            " imageData=${withValue(IMAGE, value = { imageData })}," +
-            " organization=${withValue(ORGANIZATION, value = { organization })}," +
-            " jobTitle=${withValue(ORGANIZATION, value = { jobTitle })}," +
-            " phones=${withValue(PHONES, value = { phones })}," +
-            " mails=${withValue(MAILS, value = { mails })}," +
-            " events=${withValue(EVENTS, value = { events })}," +
-            " postalAddresses=${withValue(POSTAL_ADDRESSES, value = { postalAddresses })}," +
-            " note=${withValue(NOTE, value = { note })}" +
+            " firstName=${withValue(Names, value = { firstName })}," +
+            " lastName=${withValue(Names, value = { lastName })}," +
+            " imageData=${withValue(Image, value = { imageData })}," +
+            " organization=${withValue(Organization, value = { organization })}," +
+            " jobTitle=${withValue(Organization, value = { jobTitle })}," +
+            " phones=${withValue(Phones, value = { phones })}," +
+            " mails=${withValue(Mails, value = { mails })}," +
+            " events=${withValue(Events, value = { events })}," +
+            " postalAddresses=${withValue(PostalAddresses, value = { postalAddresses })}," +
+            " note=${withValue(Note, value = { note })}" +
             ")"
 }
 

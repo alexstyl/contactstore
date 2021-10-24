@@ -394,17 +394,17 @@ internal class ContactQueries(
                     valueIn(
                         columnsToFetch.map { col ->
                             when (col) {
-                                ContactColumn.PHONES -> PhoneColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.MAILS -> EmailColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.NOTE -> NoteColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.EVENTS -> EventColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.POSTAL_ADDRESSES -> PostalColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.IMAGE -> PhotoColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.NAMES -> NameColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.WEB_ADDRESSES -> WebColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.ORGANIZATION -> OrganizationColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.NICKNAME -> NicknameColumns.CONTENT_ITEM_TYPE
-                                ContactColumn.GROUP_MEMBERSHIPS -> GroupColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Phones -> PhoneColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Mails -> EmailColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Note -> NoteColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Events -> EventColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.PostalAddresses -> PostalColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Image -> PhotoColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Names -> NameColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.WebAddresses -> WebColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Organization -> OrganizationColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.Nickname -> NicknameColumns.CONTENT_ITEM_TYPE
+                                ContactColumn.GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
                             }
                         }
                     )

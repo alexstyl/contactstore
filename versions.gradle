@@ -8,7 +8,7 @@ ext {
     javaVersion = JavaVersion.VERSION_11
 
     androidCompileSdkVersion = 30
-    androidMinSdkVersion = 23
+    androidMinSdkVersion = 14
 
     androidBuildToolsVersion = '30.0.2'
     daggerHiltVersion = '2.38.1'

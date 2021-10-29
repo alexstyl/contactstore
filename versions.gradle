@@ -7,7 +7,7 @@ ext {
 
     javaVersion = JavaVersion.VERSION_11
 
-    androidCompileSdkVersion = 30
+    androidCompileSdkVersion = 31
     androidMinSdkVersion = 14
 
     gradlePluginVersion = '7.0.3'

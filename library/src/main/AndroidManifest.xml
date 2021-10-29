@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.alexstyl.contactstore" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.alexstyl.contactstore">
+    <queries>
+        <intent>
+            <action android:name="android.content.SyncAdapter" />
+        </intent>
+    </queries>
+</manifest>

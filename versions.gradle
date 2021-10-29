@@ -17,7 +17,7 @@ ext {
     hiltNavigationComposeVersion = '1.0.0-alpha03'
     navigationVersion = '2.4.0-alpha04'
     kotlinVersion = '1.5.30'
-    coroutinesVersion = '1.5.1'
+    coroutinesVersion = '1.5.2'
     junitVersion = '4.13.2'
     testRunnerVersion = '1.4.0'
     testRulesVersion = '1.4.0'

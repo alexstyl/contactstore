@@ -10,6 +10,7 @@ ext {
     androidCompileSdkVersion = 30
     androidMinSdkVersion = 14
 
+    gradlePluginVersion = '7.0.3'
     androidBuildToolsVersion = '30.0.2'
     daggerHiltVersion = '2.38.1'
     hiltVersion = '1.0.0'

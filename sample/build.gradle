@@ -37,6 +37,9 @@ android {
     kotlinOptions {
         jvmTarget = javaVersion
         useIR = true
+        freeCompilerArgs = [
+                "-Xuse-experimental=androidx.compose.material.ExperimentalMaterialApi"
+        ]
     }
     buildFeatures {
         compose true

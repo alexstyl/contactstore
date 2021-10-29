@@ -40,11 +40,12 @@ import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.imageUri
+import com.alexstyl.contactstore.sample.ContactDetailsActivity.Companion.EXTRA_CONTACT_ID
 import com.alexstyl.contactstore.sample.ContactListState.Loaded
 import com.alexstyl.contactstore.sample.ContactListState.Loading
 import com.alexstyl.contactstore.sample.ContactListState.PermissionRequired
+import com.alexstyl.contactstore.sample.ui.setupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -91,7 +92,9 @@ class ContactListActivity : ComponentActivity() {
                 is Loaded -> ContactList(
                     contacts = state.contacts,
                     onContactClick = { contact ->
-                        val intent = Intent(Intent.ACTION_VIEW, contactUri(contact))
+                        val intent = Intent(this, ContactDetailsActivity::class.java).apply {
+                            putExtra(EXTRA_CONTACT_ID, contact.contactId)
+                        }
                         startActivity(intent)
                     })
                 PermissionRequired -> {
@@ -102,25 +105,6 @@ class ContactListActivity : ComponentActivity() {
                 }
             }.exhaustive
         }
-    }
-
-    @Composable
-    private fun setupSystemUi() {
-        val systemUiController = rememberSystemUiController()
-        val useDarkIcons = MaterialTheme.colors.isLight
-
-        SideEffect {
-            systemUiController.setSystemBarsColor(
-                color = Color.Transparent,
-                darkIcons = useDarkIcons
-            )
-        }
-    }
-
-    private fun contactUri(uri: Contact): Uri {
-        return ContactsContract.Contacts.CONTENT_URI.buildUpon()
-            .appendPath(uri.contactId.toString())
-            .build()
     }
 }
 

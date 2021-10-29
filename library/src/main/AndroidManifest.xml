@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alexstyl.contactstore">
+
+    <queries>
+        <intent>
+            <action android:name="android.content.SyncAdapter" />
+        </intent>
+    </queries>
+
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 </manifest>

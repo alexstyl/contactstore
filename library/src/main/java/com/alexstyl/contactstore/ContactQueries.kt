@@ -22,6 +22,7 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
+import android.provider.ContactsContract.RawContacts
 import com.alexstyl.contactstore.ContactColumn.*
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
@@ -38,16 +39,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.io.InputStream
 
-private val PHONE_LOOKUP_CONTACT_ID = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-    ContactsContract.PhoneLookup.CONTACT_ID
-} else {
-    ContactsContract.PhoneLookup._ID
-}
-
 internal class ContactQueries(
     private val contentResolver: ContentResolver,
-    private val dateParser: DateParser
+    private val dateParser: DateParser,
+    private val accountInfoResolver: AccountInfoResolver
 ) {
+
+    private val linkedAccountMimeTypes by lazy {
+        accountInfoResolver
+            .fetchLinkedAccountMimeTypes()
+            .associateBy { it.mimetype }
+    }
+
     fun queryContacts(
         predicate: ContactPredicate?,
         columnsToFetch: List<ContactColumn>
@@ -65,7 +68,7 @@ internal class ContactQueries(
     private fun queryContacts(predicate: ContactPredicate?): Flow<List<PartialContact>> {
         return when (predicate) {
             null -> queryAllContacts()
-            is ContactLookup -> fetchContactsMatchingPredicate(predicate)
+            is ContactLookup -> lookupFromPredicate(predicate)
             is MailLookup -> lookupFromMail(predicate.mailAddress)
             is PhoneLookup -> lookupFromPhone(predicate.phoneNumber)
             is NameLookup -> lookupFromName(predicate.partOfName)
@@ -92,7 +95,7 @@ internal class ContactQueries(
         }
     }
 
-    private fun fetchContactsMatchingPredicate(predicate: ContactLookup): Flow<List<PartialContact>> {
+    private fun lookupFromPredicate(predicate: ContactLookup): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = Contacts.CONTENT_URI,
             projection = SimpleQuery.PROJECTION,
@@ -225,8 +228,7 @@ internal class ContactQueries(
                 selection = buildColumnsToFetchSelection(contactId, columnsToFetch),
                 selectionArgs = buildSelectionArgs(columnsToFetch)
             ).iterate { row ->
-
-                when (row[Contacts.Data.MIMETYPE]) {
+                when (val mimetype = row[Contacts.Data.MIMETYPE]) {
                     NicknameColumns.CONTENT_ITEM_TYPE -> {
                         nickname = row[NicknameColumns.NAME]
                     }
@@ -284,11 +286,7 @@ internal class ContactQueries(
                         if (webAddressString.isNotBlank()) {
                             val mailAddress = WebAddress(webAddressString)
                             webAddresses.add(
-                                LabeledValue(
-                                    mailAddress,
-                                    webLabelFrom(row),
-                                    id
-                                )
+                                LabeledValue(mailAddress, webLabelFrom(row), id)
                             )
                         }
                     }
@@ -339,28 +337,17 @@ internal class ContactQueries(
                         jobTitle = row[OrganizationColumns.TITLE]
                     }
                     else -> {
-                        val mimetype = LinkedAccountValue(
-                            id = row[Contacts.Data._ID].toLong(),
-                            accountType = row[ContactsContract.RawContacts.ACCOUNT_TYPE],
-                            mimetype = row[Contacts.Data.MIMETYPE],
-                            data1 = row[Contacts.Data.DATA1],
-                            data2 = row[Contacts.Data.DATA2],
-                            data3 = row[Contacts.Data.DATA3],
-                            data4 = row[Contacts.Data.DATA4],
-                            data5 = row[Contacts.Data.DATA5],
-                            data6 = row[Contacts.Data.DATA6],
-                            data7 = row[Contacts.Data.DATA7],
-                            data8 = row[Contacts.Data.DATA8],
-                            data9 = row[Contacts.Data.DATA9],
-                            data10 = row[Contacts.Data.DATA10],
-                            data11 = row[Contacts.Data.DATA11],
-                            data12 = row[Contacts.Data.DATA12],
-                            data13 = row[Contacts.Data.DATA13],
-                            data14 = row[Contacts.Data.DATA14],
-                            data15 = row[Contacts.Data.DATA15],
-                        )
-                        linkedAccountValues.add(mimetype)
-                        Unit
+                        val mimeType = linkedAccountMimeTypes[mimetype]
+                        if (mimeType != null) {
+                            val value = LinkedAccountValue(
+                                id = row[Contacts.Data._ID].toLong(),
+                                accountType = row[RawContacts.ACCOUNT_TYPE],
+                                summary = row[mimeType.summaryColumn],
+                                detail = row[mimeType.detailColumn],
+                                icon = mimeType.icon
+                            )
+                            linkedAccountValues.add(value)
+                        }
                     }
                 }
             }
@@ -456,7 +443,7 @@ internal class ContactQueries(
                     append(" OR ")
                 }
                 append(
-                    " ${ContactsContract.RawContacts.ACCOUNT_TYPE} IN ${
+                    " ${RawContacts.ACCOUNT_TYPE} IN ${
                         valueIn(linkedAccountColumns.map { "?" })
                     }"
                 )
@@ -563,6 +550,14 @@ internal class ContactQueries(
 
         fun getIsStarred(it: Cursor): Boolean {
             return it.getInt(2) == 1
+        }
+    }
+
+    private companion object {
+        val PHONE_LOOKUP_CONTACT_ID = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ContactsContract.PhoneLookup.CONTACT_ID
+        } else {
+            ContactsContract.PhoneLookup._ID
         }
     }
 }

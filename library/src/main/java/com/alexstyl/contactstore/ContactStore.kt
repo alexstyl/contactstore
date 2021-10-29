@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore
 
+import android.accounts.AccountManager
 import android.content.Context
 import com.alexstyl.contactstore.ContactStore.Companion.newInstance
 import com.alexstyl.contactstore.utils.DateTimeFormatParser
@@ -31,14 +32,19 @@ interface ContactStore {
 
     companion object {
         /**
-         * The entry point to the ContactStore library
+         * The entry point to ContactStore
          */
         fun newInstance(context: Context): ContactStore {
             val contentResolver = context.contentResolver
             val resources = context.resources
             val contactsQueries = ContactQueries(
-                contentResolver,
-                DateTimeFormatParser()
+                contentResolver = contentResolver,
+                dateParser = DateTimeFormatParser(),
+                accountInfoResolver = AccountInfoResolver(
+                    context,
+                    context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager,
+                    context.packageManager
+                )
             )
             return AndroidContactStore(
                 contentResolver = contentResolver,

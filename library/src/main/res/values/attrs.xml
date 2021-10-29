@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ContactsDataKind">
+        <!-- Mime-type handled by this mapping. -->
+        <attr name="android:mimeType" />
+        <!-- Icon used to represent data of this kind. -->
+        <attr name="android:icon" />
+        <!-- Column in data table that summarizes this data. -->
+        <attr name="android:summaryColumn" />
+        <!-- Column in data table that contains details for this data. -->
+        <attr name="android:detailColumn" />
+    </declare-styleable>
+
+</resources>

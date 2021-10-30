@@ -26,10 +26,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alexstyl:contactstore:0.3.3'
+    implementation 'com.alexstyl:contactstore:0.4.0'
     
     // optional dependency for tests
-    testImplementation 'com.alexstyl:contactstore-test:0.3.3'
+    testImplementation 'com.alexstyl:contactstore-test:0.4.0'
 }
 ```
 

@@ -242,7 +242,11 @@ internal class ContactQueries(
                         lastName = row[NameColumns.FAMILY_NAME]
                         prefix = row[NameColumns.PREFIX]
                         suffix = row[NameColumns.SUFFIX]
-                        fullNameStyle = row[NameColumns.FULL_NAME_STYLE].toInt()
+                        fullNameStyle = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            row[NameColumns.FULL_NAME_STYLE].toInt()
+                        } else {
+                            FullNameStyle.UNDEFINED
+                        }
                         phoneticFirstName = row[NameColumns.PHONETIC_GIVEN_NAME]
                         phoneticMiddleName = row[NameColumns.PHONETIC_MIDDLE_NAME]
                         phoneticLastName = row[NameColumns.PHONETIC_FAMILY_NAME]

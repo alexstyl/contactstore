@@ -136,12 +136,8 @@ internal class ContactQueries(
 
     private fun buildColumnsToFetchSelection(predicate: ContactLookup): String {
         return buildString {
-            append("${Contacts.IN_VISIBLE_GROUP} = 1")
             predicate.inContactIds?.let { contactIds ->
-                if (isNotEmpty()) {
-                    append(" AND")
-                }
-                append(" ${Contacts._ID} IN ${valueIn(contactIds)}")
+                append("${Contacts._ID} IN ${valueIn(contactIds)}")
             }
             predicate.isFavorite?.let { isTrue ->
                 if (isNotEmpty()) {

@@ -29,12 +29,12 @@ data class WebAddress(val raw: String)
 
 data class PostalAddress(
     val street: String,
-    val poBox: String,
-    val neighborhood: String,
-    val city: String,
-    val region: String,
-    val postCode: String,
-    val country: String
+    val poBox: String = "",
+    val neighborhood: String = "",
+    val city: String = "",
+    val region: String = "",
+    val postCode: String = "",
+    val country: String = "",
 )
 
 @Suppress("MagicNumber")

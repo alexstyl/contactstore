@@ -35,4 +35,23 @@ class SaveRequest {
     fun delete(contactId: Long) {
         _requests.add(Delete(contactId))
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as SaveRequest
+
+        if (_requests != other._requests) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return _requests.hashCode()
+    }
+
+    override fun toString(): String {
+        return "SaveRequest(_requests=$_requests)"
+    }
 }

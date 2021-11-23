@@ -33,7 +33,7 @@ dependencies {
 }
 ```
 
-## How to fetch contacts using Contact Store?
+## How to fetch contacts using Contact Store
 
 The following sample returns a list of all contacts in the device. Each contact will contain an id,
 a display name and whether they are starred or not:
@@ -89,7 +89,7 @@ store.fetchContacts(
 Always make sure to query only the columns that you need. In the case where a property is accessed
 which was not queried, an `Exception` is thrown.
 
-## How to edit contacts using Contact Store?
+## How to modify contacts using Contact Store
 
 The following snippets show how to edit contacts in the device. ⚠️ The user must have already
 granted

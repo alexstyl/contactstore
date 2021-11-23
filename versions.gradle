@@ -12,7 +12,6 @@ ext {
 
     gradlePluginVersion = '7.0.3'
     androidBuildToolsVersion = '30.0.2'
-    hiltVersion = '1.0.0'
     kotlinVersion = '1.5.31'
     coroutinesVersion = '1.5.2'
     junitVersion = '4.13.2'

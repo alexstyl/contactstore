@@ -101,18 +101,35 @@ permission before calling `execute()`.
 ```kotlin
 val store = ContactStore.newInstance(application)
 
-store.execute(SaveRequest().apply {
-    insert(MutableContact().apply {
+store.execute {
+    insert {
         firstName = "Paolo"
         lastName = "Melendez"
-        phones.add(
-            LabeledValue(
-                value = PhoneNumber("555"),
-                label = Label.PhoneNumberMobile
-            )
+        phone(
+            value = PhoneNumber("555"),
+            label = Label.PhoneNumberMobile
         )
-    })
-})
+        mail(
+            address = "paolo@paolo.com",
+            label = Label.LocationWork
+        )
+        event(
+            dayOfMonth = 23,
+            month = 11,
+            year = 2021,
+            label = Label.DateBirthday
+        )
+        postalAddress(
+            street = "85 Somewhere Str",
+            label = Label.LocationHome
+        )
+        webAddress(
+            address = "paolo@paolo.com",
+            label = Label.LocationWork
+        )
+        groupMembership(groupId = 123)
+    }
+}
 ```
 
 ### Update an existing contact
@@ -132,11 +149,11 @@ if (foundContacts.isEmpty()) return // the contact was not found
 
 val contact = foundContacts.first()
 
-store.execute(SaveRequest().apply {
+store.execute {
     update(contact.mutableCopy().apply {
         note = Note("To infinity and beyond!")
     })
-})
+}
 ```
 
 ### Deleting a contact
@@ -144,9 +161,9 @@ store.execute(SaveRequest().apply {
 The following code shows how to delete a contact by id:
 
 ```kotlin
-store.execute(SaveRequest().apply {
+store.execute {
     delete(contactId = 5L)
-})
+}
 ```
 
 ## Using ContactStore in unit tests (experimental)

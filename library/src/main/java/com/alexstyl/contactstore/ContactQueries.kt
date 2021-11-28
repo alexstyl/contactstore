@@ -344,7 +344,8 @@ internal class ContactQueries(
                                 accountType = row[RawContacts.ACCOUNT_TYPE],
                                 summary = row[mimeType.summaryColumn],
                                 detail = row[mimeType.detailColumn],
-                                icon = mimeType.icon
+                                icon = mimeType.icon,
+                                mimeType = mimeType.mimetype
                             )
                             linkedAccountValues.add(value)
                         }

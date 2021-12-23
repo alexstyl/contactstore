@@ -1,16 +1,5 @@
 package com.alexstyl.contactstore
 
-import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
-import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
-import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupColumns
-import android.provider.ContactsContract.CommonDataKinds.Nickname as NicknameColumns
-import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
-import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
-import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
-import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
-import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
-import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
-import android.provider.ContactsContract.CommonDataKinds.Website as WebColumns
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.database.Cursor
@@ -38,6 +27,17 @@ import com.alexstyl.contactstore.utils.valueIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.io.InputStream
+import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
+import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupColumns
+import android.provider.ContactsContract.CommonDataKinds.Nickname as NicknameColumns
+import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
+import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
+import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
+import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
+import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
+import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
+import android.provider.ContactsContract.CommonDataKinds.Website as WebColumns
 
 internal class ContactQueries(
     private val contentResolver: ContentResolver,
@@ -233,10 +233,11 @@ internal class ContactQueries(
                         nickname = row[NicknameColumns.NAME]
                     }
                     GroupColumns.CONTENT_ITEM_TYPE -> {
-                        val groupId = row[GroupColumns.GROUP_ROW_ID].toLong()
-                        val id = row[GroupColumns._ID].toLong()
-                        groupIds.add(GroupMembership(_id = id, groupId = groupId))
-                        Unit
+                        val groupId = row[GroupColumns.GROUP_ROW_ID].toLongOrNull()
+                        val id = row[GroupColumns._ID].toLongOrNull()
+                        if (groupId != null && id != null) {
+                            groupIds.add(GroupMembership(_id = id, groupId = groupId))
+                        }
                     }
                     NameColumns.CONTENT_ITEM_TYPE -> {
                         firstName = row[NameColumns.GIVEN_NAME]
@@ -245,21 +246,21 @@ internal class ContactQueries(
                         prefix = row[NameColumns.PREFIX]
                         suffix = row[NameColumns.SUFFIX]
                         fullNameStyle = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            row[NameColumns.FULL_NAME_STYLE].toInt()
+                            row[NameColumns.FULL_NAME_STYLE].toIntOrNull() ?: FullNameStyle.UNDEFINED
                         } else {
                             FullNameStyle.UNDEFINED
                         }
                         phoneticFirstName = row[NameColumns.PHONETIC_GIVEN_NAME]
                         phoneticMiddleName = row[NameColumns.PHONETIC_MIDDLE_NAME]
                         phoneticLastName = row[NameColumns.PHONETIC_FAMILY_NAME]
-                        phoneticNameStyle = row[NameColumns.PHONETIC_NAME_STYLE].toInt()
+                        phoneticNameStyle = row[NameColumns.PHONETIC_NAME_STYLE].toIntOrNull() ?: PhoneticNameStyle.UNDEFINED
                     }
                     PhotoColumns.CONTENT_ITEM_TYPE -> {
                         imageData = loadContactPhoto(contactId)
                     }
                     PhoneColumns.CONTENT_ITEM_TYPE -> {
-                        val phoneNumberString = row[PhoneColumns.NUMBER]
-                        val id = row[PhoneColumns._ID].toLong()
+                        val phoneNumberString: String = row[PhoneColumns.NUMBER]
+                        val id: Long? = row[PhoneColumns._ID].toLongOrNull()
                         if (phoneNumberString.isNotBlank()) {
                             val value = PhoneNumber(phoneNumberString)
                             val phoneEntry = LabeledValue(value, phoneLabelFrom(row), id)
@@ -268,7 +269,7 @@ internal class ContactQueries(
                     }
                     EmailColumns.CONTENT_ITEM_TYPE -> {
                         val mailAddressString = row[EmailColumns.ADDRESS]
-                        val id = row[EmailColumns._ID].toLong()
+                        val id = row[EmailColumns._ID].toLongOrNull()
                         if (mailAddressString.isNotBlank()) {
                             val mailAddress = MailAddress(mailAddressString)
                             mails.add(
@@ -282,7 +283,7 @@ internal class ContactQueries(
                     }
                     WebColumns.CONTENT_ITEM_TYPE -> {
                         val webAddressString = row[WebColumns.URL]
-                        val id = row[WebColumns._ID].toLong()
+                        val id = row[WebColumns._ID].toLongOrNull()
                         if (webAddressString.isNotBlank()) {
                             val mailAddress = WebAddress(webAddressString)
                             webAddresses.add(
@@ -298,7 +299,7 @@ internal class ContactQueries(
                     }
                     EventColumns.CONTENT_ITEM_TYPE -> {
                         val parsedDate = dateParser.parse(row[EventColumns.START_DATE])
-                        val id = row[EventColumns._ID].toLong()
+                        val id = row[EventColumns._ID].toLongOrNull()
                         if (parsedDate != null) {
                             val entry = LabeledValue(parsedDate, eventLabelFrom(row), id)
                             events.add(entry)
@@ -314,7 +315,7 @@ internal class ContactQueries(
                             val region = row[PostalColumns.REGION].trim()
                             val postCode = row[PostalColumns.POSTCODE].trim()
                             val country = row[PostalColumns.COUNTRY].trim()
-                            val id = row[PostalColumns._ID].toLong()
+                            val id = row[PostalColumns._ID].toLongOrNull()
                             val value = PostalAddress(
                                 street = street,
                                 poBox = poBox,
@@ -340,7 +341,7 @@ internal class ContactQueries(
                         val mimeType = linkedAccountMimeTypes[mimetype]
                         if (mimeType != null) {
                             val value = LinkedAccountValue(
-                                id = row[Contacts.Data._ID].toLong(),
+                                id = row[Contacts.Data._ID].toLongOrNull() ?: return@iterate,
                                 accountType = row[RawContacts.ACCOUNT_TYPE],
                                 summary = row[mimeType.summaryColumn],
                                 detail = row[mimeType.detailColumn],
@@ -457,7 +458,7 @@ internal class ContactQueries(
     private fun postalAddressLabelFrom(cursor: Cursor): Label {
         return when (
             cursor[PostalColumns.TYPE]
-                .ifBlank { "${PostalColumns.TYPE_CUSTOM}" }.toInt()) {
+                .ifBlank { "${PostalColumns.TYPE_CUSTOM}" }.toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[PostalColumns.LABEL])
             PostalColumns.TYPE_HOME -> Label.LocationHome
             PostalColumns.TYPE_WORK -> Label.LocationWork
@@ -467,7 +468,7 @@ internal class ContactQueries(
     }
 
     private fun eventLabelFrom(cursor: Cursor): Label {
-        return when (cursor[EventColumns.TYPE].ifBlank { "${EventColumns.TYPE_CUSTOM}" }.toInt()) {
+        return when (cursor[EventColumns.TYPE].ifBlank { "${EventColumns.TYPE_CUSTOM}" }.toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[EventColumns.LABEL])
             EventColumns.TYPE_ANNIVERSARY -> Label.DateAnniversary
             EventColumns.TYPE_BIRTHDAY -> Label.DateBirthday
@@ -477,7 +478,7 @@ internal class ContactQueries(
     }
 
     private fun mailLabelFrom(cursor: Cursor): Label {
-        return when (cursor[EmailColumns.TYPE].ifBlank { "${EmailColumns.TYPE_OTHER}" }.toInt()) {
+        return when (cursor[EmailColumns.TYPE].ifBlank { "${EmailColumns.TYPE_OTHER}" }.toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[EmailColumns.LABEL])
             EmailColumns.TYPE_HOME -> Label.LocationHome
             EmailColumns.TYPE_WORK -> Label.LocationWork
@@ -487,7 +488,7 @@ internal class ContactQueries(
     }
 
     private fun webLabelFrom(cursor: Cursor): Label {
-        return when (cursor[WebColumns.TYPE].ifBlank { "${WebColumns.TYPE_OTHER}" }.toInt()) {
+        return when (cursor[WebColumns.TYPE].ifBlank { "${WebColumns.TYPE_OTHER}" }.toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[WebColumns.LABEL])
             WebColumns.TYPE_HOME -> Label.LocationHome
             WebColumns.TYPE_HOMEPAGE -> Label.WebsiteHomePage
@@ -500,7 +501,7 @@ internal class ContactQueries(
     }
 
     private fun phoneLabelFrom(cursor: Cursor): Label {
-        return when (cursor[PhoneColumns.TYPE].ifBlank { "${PhoneColumns.TYPE_OTHER}" }.toInt()) {
+        return when (cursor[PhoneColumns.TYPE].ifBlank { "${PhoneColumns.TYPE_OTHER}" }.toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[PhoneColumns.LABEL])
             PhoneColumns.TYPE_HOME -> Label.LocationHome
             PhoneColumns.TYPE_MOBILE -> Label.PhoneNumberMobile

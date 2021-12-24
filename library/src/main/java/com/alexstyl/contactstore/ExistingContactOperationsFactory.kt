@@ -1,15 +1,5 @@
 package com.alexstyl.contactstore
 
-import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
-import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
-import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupsColumns
-import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
-import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
-import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
-import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
-import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
-import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
-import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newDelete
 import android.content.ContentProviderOperation.newInsert
@@ -34,6 +24,16 @@ import com.alexstyl.contactstore.utils.get
 import com.alexstyl.contactstore.utils.runQuery
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
+import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupsColumns
+import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
+import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
+import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
+import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
+import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
+import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
+import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
 
 internal class ExistingContactOperationsFactory(
     private val contentResolver: ContentResolver,
@@ -346,7 +346,7 @@ internal class ExistingContactOperationsFactory(
             selection = "${RawContacts.CONTACT_ID} = $contactID"
         )?.use {
             it.moveToFirst()
-            it[RawContacts._ID].toLong()
+            it[RawContacts._ID].toLongOrNull()
         } ?: -1L
     }
 

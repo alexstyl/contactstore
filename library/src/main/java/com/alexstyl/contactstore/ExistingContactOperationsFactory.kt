@@ -3,6 +3,7 @@ package com.alexstyl.contactstore
 import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
 import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupsColumns
+import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
 import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
 import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
@@ -10,7 +11,6 @@ import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
-import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newDelete
 import android.content.ContentProviderOperation.newInsert
@@ -369,7 +369,7 @@ internal class ExistingContactOperationsFactory(
             selection = "${RawContacts.CONTACT_ID} = $contactID"
         )?.use {
             it.moveToFirst()
-            it[RawContacts._ID].toLong()
+            it[RawContacts._ID].toLongOrNull()
         } ?: -1L
     }
 

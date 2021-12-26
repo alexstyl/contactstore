@@ -13,7 +13,7 @@ internal fun ContentResolver.uriFlow(uri: Uri): Flow<Unit> {
     return callbackFlow {
         val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
-                if (!channel.isClosedForSend) {
+                if (channel.isClosedForSend.not()) {
                     trySend(Unit)
                 }
             }

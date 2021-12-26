@@ -32,13 +32,18 @@ internal class NewContactOperationsFactory {
                 contact.postalAddresses.forEach { add(insertPostalOperation(it)) }
                 contact.note?.run { add(insertNoteOperation(this)) }
 
-                if (contact.organization != null || contact.jobTitle != null) {
+                if (hasOrganizationDetails(contact)) {
                     add(insertOrganization(contact))
                 }
             }
         }
             .filterNotNull()
             .toList()
+    }
+
+    private fun hasOrganizationDetails(contact: MutableContact): Boolean {
+        return (contact.organization.isNullOrBlank().not()
+                || contact.jobTitle.isNullOrBlank().not())
     }
 
     private fun insertOrganization(contact: Contact): ContentProviderOperation {

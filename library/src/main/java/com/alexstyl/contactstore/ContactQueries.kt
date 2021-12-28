@@ -262,22 +262,24 @@ internal class ContactQueries(
                         prefix = row[NameColumns.PREFIX]
                         suffix = row[NameColumns.SUFFIX]
                         fullNameStyle = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            row[NameColumns.FULL_NAME_STYLE].toIntOrNull() ?: FullNameStyle.UNDEFINED
+                            row[NameColumns.FULL_NAME_STYLE].toIntOrNull()
+                                ?: FullNameStyle.UNDEFINED
                         } else {
                             FullNameStyle.UNDEFINED
                         }
                         phoneticFirstName = row[NameColumns.PHONETIC_GIVEN_NAME]
                         phoneticMiddleName = row[NameColumns.PHONETIC_MIDDLE_NAME]
                         phoneticLastName = row[NameColumns.PHONETIC_FAMILY_NAME]
-                        phoneticNameStyle = row[NameColumns.PHONETIC_NAME_STYLE].toIntOrNull() ?: PhoneticNameStyle.UNDEFINED
+                        phoneticNameStyle = row[NameColumns.PHONETIC_NAME_STYLE].toIntOrNull()
+                            ?: PhoneticNameStyle.UNDEFINED
                     }
                     PhotoColumns.CONTENT_ITEM_TYPE -> {
                         imageData = loadContactPhoto(contactId)
                     }
                     PhoneColumns.CONTENT_ITEM_TYPE -> {
-                        val phoneNumberString: String = row[PhoneColumns.NUMBER]
-                        val id: Long? = row[PhoneColumns._ID].toLongOrNull()
-                        if (phoneNumberString.isNotBlank()) {
+                        val phoneNumberString = row[PhoneColumns.NUMBER]
+                        val id = row[PhoneColumns._ID].toLongOrNull()
+                        if (phoneNumberString.isNotBlank() && id != null) {
                             val value = PhoneNumber(phoneNumberString)
                             val phoneEntry = LabeledValue(value, phoneLabelFrom(row), id)
                             phones.add(phoneEntry)
@@ -286,7 +288,7 @@ internal class ContactQueries(
                     EmailColumns.CONTENT_ITEM_TYPE -> {
                         val mailAddressString = row[EmailColumns.ADDRESS]
                         val id = row[EmailColumns._ID].toLongOrNull()
-                        if (mailAddressString.isNotBlank()) {
+                        if (mailAddressString.isNotBlank() && id != null) {
                             val mailAddress = MailAddress(mailAddressString)
                             mails.add(
                                 LabeledValue(
@@ -300,7 +302,7 @@ internal class ContactQueries(
                     WebColumns.CONTENT_ITEM_TYPE -> {
                         val webAddressString = row[WebColumns.URL]
                         val id = row[WebColumns._ID].toLongOrNull()
-                        if (webAddressString.isNotBlank()) {
+                        if (webAddressString.isNotBlank() && id != null) {
                             val mailAddress = WebAddress(webAddressString)
                             webAddresses.add(
                                 LabeledValue(mailAddress, webLabelFrom(row), id)
@@ -316,14 +318,15 @@ internal class ContactQueries(
                     EventColumns.CONTENT_ITEM_TYPE -> {
                         val parsedDate = dateParser.parse(row[EventColumns.START_DATE])
                         val id = row[EventColumns._ID].toLongOrNull()
-                        if (parsedDate != null) {
+                        if (parsedDate != null && id != null) {
                             val entry = LabeledValue(parsedDate, eventLabelFrom(row), id)
                             events.add(entry)
                         }
                     }
                     PostalColumns.CONTENT_ITEM_TYPE -> {
                         val formattedAddress = row[PostalColumns.FORMATTED_ADDRESS]
-                        if (formattedAddress.isNotBlank()) {
+                        val id = row[PostalColumns._ID].toLongOrNull()
+                        if (formattedAddress.isNotBlank() && id != null) {
                             val street = row[PostalColumns.STREET].trim()
                             val poBox = row[PostalColumns.POBOX].trim()
                             val neighborhood = row[PostalColumns.NEIGHBORHOOD].trim()
@@ -331,7 +334,6 @@ internal class ContactQueries(
                             val region = row[PostalColumns.REGION].trim()
                             val postCode = row[PostalColumns.POSTCODE].trim()
                             val country = row[PostalColumns.COUNTRY].trim()
-                            val id = row[PostalColumns._ID].toLongOrNull()
                             val value = PostalAddress(
                                 street = street,
                                 poBox = poBox,
@@ -355,27 +357,31 @@ internal class ContactQueries(
                     }
                     ImColumns.CONTENT_ITEM_TYPE -> {
                         val imAddressString = row[ImColumns.DATA]
-                        val protocol = getImProtocol(row)
-                        val id = row[ImColumns._ID].toLong()
-                        if (imAddressString.isNotBlank()) {
+                        val id = row[ImColumns._ID].toLongOrNull()
+                        if (imAddressString.isNotBlank() && id != null) {
+                            val protocol = getImProtocol(row)
                             val imAddress = ImAddress(raw = imAddressString, protocol = protocol)
+                            val label = imLabelFrom(row)
                             imAddresses.add(
-                                LabeledValue(imAddress, imLabelFrom(row), id)
+                                LabeledValue(imAddress, label, id)
                             )
                         }
                     }
                     else -> {
                         val mimeType = linkedAccountMimeTypes[mimetype]
                         if (mimeType != null) {
-                            val value = LinkedAccountValue(
-                                id = row[Contacts.Data._ID].toLongOrNull() ?: return@iterate,
-                                accountType = row[RawContacts.ACCOUNT_TYPE],
-                                summary = row[mimeType.summaryColumn],
-                                detail = row[mimeType.detailColumn],
-                                icon = mimeType.icon,
-                                mimeType = mimeType.mimetype
-                            )
-                            linkedAccountValues.add(value)
+                            val id = row[Contacts.Data._ID].toLongOrNull()
+                            if (id != null) {
+                                val value = LinkedAccountValue(
+                                    id = id,
+                                    accountType = row[RawContacts.ACCOUNT_TYPE],
+                                    summary = row[mimeType.summaryColumn],
+                                    detail = row[mimeType.detailColumn],
+                                    icon = mimeType.icon,
+                                    mimeType = mimeType.mimetype
+                                )
+                                linkedAccountValues.add(value)
+                            }
                         }
                     }
                 }
@@ -507,7 +513,8 @@ internal class ContactQueries(
     }
 
     private fun eventLabelFrom(cursor: Cursor): Label {
-        return when (cursor[EventColumns.TYPE].ifBlank { "${EventColumns.TYPE_CUSTOM}" }.toIntOrNull()) {
+        return when (cursor[EventColumns.TYPE].ifBlank { "${EventColumns.TYPE_CUSTOM}" }
+            .toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[EventColumns.LABEL])
             EventColumns.TYPE_ANNIVERSARY -> Label.DateAnniversary
             EventColumns.TYPE_BIRTHDAY -> Label.DateBirthday
@@ -517,7 +524,8 @@ internal class ContactQueries(
     }
 
     private fun mailLabelFrom(cursor: Cursor): Label {
-        return when (cursor[EmailColumns.TYPE].ifBlank { "${EmailColumns.TYPE_OTHER}" }.toIntOrNull()) {
+        return when (cursor[EmailColumns.TYPE].ifBlank { "${EmailColumns.TYPE_OTHER}" }
+            .toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[EmailColumns.LABEL])
             EmailColumns.TYPE_HOME -> Label.LocationHome
             EmailColumns.TYPE_WORK -> Label.LocationWork
@@ -549,7 +557,8 @@ internal class ContactQueries(
     }
 
     private fun phoneLabelFrom(cursor: Cursor): Label {
-        return when (cursor[PhoneColumns.TYPE].ifBlank { "${PhoneColumns.TYPE_OTHER}" }.toIntOrNull()) {
+        return when (cursor[PhoneColumns.TYPE].ifBlank { "${PhoneColumns.TYPE_OTHER}" }
+            .toIntOrNull()) {
             BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[PhoneColumns.LABEL])
             PhoneColumns.TYPE_HOME -> Label.LocationHome
             PhoneColumns.TYPE_MOBILE -> Label.PhoneNumberMobile

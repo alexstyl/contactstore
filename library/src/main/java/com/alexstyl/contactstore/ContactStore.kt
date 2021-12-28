@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ContactStore {
 
+    @Deprecated(
+        "Prefer the version of this function that receives a lambda",
+        ReplaceWith("execute {}")
+    )
     suspend fun execute(request: SaveRequest)
 
     /**

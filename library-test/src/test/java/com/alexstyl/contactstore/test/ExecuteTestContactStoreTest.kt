@@ -73,6 +73,7 @@ class ExecuteTestContactStoreTest {
                 displayName = "Prefix Peter Mid Melendez, Suffix",
                 isStarred = false,
                 columns = emptyList(),
+                lookupKey = null,
             ),
             kimClay()
         )
@@ -88,6 +89,7 @@ class ExecuteTestContactStoreTest {
         displayName = "Kim Clay",
         isStarred = false,
         columns = emptyList(),
+        lookupKey = null,
     )
 
     private fun paoloMelendez() = PartialContact(
@@ -95,5 +97,6 @@ class ExecuteTestContactStoreTest {
         displayName = "Paolo Melendez",
         isStarred = false,
         columns = emptyList(),
+        lookupKey = null,
     )
 }

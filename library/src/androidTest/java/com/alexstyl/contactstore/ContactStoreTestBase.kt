@@ -77,6 +77,7 @@ abstract class ContactStoreTestBase {
     ): PartialContact {
         return PartialContact(
             contactId = IGNORED,
+            lookupKey = null,
             displayName = displayName,
             prefix = prefix,
             middleName = middleName,

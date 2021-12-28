@@ -64,3 +64,6 @@ data class ImAddress(
 internal fun GroupMembership.requireId(): Long {
     return requireNotNull(_id)
 }
+
+@JvmInline
+value class LookupKey(val value: String)

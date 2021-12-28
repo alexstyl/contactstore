@@ -230,6 +230,7 @@ class TestContactStore(
             PartialContact(
                 displayName = displayName(it),
                 contactId = it.contactId,
+                lookupKey = null,
                 columns = columnsToFetch,
                 isStarred = it.isStarred,
 

@@ -36,6 +36,7 @@ class ColumnTestContactStoreTest {
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = emptyList(),
+                lookupKey = null,
             )
         )
     }
@@ -62,7 +63,8 @@ class ColumnTestContactStoreTest {
                 firstName = "Paolo",
                 middleName = "Mid",
                 lastName = "Melendez",
-                suffix = "Suffix"
+                suffix = "Suffix",
+                lookupKey = null,
             )
         )
     }
@@ -85,7 +87,8 @@ class ColumnTestContactStoreTest {
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Phones),
-                phones = ContactFixtures.PAOLO_MELENDEZ.phones
+                phones = ContactFixtures.PAOLO_MELENDEZ.phones,
+                lookupKey = null,
             )
         )
     }
@@ -110,7 +113,8 @@ class ColumnTestContactStoreTest {
                 columns = listOf(ContactColumn.Mails),
                 mails = listOf(
                     LabeledValue(MailAddress("hi@mail.com"), Label.LocationHome)
-                )
+                ),
+                lookupKey = null,
             )
         )
     }
@@ -134,7 +138,8 @@ class ColumnTestContactStoreTest {
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Organization),
                 organization = "Organization",
-                jobTitle = "Job Title"
+                jobTitle = "Job Title",
+                lookupKey = null,
             )
         )
     }
@@ -157,7 +162,8 @@ class ColumnTestContactStoreTest {
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Image),
-                imageData = ImageData("imagedata".toByteArray())
+                imageData = ImageData("imagedata".toByteArray()),
+                lookupKey = null,
             )
         )
     }
@@ -180,7 +186,8 @@ class ColumnTestContactStoreTest {
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Note),
-                note = Note("note")
+                note = Note("note"),
+                lookupKey = null,
             )
         )
     }
@@ -205,7 +212,8 @@ class ColumnTestContactStoreTest {
                 columns = listOf(ContactColumn.PostalAddresses),
                 postalAddresses = listOf(
                     LabeledValue(PostalAddress("SomeStreet 55"), Label.LocationHome)
-                )
+                ),
+                lookupKey = null,
             )
         )
     }
@@ -228,7 +236,8 @@ class ColumnTestContactStoreTest {
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Nickname),
-                nickname = "Nickname"
+                nickname = "Nickname",
+                lookupKey = null,
             )
         )
     }
@@ -253,7 +262,8 @@ class ColumnTestContactStoreTest {
                 columns = listOf(ContactColumn.WebAddresses),
                 webAddresses = listOf(
                     LabeledValue(WebAddress("www.web.com"), Label.WebsiteHomePage)
-                )
+                ),
+                lookupKey = null,
             )
         )
     }
@@ -278,7 +288,8 @@ class ColumnTestContactStoreTest {
                 columns = listOf(ContactColumn.GroupMemberships),
                 groups = listOf(
                     GroupMembership(groupId = 10)
-                )
+                ),
+                lookupKey = null,
             )
         )
     }

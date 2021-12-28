@@ -89,6 +89,7 @@ internal class ContactQueries(
             cursor.mapEachRow {
                 PartialContact(
                     contactId = SimpleQuery.getContactId(it),
+                    lookupKey = SimpleQuery.getLookupKey(it),
                     displayName = SimpleQuery.getDisplayName(it),
                     isStarred = SimpleQuery.getIsStarred(it),
                     columns = emptyList()
@@ -107,6 +108,7 @@ internal class ContactQueries(
             cursor.mapEachRow {
                 PartialContact(
                     contactId = SimpleQuery.getContactId(it),
+                    lookupKey = SimpleQuery.getLookupKey(it),
                     displayName = SimpleQuery.getDisplayName(it),
                     isStarred = SimpleQuery.getIsStarred(it),
                     columns = emptyList()
@@ -123,7 +125,8 @@ internal class ContactQueries(
             projection = arrayOf(
                 EmailColumns.CONTACT_ID,
                 EmailColumns.DISPLAY_NAME_PRIMARY,
-                EmailColumns.STARRED
+                EmailColumns.STARRED,
+                EmailColumns.LOOKUP_KEY,
             ),
             selection = null,
             sortOrder = Contacts.DISPLAY_NAME_PRIMARY
@@ -133,6 +136,9 @@ internal class ContactQueries(
                     contactId = it.getLong(0),
                     displayName = it.getString(1),
                     isStarred = it.getInt(2) == 1,
+                    lookupKey = it.getString(3)?.let { raw ->
+                        LookupKey(raw)
+                    },
                     columns = emptyList()
                 )
             }
@@ -161,7 +167,8 @@ internal class ContactQueries(
             projection = arrayOf(
                 PHONE_LOOKUP_CONTACT_ID,
                 ContactsContract.PhoneLookup.DISPLAY_NAME_PRIMARY,
-                ContactsContract.PhoneLookup.STARRED
+                ContactsContract.PhoneLookup.STARRED,
+                ContactsContract.PhoneLookup.LOOKUP_KEY,
             ),
             selection = null,
             sortOrder = Contacts.DISPLAY_NAME_PRIMARY
@@ -171,6 +178,7 @@ internal class ContactQueries(
                     contactId = it.getLong(0),
                     displayName = it.getString(1),
                     isStarred = it.getInt(2) == 1,
+                    lookupKey = it.getString(3)?.let { raw -> LookupKey(raw) },
                     columns = emptyList()
                 )
             }
@@ -188,6 +196,7 @@ internal class ContactQueries(
             cursor.mapEachRow {
                 PartialContact(
                     contactId = SimpleQuery.getContactId(it),
+                    lookupKey = SimpleQuery.getLookupKey(it),
                     displayName = SimpleQuery.getDisplayName(it),
                     isStarred = SimpleQuery.getIsStarred(it),
                     columns = emptyList()
@@ -368,6 +377,7 @@ internal class ContactQueries(
             }
             PartialContact(
                 contactId = contactId,
+                lookupKey = contact.lookupKey,
                 columns = columnsToFetch,
                 isStarred = contact.isStarred,
                 displayName = contact.displayName,
@@ -572,7 +582,8 @@ internal class ContactQueries(
         val PROJECTION = arrayOf(
             Contacts._ID,
             Contacts.DISPLAY_NAME_PRIMARY,
-            Contacts.STARRED
+            Contacts.STARRED,
+            Contacts.LOOKUP_KEY
         )
 
         fun getContactId(it: Cursor): Long {
@@ -585,6 +596,12 @@ internal class ContactQueries(
 
         fun getIsStarred(it: Cursor): Boolean {
             return it.getInt(2) == 1
+        }
+
+        fun getLookupKey(it: Cursor): LookupKey? {
+            return it.getString(3)?.let { raw ->
+                LookupKey(raw)
+            }
         }
     }
 

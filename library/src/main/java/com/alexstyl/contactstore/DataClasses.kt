@@ -65,5 +65,4 @@ internal fun GroupMembership.requireId(): Long {
     return requireNotNull(_id)
 }
 
-@JvmInline
-value class LookupKey(val value: String)
+data class LookupKey(val value: String)

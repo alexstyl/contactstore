@@ -3,6 +3,7 @@ package com.alexstyl.contactstore
 import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
 import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupColumns
+import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.provider.ContactsContract.CommonDataKinds.Nickname as NicknameColumns
 import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
 import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
@@ -13,6 +14,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as Pos
 import android.provider.ContactsContract.CommonDataKinds.Website as WebColumns
 import android.content.ContentResolver
 import android.content.ContentUris
+import android.content.res.Resources
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -41,10 +43,10 @@ import java.io.InputStream
 
 internal class ContactQueries(
     private val contentResolver: ContentResolver,
+    private val resources: Resources,
     private val dateParser: DateParser,
     private val accountInfoResolver: AccountInfoResolver
 ) {
-
     private val linkedAccountMimeTypes by lazy {
         accountInfoResolver
             .fetchLinkedAccountMimeTypes()
@@ -216,6 +218,7 @@ internal class ContactQueries(
             val mails = mutableSetOf<LabeledValue<MailAddress>>()
             val webAddresses = mutableSetOf<LabeledValue<WebAddress>>()
             val events = mutableSetOf<LabeledValue<EventDate>>()
+            val imAddresses = mutableSetOf<LabeledValue<ImAddress>>()
             val postalAddresses = mutableSetOf<LabeledValue<PostalAddress>>()
             var organization: String? = null
             var jobTitle: String? = null
@@ -336,6 +339,17 @@ internal class ContactQueries(
                         organization = row[OrganizationColumns.COMPANY]
                         jobTitle = row[OrganizationColumns.TITLE]
                     }
+                    ImColumns.CONTENT_ITEM_TYPE -> {
+                        val imAddressString = row[ImColumns.DATA]
+                        val protocol = getImProtocol(row)
+                        val id = row[ImColumns._ID].toLong()
+                        if (imAddressString.isNotBlank()) {
+                            val imAddress = ImAddress(raw = imAddressString, protocol = protocol)
+                            imAddresses.add(
+                                LabeledValue(imAddress, imLabelFrom(row), id)
+                            )
+                        }
+                    }
                     else -> {
                         val mimeType = linkedAccountMimeTypes[mimetype]
                         if (mimeType != null) {
@@ -378,8 +392,18 @@ internal class ContactQueries(
                 phoneticMiddleName = phoneticMiddleName,
                 phoneticNameStyle = phoneticNameStyle,
                 groups = groupIds.toList(),
-                linkedAccountValues = linkedAccountValues.toList()
+                linkedAccountValues = linkedAccountValues.toList(),
+                imAddresses = imAddresses.toList(),
             )
+        }
+    }
+
+    private fun getImProtocol(fromCursor: Cursor): String {
+        // starting from Android 31, type will always be PROTOCOL_CUSTOM according to docs
+        // the else covers legacy versions
+        return when (val type = fromCursor[ImColumns.PROTOCOL].toIntOrNull()) {
+            null, ImColumns.PROTOCOL_CUSTOM -> fromCursor[ImColumns.CUSTOM_PROTOCOL]
+            else -> resources.getString(ImColumns.getProtocolLabelResource(type))
         }
     }
 
@@ -412,6 +436,7 @@ internal class ContactQueries(
                 Organization -> OrganizationColumns.CONTENT_ITEM_TYPE
                 Nickname -> NicknameColumns.CONTENT_ITEM_TYPE
                 GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
+                ImAddresses -> ImColumns.CONTENT_ITEM_TYPE
                 is LinkedAccountValues ->
                     error("Tried to map a LinkedAccountColumn as standard column")
             }
@@ -495,6 +520,15 @@ internal class ContactQueries(
             WebColumns.TYPE_FTP -> Label.WebsiteFtp
             WebColumns.TYPE_PROFILE -> Label.WebsiteProfile
             WebColumns.TYPE_WORK -> Label.LocationWork
+            else -> Label.Other
+        }
+    }
+
+    private fun imLabelFrom(cursor: Cursor): Label {
+        return when (cursor[ImColumns.TYPE].ifBlank { "${ImColumns.TYPE_OTHER}" }.toInt()) {
+            BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor[ImColumns.LABEL])
+            ImColumns.TYPE_HOME -> Label.LocationHome
+            ImColumns.TYPE_WORK -> Label.LocationWork
             else -> Label.Other
         }
     }

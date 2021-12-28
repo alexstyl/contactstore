@@ -40,6 +40,7 @@ interface ContactStore {
             val contactsQueries = ContactQueries(
                 contentResolver = contentResolver,
                 dateParser = DateTimeFormatParser(),
+                resources = context.resources,
                 accountInfoResolver = AccountInfoResolver(
                     context,
                     context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager,

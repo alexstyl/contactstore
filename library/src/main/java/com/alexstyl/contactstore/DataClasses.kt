@@ -56,6 +56,11 @@ data class GroupMembership(
     val _id: Long? = null,
 )
 
+data class ImAddress(
+    val raw: String,
+    val protocol: String,
+)
+
 internal fun GroupMembership.requireId(): Long {
     return requireNotNull(_id)
 }

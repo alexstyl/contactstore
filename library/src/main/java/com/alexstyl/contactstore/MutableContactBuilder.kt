@@ -41,6 +41,9 @@ data class MutableContactBuilder(
         get() = _webAddresses.toList()
 
     private val _groups: MutableList<GroupMembership> = mutableListOf()
+    private val _imAddresses: MutableList<LabeledValue<ImAddress>> = mutableListOf()
+    val imAddresses: List<LabeledValue<ImAddress>>
+        get() = _imAddresses.toList()
     val groupMemberships: List<GroupMembership>
         get() = _groups.toList()
 
@@ -106,6 +109,12 @@ data class MutableContactBuilder(
     fun groupMembership(groupId: Long) {
         _groups.add(
             GroupMembership(groupId)
+        )
+    }
+
+    fun imAddress(address: String, protocol: String, label: Label) {
+        _imAddresses.add(
+            LabeledValue(ImAddress(raw = address, protocol = protocol), label)
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactColumn.Note
@@ -179,6 +180,29 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
         val expected = contact.mutableCopy().apply {
             note = Note("To infinity and beyond!")
+        }
+
+        store.execute(SaveRequest().apply {
+            update(expected)
+        })
+
+        assertContactUpdatedNoId(expected)
+    }
+
+    @Test
+    fun updatesIm(): Unit = runBlocking {
+        val contact = buildStoreContact(Names, ImAddresses) {
+            firstName = "Paolo"
+            lastName = "Melendez"
+        }
+
+        val expected = contact.mutableCopy().apply {
+            imAddresses.add(
+                LabeledValue(
+                    ImAddress("address", protocol = "protocol"),
+                    Label.LocationHome
+                )
+            )
         }
 
         store.execute(SaveRequest().apply {

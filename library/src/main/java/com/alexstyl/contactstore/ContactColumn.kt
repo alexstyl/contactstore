@@ -66,6 +66,11 @@ sealed class ContactColumn {
      * See [SyncColumns.ACCOUNT_TYPE][android.provider.ContactsContract.SyncColumns.ACCOUNT_TYPE] for more details.
      */
     data class LinkedAccountValues(val accountType: String) : ContactColumn()
+
+    /**
+     * A column that will populate the [Contact.imAddresses] field of all queried contacts when requested.
+     */
+    object ImAddresses : ContactColumn()
 }
 
 fun standardColumns(): List<ContactColumn> {
@@ -80,7 +85,7 @@ fun standardColumns(): List<ContactColumn> {
         ContactColumn.Nickname,
         ContactColumn.WebAddresses,
         ContactColumn.Organization,
-        ContactColumn.GroupMemberships
+        ContactColumn.GroupMemberships,
+        ContactColumn.ImAddresses,
     )
 }
-

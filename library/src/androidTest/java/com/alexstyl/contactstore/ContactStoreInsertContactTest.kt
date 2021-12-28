@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactColumn.Note
@@ -255,6 +256,33 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
             organization = "Acme",
             jobTitle = "Member",
             columns = listOf(Organization)
+        )
+
+        assertOnlyContact(actual = actual, expected = expected)
+    }
+
+    @Test
+    fun insertsContactWithIm(): Unit = runBlocking {
+        store.execute {
+            insert {
+                imAddress(
+                    address = "ImAddress",
+                    protocol = "protocol",
+                    label = LocationHome
+                )
+            }
+        }
+
+        val actual = store.fetchContacts(columnsToFetch = listOf(ImAddresses)).first()
+        val expected = contact(
+            imAddresses = listOf(
+                LabeledValue(
+                    ImAddress(raw = "ImAddress", protocol = "protocol"),
+                    LocationHome,
+                    id = 0
+                )
+            ),
+            columns = listOf(ImAddresses)
         )
 
         assertOnlyContact(actual = actual, expected = expected)

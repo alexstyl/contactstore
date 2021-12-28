@@ -9,6 +9,7 @@ import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebsiteColumns
+import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newInsert
 import android.provider.ContactsContract.CommonDataKinds.Contactables
@@ -31,6 +32,7 @@ internal class NewContactOperationsFactory {
                 contact.events.forEach { add(insertEventsOperation(it)) }
                 contact.postalAddresses.forEach { add(insertPostalOperation(it)) }
                 contact.note?.run { add(insertNoteOperation(this)) }
+                contact.imAddresses.forEach { add(insertImOperation(it)) }
 
                 if (hasOrganizationDetails(contact)) {
                     add(insertOrganization(contact))
@@ -61,6 +63,16 @@ internal class NewContactOperationsFactory {
             .withValue(Data.MIMETYPE, WebsiteColumns.CONTENT_ITEM_TYPE)
             .withValue(WebsiteColumns.URL, labeledValue.value.raw)
             .withWebsiteLabel(labeledValue.label)
+            .build()
+    }
+
+    private fun insertImOperation(labeledValue: LabeledValue<ImAddress>): ContentProviderOperation {
+        return newInsert(Data.CONTENT_URI)
+            .withValueBackReference(Data.RAW_CONTACT_ID, NEW_CONTACT_INDEX)
+            .withValue(Data.MIMETYPE, ImColumns.CONTENT_ITEM_TYPE)
+            .withValue(ImColumns.DATA, labeledValue.value.raw)
+            .withValue(ImColumns.CUSTOM_PROTOCOL, labeledValue.value.protocol)
+            .withImLabel(labeledValue.label)
             .build()
     }
 
@@ -326,6 +338,33 @@ internal class NewContactOperationsFactory {
                     .withValue(Contactables.LABEL, label.label)
             }
             else -> error("Unsupported Postal Label $label")
+        }
+    }
+
+    private fun ContentProviderOperation.Builder.withImLabel(
+        label: Label
+    ): ContentProviderOperation.Builder {
+        return when(label){
+            Label.LocationHome -> withValue(
+                Contactables.TYPE,
+                ImColumns.TYPE_HOME
+            )
+            Label.LocationWork -> withValue(
+                Contactables.TYPE,
+                ImColumns.TYPE_WORK
+            )
+            Label.Other -> withValue(
+                Contactables.TYPE,
+                ImColumns.TYPE_OTHER
+            )
+            is Label.Custom -> {
+                withValue(
+                    Contactables.TYPE,
+                    Contactables.TYPE_CUSTOM
+                )
+                    .withValue(Contactables.LABEL, label.label)
+            }
+            else -> error("Unsupported Im Label $label")
         }
     }
 

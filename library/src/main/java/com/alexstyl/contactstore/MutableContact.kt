@@ -3,6 +3,7 @@ package com.alexstyl.contactstore
 import android.provider.ContactsContract
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
@@ -14,6 +15,7 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class MutableContact internal constructor(
     override var contactId: Long = -1L,
+    override val lookupKey: LookupKey? = null,
     imageData: ImageData?,
     phones: MutableList<LabeledValue<PhoneNumber>>,
     mails: MutableList<LabeledValue<MailAddress>>,
@@ -37,6 +39,7 @@ class MutableContact internal constructor(
     jobTitle: String?,
     groups: MutableList<GroupMembership>,
     linkedAccountValues: List<LinkedAccountValue>,
+    imAddresses: MutableList<LabeledValue<ImAddress>>,
     override val columns: List<ContactColumn>,
 ) : Contact {
 
@@ -48,6 +51,8 @@ class MutableContact internal constructor(
             by requireColumn(PostalAddresses, postalAddresses)
     override val webAddresses: MutableList<LabeledValue<WebAddress>>
             by requireColumn(WebAddresses, webAddresses)
+    override val imAddresses: MutableList<LabeledValue<ImAddress>>
+            by requireColumn(ImAddresses, imAddresses)
 
     override val linkedAccountValues: List<LinkedAccountValue>
             by requireAnyLinkedAccountColumn(linkedAccountValues)
@@ -95,6 +100,7 @@ class MutableContact internal constructor(
         jobTitle = null,
         groups = mutableListOf(),
         linkedAccountValues = emptyList(),
+        imAddresses = mutableListOf(),
         columns = standardColumns() // allow editing of all columns for new contacts
     )
 

@@ -11,6 +11,7 @@ import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactColumn.Mails
@@ -25,6 +26,8 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 interface Contact {
     val contactId: Long
     val displayName: String?
+
+    val lookupKey: LookupKey?
 
     /**
      * Requires: [ContactColumn.Names]
@@ -129,6 +132,11 @@ interface Contact {
     val linkedAccountValues: List<LinkedAccountValue>
 
     /**
+     * Requires : [ContactColumn.ImAddresses]
+     */
+    val imAddresses: List<LabeledValue<ImAddress>>
+
+    /**
      * Requires: [ContactColumn.Note]
      */
     val note: com.alexstyl.contactstore.Note?
@@ -180,6 +188,7 @@ fun Contact.mutableCopy(): MutableContact {
             webAddresses.toMutableList()
         else
             mutableListOf(),
+        imAddresses = if (containsColumn(ImAddresses)) imAddresses.toMutableList() else mutableListOf(),
         note = if (containsColumn(Note)) note else null,
         columns = columns,
         middleName = if (containsColumn(Names)) middleName else null,

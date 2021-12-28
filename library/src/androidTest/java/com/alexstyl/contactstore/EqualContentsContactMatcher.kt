@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
@@ -77,6 +78,10 @@ class EqualContentsContactMatcher(
                     putCommaIfNeeded()
                     append("note = $note")
                 }
+                if (containsColumn(ImAddresses)) {
+                    putCommaIfNeeded()
+                    append("imAddresses = ${labeledValues(imAddresses)}")
+                }
             }
         }
     }
@@ -112,6 +117,10 @@ class EqualContentsContactMatcher(
                     mismatchDescription.appendText("phones were ${labeledValues(actual.phones)}")
                     false
                 }
+                imAreDifferent(actual) -> {
+                    mismatchDescription.appendText("imAddresses were ${labeledValues(actual.imAddresses)}")
+                    false
+                }
                 organizationIsDifferent(actual) -> {
                     mismatchDescription.appendText("organization was ${actual.organization}, jobTitle was ${actual.jobTitle}")
                     false
@@ -143,6 +152,13 @@ class EqualContentsContactMatcher(
                 else -> true
             }
         }
+    }
+
+    private fun imAreDifferent(actual: Contact): Boolean {
+        if (expected.containsColumn(ImAddresses).not()) {
+            return false
+        }
+        return areLabeledValuesDifferentIgnoringId(actual.imAddresses, expected.imAddresses)
     }
 
     private fun namesAreDifferent(actual: Contact): Boolean {

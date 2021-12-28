@@ -1,5 +1,16 @@
 package com.alexstyl.contactstore
 
+import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
+import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupsColumns
+import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
+import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
+import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
+import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
+import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
+import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
+import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
+import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newDelete
 import android.content.ContentProviderOperation.newInsert
@@ -12,6 +23,7 @@ import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.RawContacts
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
@@ -24,16 +36,6 @@ import com.alexstyl.contactstore.utils.get
 import com.alexstyl.contactstore.utils.runQuery
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
-import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
-import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupsColumns
-import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
-import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
-import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
-import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
-import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
-import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
-import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
 
 internal class ExistingContactOperationsFactory(
     private val contentResolver: ContentResolver,
@@ -59,6 +61,7 @@ internal class ExistingContactOperationsFactory(
                 updateEvents(newContact = contact, oldContact = existingContact) +
                 updateGroupMembership(newContact = contact, oldContact = existingContact) +
                 updatePostalAddresses(newContact = contact, oldContact = existingContact) +
+                updateImAddresses(newContact = contact, oldContact = existingContact) +
                 replaceWebAddresses(newContact = contact, oldContact = existingContact)
     }
 
@@ -284,6 +287,26 @@ internal class ExistingContactOperationsFactory(
         }
     }
 
+    private fun updateImAddresses(
+        newContact: MutableContact,
+        oldContact: Contact
+    ): List<ContentProviderOperation> {
+        if (newContact.containsColumn(ImAddresses).not()) {
+            return emptyList()
+        }
+        return buildOperations(
+            forContactId = newContact.contactId,
+            oldValues = oldContact.imAddresses,
+            newValues = newContact.imAddresses,
+            mimeType = ImColumns.CONTENT_ITEM_TYPE,
+        ) { labeledValue ->
+            withValue(ImColumns.DATA, labeledValue.value.raw)
+                .withValue(ImColumns.PROTOCOL, ImColumns.PROTOCOL_CUSTOM)
+                .withValue(ImColumns.CUSTOM_PROTOCOL, labeledValue.value.protocol)
+                .withImLabel(labeledValue.label)
+        }
+    }
+
     private fun <T : Any> buildOperations(
         forContactId: Long,
         mimeType: String,
@@ -437,6 +460,21 @@ internal class ExistingContactOperationsFactory(
                     .withValue(Contactables.LABEL, label.label)
             }
             else -> error("Unsupported Postal Label $label")
+        }
+    }
+
+    private fun ContentProviderOperation.Builder.withImLabel(
+        label: Label
+    ): ContentProviderOperation.Builder {
+        return when (label) {
+            Label.LocationHome -> withValue(Contactables.TYPE, ImColumns.TYPE_HOME)
+            Label.LocationWork -> withValue(Contactables.TYPE, ImColumns.TYPE_WORK)
+            Label.Other -> withValue(Contactables.TYPE, ImColumns.TYPE_OTHER)
+            is Label.Custom -> {
+                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
+                    .withValue(Contactables.LABEL, label.label)
+            }
+            else -> error("Unsupported Im Label $label")
         }
     }
 

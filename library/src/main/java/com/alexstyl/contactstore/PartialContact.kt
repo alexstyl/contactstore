@@ -3,6 +3,7 @@ package com.alexstyl.contactstore
 import android.provider.ContactsContract
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
@@ -15,6 +16,7 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class PartialContact constructor(
     override val contactId: Long,
+    override val lookupKey: LookupKey?,
     override val columns: List<ContactColumn>,
     override val isStarred: Boolean,
     override val displayName: String?,
@@ -39,12 +41,14 @@ class PartialContact constructor(
     fullNameStyle: Int = ContactsContract.FullNameStyle.UNDEFINED,
     phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
     groups: List<GroupMembership> = emptyList(),
+    imAddresses: List<LabeledValue<ImAddress>> = emptyList(),
     linkedAccountValues: List<LinkedAccountValue> = emptyList()
 ) : Contact {
     override val prefix by requireColumn(Names, prefix)
     override val firstName by requireColumn(Names, firstName)
     override val middleName by requireColumn(Names, middleName)
     override val lastName by requireColumn(Names, lastName)
+    override val imAddresses by requireColumn(ImAddresses, imAddresses)
     override val suffix by requireColumn(Names, suffix)
     override val phoneticFirstName by requireColumn(Names, phoneticFirstName)
     override val phoneticMiddleName by requireColumn(Names, phoneticMiddleName)

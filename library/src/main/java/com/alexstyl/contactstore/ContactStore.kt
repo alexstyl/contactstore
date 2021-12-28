@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ContactStore {
 
+    @Deprecated(
+        "Prefer the version of this function that receives a lambda",
+        ReplaceWith("execute {}")
+    )
     suspend fun execute(request: SaveRequest)
 
     /**
@@ -40,6 +44,7 @@ interface ContactStore {
             val contactsQueries = ContactQueries(
                 contentResolver = contentResolver,
                 dateParser = DateTimeFormatParser(),
+                resources = context.resources,
                 accountInfoResolver = AccountInfoResolver(
                     context,
                     context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager,

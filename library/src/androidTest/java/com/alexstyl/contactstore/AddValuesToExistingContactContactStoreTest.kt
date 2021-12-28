@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactColumn.Note
@@ -29,9 +30,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             lastName = "Melendez"
             suffix = "Z."
         }
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(updated)
-        })
+        }
 
         assertContactUpdated(updated)
     }
@@ -52,9 +53,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -75,9 +76,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -98,9 +99,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -121,9 +122,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -144,9 +145,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -163,9 +164,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             jobTitle = "Member"
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -181,9 +182,32 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             note = Note("To infinity and beyond!")
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
+
+        assertContactUpdatedNoId(expected)
+    }
+
+    @Test
+    fun updatesIm(): Unit = runBlocking {
+        val contact = buildStoreContact(Names, ImAddresses) {
+            firstName = "Paolo"
+            lastName = "Melendez"
+        }
+
+        val expected = contact.mutableCopy().apply {
+            imAddresses.add(
+                LabeledValue(
+                    ImAddress("address", protocol = "protocol"),
+                    Label.LocationHome
+                )
+            )
+        }
+
+        store.execute {
+            update(expected)
+        }
 
         assertContactUpdatedNoId(expected)
     }

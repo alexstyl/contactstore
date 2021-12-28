@@ -12,7 +12,7 @@ class ContactStoreDeleteContactTest : ContactStoreTestBase() {
 
     @Test
     fun deletesContact(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     firstName = "Paolo"
@@ -31,14 +31,14 @@ class ContactStoreDeleteContactTest : ContactStoreTestBase() {
                     lastName = "Jones"
                 }
             )
-        })
+        }
 
         val contactsBefore = store.fetchContacts().first()
         val contactToDelete = contactsBefore.first()
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             delete(contactId = contactToDelete.contactId)
-        })
+        }
 
         val actual = store.fetchContacts().first()
         val expected = contactsBefore - contactToDelete

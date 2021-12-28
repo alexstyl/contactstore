@@ -30,9 +30,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             lastName = "Melendez"
             suffix = "Z."
         }
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(updated)
-        })
+        }
 
         assertContactUpdated(updated)
     }
@@ -53,9 +53,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -76,9 +76,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -99,9 +99,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -122,9 +122,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -145,9 +145,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -164,9 +164,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             jobTitle = "Member"
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -182,9 +182,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             note = Note("To infinity and beyond!")
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }
@@ -205,9 +205,9 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
-        store.execute(SaveRequest().apply {
+        store.execute {
             update(expected)
-        })
+        }
 
         assertContactUpdatedNoId(expected)
     }

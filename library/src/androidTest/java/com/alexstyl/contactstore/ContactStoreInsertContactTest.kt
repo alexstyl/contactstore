@@ -22,7 +22,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithNames(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     prefix = "A."
@@ -32,7 +32,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                     suffix = "Z."
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Names)).first()
         val expected = contact(
@@ -50,7 +50,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithPhones(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     phones.add(
@@ -62,7 +62,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                     )
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Phones)).first()
         val expected = contact(
@@ -82,7 +82,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithMails(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     mails.add(
@@ -94,7 +94,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                     )
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Mails)).first()
         val expected = contact(
@@ -114,7 +114,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithEvents(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     events.add(
@@ -128,7 +128,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                     )
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Events)).first()
         val expected = contact(
@@ -146,7 +146,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithPostalAddress(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     postalAddresses.add(
@@ -165,7 +165,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                     )
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(PostalAddresses)).first()
         val expected = contact(
@@ -191,13 +191,13 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithNote(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     note = Note("Cool guy")
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Note)).first()
         val expected = contact(
@@ -210,7 +210,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithWebAddresses(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     webAddresses.add(
@@ -222,7 +222,7 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                     )
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(WebAddresses)).first()
         val expected = contact(
@@ -241,14 +241,14 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithOrganization(): Unit = runBlocking {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     organization = "Acme"
                     jobTitle = "Member"
                 }
             )
-        })
+        }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Organization)).first()
         val expected = contact(

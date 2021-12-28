@@ -15,7 +15,7 @@ class ContactStoreLookupTest : ContactStoreTestBase() {
     @Before
     override fun before(): Unit = runBlocking {
         super.before()
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply {
                     firstName = "Paolo"
@@ -42,7 +42,7 @@ class ContactStoreLookupTest : ContactStoreTestBase() {
                     )
                 }
             )
-        })
+        }
     }
 
     @Test

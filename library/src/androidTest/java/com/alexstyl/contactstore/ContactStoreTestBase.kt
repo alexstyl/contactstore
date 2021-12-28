@@ -21,7 +21,7 @@ abstract class ContactStoreTestBase {
     )
 
     suspend fun assertContactUpdated(editedContact: MutableContact) {
-        store.execute(SaveRequest().apply { update(editedContact) })
+        store.execute { update(editedContact) }
         val actual = store.fetchContacts(
             predicate = ContactPredicate.ContactLookup(inContactIds = listOf(editedContact.contactId)),
             columnsToFetch = editedContact.columns
@@ -31,7 +31,7 @@ abstract class ContactStoreTestBase {
     }
 
     suspend fun assertContactUpdatedNoId(expected: MutableContact) {
-        store.execute(SaveRequest().apply { update(expected) })
+        store.execute { update(expected) }
         val actual = store.fetchContacts(
             predicate = ContactPredicate.ContactLookup(inContactIds = listOf(expected.contactId)),
             columnsToFetch = expected.columns
@@ -69,7 +69,7 @@ abstract class ContactStoreTestBase {
         postalAddresses: List<LabeledValue<PostalAddress>> = emptyList(),
         events: List<LabeledValue<EventDate>> = emptyList(),
         webAddresses: List<LabeledValue<WebAddress>> = emptyList(),
-        imAddresses : List<LabeledValue<ImAddress>> = emptyList(),
+        imAddresses: List<LabeledValue<ImAddress>> = emptyList(),
         note: Note? = null,
         prefix: String? = null,
         middleName: String? = null,
@@ -101,11 +101,11 @@ abstract class ContactStoreTestBase {
         vararg withColumns: ContactColumn,
         contactBuilder: MutableContact.() -> Unit
     ): Contact {
-        store.execute(SaveRequest().apply {
+        store.execute {
             insert(
                 MutableContact().apply(contactBuilder)
             )
-        })
+        }
 
         val contactsBefore = store.fetchContacts(columnsToFetch = withColumns.toList()).first()
         return contactsBefore.first()

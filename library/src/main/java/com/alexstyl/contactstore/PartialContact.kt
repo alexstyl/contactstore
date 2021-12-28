@@ -16,6 +16,7 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class PartialContact constructor(
     override val contactId: Long,
+    override val lookupKey: LookupKey?,
     override val columns: List<ContactColumn>,
     override val isStarred: Boolean,
     override val displayName: String?,

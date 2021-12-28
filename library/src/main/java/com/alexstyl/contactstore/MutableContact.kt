@@ -15,6 +15,7 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class MutableContact internal constructor(
     override var contactId: Long = -1L,
+    override val lookupKey: LookupKey? = null,
     imageData: ImageData?,
     phones: MutableList<LabeledValue<PhoneNumber>>,
     mails: MutableList<LabeledValue<MailAddress>>,

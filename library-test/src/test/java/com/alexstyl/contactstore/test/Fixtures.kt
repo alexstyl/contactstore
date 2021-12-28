@@ -72,6 +72,7 @@ object ContactFixtures {
         middleName = "Mid",
         suffix = "Suffix",
         nickname = "Nickname",
-        groups = listOf(GroupMembership(groupId = 10))
+        groups = listOf(GroupMembership(groupId = 10)),
+        lookupKey = null,
     )
 }

@@ -27,6 +27,8 @@ interface Contact {
     val contactId: Long
     val displayName: String?
 
+    val lookupKey: LookupKey?
+
     /**
      * Requires: [ContactColumn.Names]
      */
@@ -186,7 +188,7 @@ fun Contact.mutableCopy(): MutableContact {
             webAddresses.toMutableList()
         else
             mutableListOf(),
-        imAddresses = if(containsColumn(ImAddresses)) imAddresses.toMutableList() else mutableListOf(),
+        imAddresses = if (containsColumn(ImAddresses)) imAddresses.toMutableList() else mutableListOf(),
         note = if (containsColumn(Note)) note else null,
         columns = columns,
         middleName = if (containsColumn(Names)) middleName else null,

@@ -75,8 +75,8 @@ class AccountInfoResolver(
                         returningList.add(
                             LinkedAccountMimeType(
                                 mimetype = requireNotNull(mimeType),
-                                summaryColumn = requireNotNull(summaryColumn),
-                                detailColumn = requireNotNull(detailColumn),
+                                summaryColumn = summaryColumn.orEmpty(),
+                                detailColumn = detailColumn.orEmpty(),
                                 icon = icon,
                                 packageName = packageName
                             )

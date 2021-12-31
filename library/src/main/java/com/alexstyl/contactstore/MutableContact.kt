@@ -11,6 +11,7 @@ import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class MutableContact internal constructor(
@@ -40,6 +41,7 @@ class MutableContact internal constructor(
     groups: MutableList<GroupMembership>,
     linkedAccountValues: List<LinkedAccountValue>,
     imAddresses: MutableList<LabeledValue<ImAddress>>,
+    relations: MutableList<LabeledValue<Relation>>,
     override val columns: List<ContactColumn>,
 ) : Contact {
 
@@ -60,6 +62,8 @@ class MutableContact internal constructor(
     override var note: com.alexstyl.contactstore.Note? by readWriteField(Note, note)
 
     override val groups: MutableList<GroupMembership> by requireColumn(GroupMemberships, groups)
+
+    override val relations: MutableList<LabeledValue<Relation>> by requireColumn(Relations, relations)
 
     override var organization: String? by readWriteField(Organization, organization)
     override var jobTitle: String? by readWriteField(Organization, jobTitle)
@@ -83,6 +87,7 @@ class MutableContact internal constructor(
         events = mutableListOf(),
         postalAddresses = mutableListOf(),
         webAddresses = mutableListOf(),
+        relations = mutableListOf(),
         note = null,
         isStarred = false,
         firstName = null,

@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names

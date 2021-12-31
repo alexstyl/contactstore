@@ -21,6 +21,7 @@ import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 interface Contact {
@@ -147,6 +148,11 @@ interface Contact {
     val organization: String?
 
     /**
+     * Requires: [ContactColumn.Relations]
+     */
+    val relations: List<LabeledValue<Relation>>
+
+    /**
      * Requires: [ContactColumn.Organization]
      */
     val jobTitle: String?
@@ -189,6 +195,7 @@ fun Contact.mutableCopy(): MutableContact {
         else
             mutableListOf(),
         imAddresses = if (containsColumn(ImAddresses)) imAddresses.toMutableList() else mutableListOf(),
+        relations = if(containsColumn(Relations)) relations.toMutableList() else mutableListOf(),
         note = if (containsColumn(Note)) note else null,
         columns = columns,
         middleName = if (containsColumn(Names)) middleName else null,

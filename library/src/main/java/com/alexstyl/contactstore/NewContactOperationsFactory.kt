@@ -2,16 +2,18 @@ package com.alexstyl.contactstore
 
 import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
 import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
+import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
 import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
 import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
 import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
+import android.provider.ContactsContract.CommonDataKinds.Relation as RelationColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebsiteColumns
-import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newInsert
+import android.os.Build
 import android.provider.ContactsContract.CommonDataKinds.Contactables
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.FullNameStyle
@@ -33,6 +35,7 @@ internal class NewContactOperationsFactory {
                 contact.postalAddresses.forEach { add(insertPostalOperation(it)) }
                 contact.note?.run { add(insertNoteOperation(this)) }
                 contact.imAddresses.forEach { add(insertImOperation(it)) }
+                contact.relations.forEach { add(insertRelationOperation(it)) }
 
                 if (hasOrganizationDetails(contact)) {
                     add(insertOrganization(contact))
@@ -134,6 +137,14 @@ internal class NewContactOperationsFactory {
             .build()
     }
 
+    private fun insertRelationOperation(labeledValue: LabeledValue<Relation>): ContentProviderOperation {
+        return newInsert(Data.CONTENT_URI)
+            .withValueBackReference(Data.RAW_CONTACT_ID, NEW_CONTACT_INDEX)
+            .withValue(Data.MIMETYPE, RelationColumns.CONTENT_ITEM_TYPE)
+            .withValue(RelationColumns.NAME, labeledValue.value.name)
+            .withRelationLabel(labeledValue.label)
+            .build()
+    }
 
     private fun insertLocalRawAccountOperation(contact: MutableContact): ContentProviderOperation {
         return newInsert(RawContacts.CONTENT_URI)
@@ -350,7 +361,7 @@ internal class NewContactOperationsFactory {
     private fun ContentProviderOperation.Builder.withImLabel(
         label: Label
     ): ContentProviderOperation.Builder {
-        return when(label){
+        return when (label) {
             Label.LocationHome -> withValue(
                 Contactables.TYPE,
                 ImColumns.TYPE_HOME
@@ -403,5 +414,80 @@ internal class NewContactOperationsFactory {
 
     private companion object {
         const val NEW_CONTACT_INDEX = 0
+    }
+}
+
+fun ContentProviderOperation.Builder.withRelationLabel(
+    label: Label
+): ContentProviderOperation.Builder {
+    return when (label) {
+        Label.PhoneNumberAssistant -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_ASSISTANT
+        )
+        Label.RelationBrother -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_BROTHER
+        )
+        Label.RelationDomesticPartner -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_DOMESTIC_PARTNER
+        )
+        Label.RelationChild -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_CHILD
+        )
+        Label.RelationFather -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_FATHER
+        )
+        Label.RelationMother -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_MOTHER
+        )
+        Label.RelationManager -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_MANAGER
+        )
+        Label.RelationFriend -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_FRIEND
+        )
+        Label.RelationParent -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_PARENT
+        )
+        Label.RelationPartner -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_PARTNER
+        )
+        Label.RelationReferredBy -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_REFERRED_BY
+        )
+        Label.RelationSister -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_SISTER
+        )
+        Label.RelationSpouse -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_SPOUSE
+        )
+        Label.RelationRelative -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_RELATIVE
+        )
+        Label.Other -> withValue(
+            Contactables.TYPE,
+            RelationColumns.TYPE_CHILD
+        )
+        is Label.Custom -> {
+            withValue(
+                Contactables.TYPE,
+                Contactables.TYPE_CUSTOM
+            )
+                .withValue(Contactables.LABEL, label.label)
+        }
+        else -> error("Unsupported Postal Label $label")
     }
 }

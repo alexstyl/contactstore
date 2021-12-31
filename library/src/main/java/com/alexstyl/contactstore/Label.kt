@@ -33,4 +33,17 @@ sealed class Label {
 
     data class Custom(val label: String) : Label()
     object Other : Label()
+    object RelationBrother : Label()
+    object RelationChild : Label()
+    object RelationDomesticPartner : Label()
+    object RelationFather : Label()
+    object RelationFriend : Label()
+    object RelationManager : Label()
+    object RelationMother : Label()
+    object RelationParent : Label()
+    object RelationPartner : Label()
+    object RelationReferredBy : Label()
+    object RelationRelative : Label()
+    object RelationSister : Label()
+    object RelationSpouse : Label()
 }

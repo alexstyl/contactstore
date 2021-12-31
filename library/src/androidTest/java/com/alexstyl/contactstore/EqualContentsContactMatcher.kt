@@ -10,6 +10,7 @@ import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -61,6 +62,10 @@ class EqualContentsContactMatcher(
                 if (containsColumn(Nickname)) {
                     putCommaIfNeeded()
                     append("nickname = $nickname")
+                }
+                if (containsColumn(Relations)) {
+                    putCommaIfNeeded()
+                    append("relations = ${labeledValues(relations)}")
                 }
                 if (containsColumn(WebAddresses)) {
                     putCommaIfNeeded()
@@ -145,6 +150,10 @@ class EqualContentsContactMatcher(
                     mismatchDescription.appendText("note was ${actual.note}")
                     false
                 }
+                relationsAreDifferent(actual) ->{
+                    mismatchDescription.appendText("relations were ${actual.relations}")
+                    false
+                }
                 displayName != expected.displayName -> {
                     mismatchDescription.appendText("display name was '${actual.displayName}'")
                     false
@@ -152,6 +161,13 @@ class EqualContentsContactMatcher(
                 else -> true
             }
         }
+    }
+
+    private fun relationsAreDifferent(actual: Contact): Boolean {
+        if(expected.containsColumn(Relations).not()) {
+            return false
+        }
+        return areLabeledValuesDifferentIgnoringId(actual.relations, expected.relations)
     }
 
     private fun imAreDifferent(actual: Contact): Boolean {

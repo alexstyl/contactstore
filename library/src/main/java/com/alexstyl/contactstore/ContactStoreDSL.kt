@@ -33,6 +33,7 @@ fun SaveRequest.insert(builder: MutableContactBuilder.() -> Unit) {
         postalAddresses.addAll(values.postalAddresses)
         webAddresses.addAll(values.webAddresses)
         groups.addAll(values.groupMemberships)
+        relations.addAll(values.relations)
         imAddresses.addAll(values.imAddresses)
     })
 }

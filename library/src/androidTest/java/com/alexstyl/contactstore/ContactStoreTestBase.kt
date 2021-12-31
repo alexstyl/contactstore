@@ -70,6 +70,7 @@ abstract class ContactStoreTestBase {
         events: List<LabeledValue<EventDate>> = emptyList(),
         webAddresses: List<LabeledValue<WebAddress>> = emptyList(),
         imAddresses: List<LabeledValue<ImAddress>> = emptyList(),
+        relations : List<LabeledValue<Relation>> = emptyList(),
         note: Note? = null,
         prefix: String? = null,
         middleName: String? = null,
@@ -94,7 +95,8 @@ abstract class ContactStoreTestBase {
             imAddresses = imAddresses,
             phones = phones,
             mails = mails,
-            isStarred = false
+            isStarred = false,
+            relations = relations
         )
     }
 

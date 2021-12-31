@@ -8,6 +8,7 @@ import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.DateBirthday
 import com.alexstyl.contactstore.Label.LocationHome
@@ -283,6 +284,25 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                 )
             ),
             columns = listOf(ImAddresses)
+        )
+
+        assertOnlyContact(actual = actual, expected = expected)
+    }
+
+    @Test
+    fun insertsContactWithRelation(): Unit = runBlocking {
+        store.execute {
+            insert {
+                relation(name = "Person", label = Label.PhoneNumberAssistant)
+            }
+        }
+
+        val actual = store.fetchContacts(columnsToFetch = listOf(Relations)).first()
+        val expected = contact(
+            relations = listOf(
+                LabeledValue(Relation(name = "Person"), Label.PhoneNumberAssistant)
+            ),
+            columns = listOf(Relations)
         )
 
         assertOnlyContact(actual = actual, expected = expected)

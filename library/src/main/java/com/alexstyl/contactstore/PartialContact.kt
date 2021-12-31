@@ -12,6 +12,7 @@ import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class PartialContact constructor(
@@ -42,7 +43,8 @@ class PartialContact constructor(
     phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
     groups: List<GroupMembership> = emptyList(),
     imAddresses: List<LabeledValue<ImAddress>> = emptyList(),
-    linkedAccountValues: List<LinkedAccountValue> = emptyList()
+    linkedAccountValues: List<LinkedAccountValue> = emptyList(),
+    relations: List<LabeledValue<Relation>> = emptyList()
 ) : Contact {
     override val prefix by requireColumn(Names, prefix)
     override val firstName by requireColumn(Names, firstName)
@@ -67,6 +69,7 @@ class PartialContact constructor(
     override val jobTitle by requireColumn(Organization, jobTitle)
     override val linkedAccountValues by requireAnyLinkedAccountColumn(linkedAccountValues)
     override val groups: List<GroupMembership> by requireColumn(GroupMemberships, groups)
+    override val relations: List<LabeledValue<Relation>> by requireColumn(Relations, relations)
 
     override fun equals(other: Any?): Boolean {
         return equalContacts(other as? Contact)

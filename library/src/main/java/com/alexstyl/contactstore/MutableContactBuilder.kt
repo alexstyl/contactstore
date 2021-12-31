@@ -47,6 +47,10 @@ data class MutableContactBuilder(
     val groupMemberships: List<GroupMembership>
         get() = _groups.toList()
 
+    private val _relations: MutableList<LabeledValue<Relation>> = mutableListOf()
+    val relations: List<LabeledValue<Relation>>
+        get() = _relations.toList()
+
     fun phone(
         number: String,
         label: Label
@@ -116,5 +120,9 @@ data class MutableContactBuilder(
         _imAddresses.add(
             LabeledValue(ImAddress(raw = address, protocol = protocol), label)
         )
+    }
+
+    fun relation(name: String, label: Label) {
+        _relations.add(LabeledValue(Relation(name = name), label))
     }
 }

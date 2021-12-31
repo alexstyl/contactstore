@@ -11,6 +11,7 @@ import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
+import android.provider.ContactsContract.CommonDataKinds.Relation as RelationColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newDelete
 import android.content.ContentProviderOperation.newInsert
@@ -31,6 +32,7 @@ import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.utils.get
 import com.alexstyl.contactstore.utils.runQuery
@@ -62,6 +64,7 @@ internal class ExistingContactOperationsFactory(
                 updateGroupMembership(newContact = contact, oldContact = existingContact) +
                 updatePostalAddresses(newContact = contact, oldContact = existingContact) +
                 updateImAddresses(newContact = contact, oldContact = existingContact) +
+                updateRelations(newContact = contact, oldContact = existingContact) +
                 replaceWebAddresses(newContact = contact, oldContact = existingContact)
     }
 
@@ -304,6 +307,24 @@ internal class ExistingContactOperationsFactory(
                 .withValue(ImColumns.PROTOCOL, ImColumns.PROTOCOL_CUSTOM)
                 .withValue(ImColumns.CUSTOM_PROTOCOL, labeledValue.value.protocol)
                 .withImLabel(labeledValue.label)
+        }
+    }
+
+    private fun updateRelations(
+        newContact: MutableContact,
+        oldContact: Contact
+    ): List<ContentProviderOperation> {
+        if (newContact.containsColumn(Relations).not()) {
+            return emptyList()
+        }
+        return buildOperations(
+            forContactId = newContact.contactId,
+            oldValues = oldContact.relations,
+            newValues = newContact.relations,
+            mimeType = RelationColumns.CONTENT_ITEM_TYPE,
+        ) { labeledValue ->
+            withValue(RelationColumns.NAME, labeledValue.value.name)
+                .withRelationLabel(labeledValue.label)
         }
     }
 

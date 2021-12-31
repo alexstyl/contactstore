@@ -8,7 +8,9 @@ import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
+import com.alexstyl.contactstore.Label.RelationManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -205,6 +207,28 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
             )
         }
 
+        store.execute {
+            update(expected)
+        }
+
+        assertContactUpdatedNoId(expected)
+    }
+
+    @Test
+    fun updatesRelation(): Unit = runBlocking {
+        val contact = buildStoreContact(Names, Relations) {
+            firstName = "Paolo"
+            lastName = "Melendez"
+        }
+
+        val expected = contact.mutableCopy().apply {
+            relations.add(
+                LabeledValue(
+                    Relation(name = "Maria"),
+                    RelationManager
+                )
+            )
+        }
         store.execute {
             update(expected)
         }

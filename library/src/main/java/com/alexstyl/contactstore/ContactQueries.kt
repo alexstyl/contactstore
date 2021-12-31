@@ -9,6 +9,7 @@ import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
 import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
 import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
 import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
+import android.provider.ContactsContract.CommonDataKinds.Relation as RelationColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebColumns
@@ -229,6 +230,7 @@ internal class ContactQueries(
             val webAddresses = mutableSetOf<LabeledValue<WebAddress>>()
             val events = mutableSetOf<LabeledValue<EventDate>>()
             val imAddresses = mutableSetOf<LabeledValue<ImAddress>>()
+            val relations = mutableSetOf<LabeledValue<Relation>>()
             val postalAddresses = mutableSetOf<LabeledValue<PostalAddress>>()
             var organization: String? = null
             var jobTitle: String? = null
@@ -367,6 +369,14 @@ internal class ContactQueries(
                             )
                         }
                     }
+                    RelationColumns.CONTENT_ITEM_TYPE -> {
+                        val name = row[RelationColumns.NAME]
+                        val id = row[RelationColumns._ID].toLongOrNull()
+                        if (name.isNotBlank() && id != null) {
+                            val label = relationLabel(row)
+                            relations.add(LabeledValue(Relation(name), label, id))
+                        }
+                    }
                     else -> {
                         val mimeType = linkedAccountMimeTypes[mimetype]
                         if (mimeType != null) {
@@ -415,7 +425,29 @@ internal class ContactQueries(
                 groups = groupIds.toList(),
                 linkedAccountValues = linkedAccountValues.toList(),
                 imAddresses = imAddresses.toList(),
+                relations = relations.toList()
             )
+        }
+    }
+
+    private fun relationLabel(row: Cursor): Label {
+        return when (row[RelationColumns.TYPE].toIntOrNull()) {
+            RelationColumns.TYPE_ASSISTANT -> Label.PhoneNumberAssistant
+            RelationColumns.TYPE_BROTHER -> Label.RelationBrother
+            RelationColumns.TYPE_CHILD -> Label.RelationChild
+            RelationColumns.TYPE_DOMESTIC_PARTNER -> Label.RelationDomesticPartner
+            RelationColumns.TYPE_FATHER -> Label.RelationFather
+            RelationColumns.TYPE_FRIEND -> Label.RelationFriend
+            RelationColumns.TYPE_MANAGER -> Label.RelationManager
+            RelationColumns.TYPE_MOTHER -> Label.RelationMother
+            RelationColumns.TYPE_PARENT -> Label.RelationParent
+            RelationColumns.TYPE_PARTNER -> Label.RelationPartner
+            RelationColumns.TYPE_REFERRED_BY -> Label.RelationReferredBy
+            RelationColumns.TYPE_RELATIVE -> Label.RelationRelative
+            RelationColumns.TYPE_SISTER -> Label.RelationSister
+            RelationColumns.TYPE_SPOUSE -> Label.RelationSpouse
+            RelationColumns.TYPE_CUSTOM -> Label.Custom(row[RelationColumns.LABEL])
+            else -> Label.Other
         }
     }
 
@@ -458,6 +490,7 @@ internal class ContactQueries(
                 Nickname -> NicknameColumns.CONTENT_ITEM_TYPE
                 GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
                 ImAddresses -> ImColumns.CONTENT_ITEM_TYPE
+                Relations -> RelationColumns.CONTENT_ITEM_TYPE
                 is LinkedAccountValues ->
                     error("Tried to map a LinkedAccountColumn as standard column")
             }

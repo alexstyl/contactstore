@@ -66,3 +66,5 @@ internal fun GroupMembership.requireId(): Long {
 }
 
 data class LookupKey(val value: String)
+
+data class Relation(val name: String)

@@ -12,6 +12,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameC
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
 import android.provider.ContactsContract.CommonDataKinds.Relation as RelationColumns
+import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newDelete
 import android.content.ContentProviderOperation.newInsert
@@ -33,6 +34,7 @@ import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.utils.get
 import com.alexstyl.contactstore.utils.runQuery
@@ -64,8 +66,9 @@ internal class ExistingContactOperationsFactory(
                 updateGroupMembership(newContact = contact, oldContact = existingContact) +
                 updatePostalAddresses(newContact = contact, oldContact = existingContact) +
                 updateImAddresses(newContact = contact, oldContact = existingContact) +
+                updateSipAddresses(newContact = contact, oldContact = existingContact) +
                 updateRelations(newContact = contact, oldContact = existingContact) +
-                replaceWebAddresses(newContact = contact, oldContact = existingContact)
+                updateWebAddresses(newContact = contact, oldContact = existingContact)
     }
 
     private fun updateGroupMembership(
@@ -309,6 +312,24 @@ internal class ExistingContactOperationsFactory(
                 .withImLabel(labeledValue.label)
         }
     }
+    
+    private fun updateSipAddresses(
+        newContact: MutableContact,
+        oldContact: Contact
+    ): List<ContentProviderOperation> {
+        if (newContact.containsColumn(SipAddresses).not()) {
+            return emptyList()
+        }
+        return buildOperations(
+            forContactId = newContact.contactId,
+            oldValues = oldContact.sipAddresses,
+            newValues = newContact.sipAddresses,
+            mimeType = SipColumns.CONTENT_ITEM_TYPE,
+        ) { labeledValue ->
+            withValue(SipColumns.SIP_ADDRESS, labeledValue.value.raw)
+                .withSipLabel(labeledValue.label)
+        }
+    }
 
     private fun updateRelations(
         newContact: MutableContact,
@@ -367,7 +388,7 @@ internal class ExistingContactOperationsFactory(
         }
     }
 
-    private fun replaceWebAddresses(
+    private fun updateWebAddresses(
         newContact: MutableContact,
         oldContact: Contact
     ): List<ContentProviderOperation> {

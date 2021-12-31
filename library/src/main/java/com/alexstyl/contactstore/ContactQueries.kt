@@ -10,6 +10,7 @@ import android.provider.ContactsContract.CommonDataKinds.Organization as Organiz
 import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
 import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
 import android.provider.ContactsContract.CommonDataKinds.Relation as RelationColumns
+import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebColumns
@@ -228,6 +229,7 @@ internal class ContactQueries(
             val phones = mutableSetOf<LabeledValue<PhoneNumber>>()
             val mails = mutableSetOf<LabeledValue<MailAddress>>()
             val webAddresses = mutableSetOf<LabeledValue<WebAddress>>()
+            val sipAddresses = mutableSetOf<LabeledValue<SipAddress>>()
             val events = mutableSetOf<LabeledValue<EventDate>>()
             val imAddresses = mutableSetOf<LabeledValue<ImAddress>>()
             val relations = mutableSetOf<LabeledValue<Relation>>()
@@ -323,6 +325,14 @@ internal class ContactQueries(
                         if (parsedDate != null && id != null) {
                             val entry = LabeledValue(parsedDate, eventLabelFrom(row), id)
                             events.add(entry)
+                        }
+                    }
+                    SipColumns.CONTENT_ITEM_TYPE -> {
+                        val address = row[SipColumns.SIP_ADDRESS]
+                        val id = row[SipColumns._ID].toLongOrNull()
+                        if (address.isNotBlank() && id != null) {
+                            val value = LabeledValue(SipAddress(address), sipLabel(row), id)
+                            sipAddresses.add(value)
                         }
                     }
                     PostalColumns.CONTENT_ITEM_TYPE -> {
@@ -422,11 +432,22 @@ internal class ContactQueries(
                 nickname = nickname,
                 phoneticMiddleName = phoneticMiddleName,
                 phoneticNameStyle = phoneticNameStyle,
+                sipAddresses = sipAddresses.toList(),
                 groups = groupIds.toList(),
                 linkedAccountValues = linkedAccountValues.toList(),
                 imAddresses = imAddresses.toList(),
                 relations = relations.toList()
             )
+        }
+    }
+
+    private fun sipLabel(row: Cursor): Label {
+        return when (row[SipColumns.TYPE].toIntOrNull()) {
+            SipColumns.TYPE_HOME -> Label.LocationHome
+            SipColumns.TYPE_OTHER -> Label.Other
+            SipColumns.TYPE_WORK -> Label.LocationWork
+            SipColumns.TYPE_CUSTOM -> Label.Custom(row[SipColumns.LABEL])
+            else -> Label.Other
         }
     }
 
@@ -491,6 +512,7 @@ internal class ContactQueries(
                 GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
                 ImAddresses -> ImColumns.CONTENT_ITEM_TYPE
                 Relations -> RelationColumns.CONTENT_ITEM_TYPE
+                SipAddresses -> SipColumns.CONTENT_ITEM_TYPE
                 is LinkedAccountValues ->
                     error("Tried to map a LinkedAccountColumn as standard column")
             }

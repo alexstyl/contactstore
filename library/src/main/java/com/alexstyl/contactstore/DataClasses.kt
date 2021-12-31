@@ -61,6 +61,8 @@ data class ImAddress(
     val protocol: String,
 )
 
+data class SipAddress(val raw: String)
+
 internal fun GroupMembership.requireId(): Long {
     return requireNotNull(_id)
 }

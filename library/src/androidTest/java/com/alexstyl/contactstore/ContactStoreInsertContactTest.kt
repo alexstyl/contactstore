@@ -9,6 +9,7 @@ import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.DateBirthday
 import com.alexstyl.contactstore.Label.LocationHome
@@ -303,6 +304,25 @@ class ContactStoreInsertContactTest : ContactStoreTestBase() {
                 LabeledValue(Relation(name = "Person"), Label.PhoneNumberAssistant)
             ),
             columns = listOf(Relations)
+        )
+
+        assertOnlyContact(actual = actual, expected = expected)
+    }
+
+    @Test
+    fun insertsContactWithSip(): Unit = runBlocking {
+        store.execute {
+            insert {
+                sipAddress(address = "123", label = LocationHome)
+            }
+        }
+
+        val actual = store.fetchContacts(columnsToFetch = listOf(SipAddresses)).first()
+        val expected = contact(
+            sipAddresses = listOf(
+                LabeledValue(SipAddress(raw = "123"), LocationHome)
+            ),
+            columns = listOf(SipAddresses)
         )
 
         assertOnlyContact(actual = actual, expected = expected)

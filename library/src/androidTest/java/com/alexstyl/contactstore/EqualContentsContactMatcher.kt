@@ -11,6 +11,7 @@ import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -71,6 +72,10 @@ class EqualContentsContactMatcher(
                     putCommaIfNeeded()
                     append("webAddresses = ${labeledValues(webAddresses)}")
                 }
+                if (containsColumn(SipAddresses)) {
+                    putCommaIfNeeded()
+                    append("sipAddresses = ${labeledValues(sipAddresses)}")
+                }
                 if (containsColumn(Events)) {
                     putCommaIfNeeded()
                     append("events = ${labeledValues(events)}")
@@ -126,6 +131,10 @@ class EqualContentsContactMatcher(
                     mismatchDescription.appendText("imAddresses were ${labeledValues(actual.imAddresses)}")
                     false
                 }
+                sipAreDifferent(actual) -> {
+                    mismatchDescription.appendText("sipAddresses were ${labeledValues(actual.sipAddresses)}")
+                    false
+                }
                 organizationIsDifferent(actual) -> {
                     mismatchDescription.appendText("organization was ${actual.organization}, jobTitle was ${actual.jobTitle}")
                     false
@@ -175,6 +184,13 @@ class EqualContentsContactMatcher(
             return false
         }
         return areLabeledValuesDifferentIgnoringId(actual.imAddresses, expected.imAddresses)
+    }
+
+    private fun sipAreDifferent(actual: Contact): Boolean {
+        if (expected.containsColumn(SipAddresses).not()) {
+            return false
+        }
+        return areLabeledValuesDifferentIgnoringId(actual.sipAddresses, expected.sipAddresses)
     }
 
     private fun namesAreDifferent(actual: Contact): Boolean {

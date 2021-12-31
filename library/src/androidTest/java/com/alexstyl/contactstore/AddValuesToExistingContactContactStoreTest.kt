@@ -9,6 +9,7 @@ import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.RelationManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -235,4 +236,27 @@ class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
         assertContactUpdatedNoId(expected)
     }
+
+    @Test
+    fun updatesSipAddresses(): Unit = runBlocking {
+        val contact = buildStoreContact(Names, SipAddresses) {
+            firstName = "Paolo"
+            lastName = "Melendez"
+        }
+
+        val expected = contact.mutableCopy().apply {
+            sipAddresses.add(
+                LabeledValue(
+                    SipAddress("123"),
+                    Label.LocationHome
+                )
+            )
+        }
+        store.execute {
+            update(expected)
+        }
+
+        assertContactUpdatedNoId(expected)
+    }
+
 }

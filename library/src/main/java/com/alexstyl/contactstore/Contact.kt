@@ -22,6 +22,7 @@ import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 interface Contact {
@@ -108,6 +109,11 @@ interface Contact {
     val phones: List<LabeledValue<PhoneNumber>>
 
     /**
+     * Requires: [ContactColumn.SipAddresses]
+     */
+    val sipAddresses: List<LabeledValue<SipAddress>>
+
+    /**
      * Requires: [ContactColumn.Mails]
      */
     val mails: List<LabeledValue<MailAddress>>
@@ -192,6 +198,10 @@ fun Contact.mutableCopy(): MutableContact {
             mutableListOf(),
         webAddresses = if (containsColumn(WebAddresses))
             webAddresses.toMutableList()
+        else
+            mutableListOf(),
+        sipAddresses = if (containsColumn(SipAddresses))
+            sipAddresses.toMutableList()
         else
             mutableListOf(),
         imAddresses = if (containsColumn(ImAddresses)) imAddresses.toMutableList() else mutableListOf(),

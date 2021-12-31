@@ -12,6 +12,7 @@ import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class MutableContact internal constructor(
@@ -41,6 +42,7 @@ class MutableContact internal constructor(
     groups: MutableList<GroupMembership>,
     linkedAccountValues: List<LinkedAccountValue>,
     imAddresses: MutableList<LabeledValue<ImAddress>>,
+    sipAddresses: MutableList<LabeledValue<SipAddress>>,
     relations: MutableList<LabeledValue<Relation>>,
     override val columns: List<ContactColumn>,
 ) : Contact {
@@ -55,6 +57,8 @@ class MutableContact internal constructor(
             by requireColumn(WebAddresses, webAddresses)
     override val imAddresses: MutableList<LabeledValue<ImAddress>>
             by requireColumn(ImAddresses, imAddresses)
+    override val sipAddresses: MutableList<LabeledValue<SipAddress>>
+            by requireColumn(SipAddresses, sipAddresses)
 
     override val linkedAccountValues: List<LinkedAccountValue>
             by requireAnyLinkedAccountColumn(linkedAccountValues)
@@ -87,6 +91,7 @@ class MutableContact internal constructor(
         events = mutableListOf(),
         postalAddresses = mutableListOf(),
         webAddresses = mutableListOf(),
+        sipAddresses = mutableListOf(),
         relations = mutableListOf(),
         note = null,
         isStarred = false,

@@ -13,6 +13,7 @@ import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
 import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 class PartialContact constructor(
@@ -27,6 +28,7 @@ class PartialContact constructor(
     organization: String? = null,
     jobTitle: String? = null,
     webAddresses: List<LabeledValue<WebAddress>> = emptyList(),
+    sipAddresses: List<LabeledValue<SipAddress>> = emptyList(),
     phones: List<LabeledValue<PhoneNumber>> = emptyList(),
     mails: List<LabeledValue<MailAddress>> = emptyList(),
     events: List<LabeledValue<EventDate>> = emptyList(),
@@ -65,6 +67,7 @@ class PartialContact constructor(
     override val postalAddresses by requireColumn(PostalAddresses, postalAddresses)
     override val note by requireColumn(Note, note)
     override val webAddresses by requireColumn(WebAddresses, webAddresses)
+    override val sipAddresses by requireColumn(SipAddresses, sipAddresses)
     override val organization by requireColumn(Organization, organization)
     override val jobTitle by requireColumn(Organization, jobTitle)
     override val linkedAccountValues by requireAnyLinkedAccountColumn(linkedAccountValues)

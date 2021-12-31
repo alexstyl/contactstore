@@ -73,6 +73,11 @@ sealed class ContactColumn {
     object ImAddresses : ContactColumn()
 
     /**
+     * A column that will populate the [Contact.sipAddresses] field of all queried contacts when requested.
+     */
+    object SipAddresses : ContactColumn()
+
+    /**
      * A column that will populate the [Contact.relations] field of all queried contacts when requested.
      */
     object Relations : ContactColumn()
@@ -93,5 +98,6 @@ fun standardColumns(): List<ContactColumn> {
         ContactColumn.GroupMemberships,
         ContactColumn.ImAddresses,
         ContactColumn.Relations,
+        ContactColumn.SipAddresses,
     )
 }

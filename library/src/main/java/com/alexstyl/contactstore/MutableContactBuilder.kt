@@ -47,6 +47,10 @@ data class MutableContactBuilder(
     val groupMemberships: List<GroupMembership>
         get() = _groups.toList()
 
+    private val _sipAddresses: MutableList<LabeledValue<SipAddress>> = mutableListOf()
+    val sipAddresses: List<LabeledValue<SipAddress>>
+        get() = _sipAddresses.toList()
+
     private val _relations: MutableList<LabeledValue<Relation>> = mutableListOf()
     val relations: List<LabeledValue<Relation>>
         get() = _relations.toList()
@@ -124,5 +128,9 @@ data class MutableContactBuilder(
 
     fun relation(name: String, label: Label) {
         _relations.add(LabeledValue(Relation(name = name), label))
+    }
+
+    fun sipAddress(address: String, label: Label) {
+        _sipAddresses.add(LabeledValue(SipAddress(address), label))
     }
 }

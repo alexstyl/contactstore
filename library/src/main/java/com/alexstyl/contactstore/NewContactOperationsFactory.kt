@@ -11,6 +11,7 @@ import android.provider.ContactsContract.CommonDataKinds.Relation as RelationCol
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebsiteColumns
+import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newInsert
 import android.os.Build
@@ -35,6 +36,7 @@ internal class NewContactOperationsFactory {
                 contact.postalAddresses.forEach { add(insertPostalOperation(it)) }
                 contact.note?.run { add(insertNoteOperation(this)) }
                 contact.imAddresses.forEach { add(insertImOperation(it)) }
+                contact.sipAddresses.forEach { add(insertSipOperation(it)) }
                 contact.relations.forEach { add(insertRelationOperation(it)) }
 
                 if (hasOrganizationDetails(contact)) {
@@ -76,6 +78,15 @@ internal class NewContactOperationsFactory {
             .withValue(ImColumns.DATA, labeledValue.value.raw)
             .withValue(ImColumns.CUSTOM_PROTOCOL, labeledValue.value.protocol)
             .withImLabel(labeledValue.label)
+            .build()
+    }
+
+    private fun insertSipOperation(labeledValue: LabeledValue<SipAddress>): ContentProviderOperation {
+        return newInsert(Data.CONTENT_URI)
+            .withValueBackReference(Data.RAW_CONTACT_ID, NEW_CONTACT_INDEX)
+            .withValue(Data.MIMETYPE, SipColumns.CONTENT_ITEM_TYPE)
+            .withValue(SipColumns.SIP_ADDRESS, labeledValue.value.raw)
+            .withSipLabel(labeledValue.label)
             .build()
     }
 
@@ -384,7 +395,6 @@ internal class NewContactOperationsFactory {
             else -> error("Unsupported Im Label $label")
         }
     }
-
     private fun ContentProviderOperation.Builder.withEventLabel(
         label: Label
     ): ContentProviderOperation.Builder {
@@ -489,5 +499,32 @@ fun ContentProviderOperation.Builder.withRelationLabel(
                 .withValue(Contactables.LABEL, label.label)
         }
         else -> error("Unsupported Postal Label $label")
+    }
+}
+
+fun ContentProviderOperation.Builder.withSipLabel(
+    label: Label
+): ContentProviderOperation.Builder {
+    return when (label) {
+        Label.LocationHome -> withValue(
+            Contactables.TYPE,
+            SipColumns.TYPE_HOME
+        )
+        Label.Other -> withValue(
+            Contactables.TYPE,
+            SipColumns.TYPE_OTHER
+        )
+        Label.LocationWork -> withValue(
+            Contactables.TYPE,
+            SipColumns.TYPE_WORK
+        )
+        is Label.Custom -> {
+            withValue(
+                Contactables.TYPE,
+                Contactables.TYPE_CUSTOM
+            )
+                .withValue(Contactables.LABEL, label.label)
+        }
+        else -> error("Unsupported Im Label $label")
     }
 }

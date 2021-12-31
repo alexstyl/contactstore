@@ -160,7 +160,13 @@ internal class NewContactOperationsFactory {
             .withValue(NameColumns.MIDDLE_NAME, contact.middleName)
             .withValue(NameColumns.SUFFIX, contact.suffix)
             .withValue(NameColumns.PREFIX, contact.prefix)
-            .withValue(NameColumns.FULL_NAME_STYLE, FullNameStyle.UNDEFINED)
+            .let {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    it.withValue(NameColumns.FULL_NAME_STYLE, FullNameStyle.UNDEFINED)
+                } else {
+                    it
+                }
+            }
             .withValue(NameColumns.PHONETIC_GIVEN_NAME, contact.phoneticFirstName)
             .withValue(NameColumns.PHONETIC_FAMILY_NAME, contact.phoneticLastName)
             .withValue(NameColumns.PHONETIC_MIDDLE_NAME, contact.phoneticMiddleName)

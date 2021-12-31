@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.rememberImagePainter
@@ -44,7 +43,6 @@ import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactStore
-import com.alexstyl.contactstore.MutableContact
 import com.alexstyl.contactstore.imageUri
 import com.alexstyl.contactstore.sample.ui.setupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
@@ -137,6 +135,24 @@ class ContactDetailsActivity : ComponentActivity() {
                                             data = Uri.parse("mailto:${mail.value.raw}")
                                         }
                                         startActivity(intent)
+                                    }
+                                )
+                            }
+                        }
+
+                        contact.events.forEach { event ->
+                            item {
+                                val date = event.value
+                                val value = if (date.year == null) {
+                                    "${date.dayOfMonth}/${date.month}"
+                                } else {
+                                    "${date.dayOfMonth}/${date.month}/${date.year}"
+                                }
+                                Contactable(
+                                    icon = drawableResource(R.drawable.ic_event),
+                                    label = "Event",
+                                    value = value,
+                                    onClick = {
                                     }
                                 )
                             }
@@ -241,18 +257,6 @@ class ContactDetailsActivity : ComponentActivity() {
             }
         }
     }
-
-    @Preview
-    @Composable
-    private fun Preview() {
-        ContactDetailsScreen(
-            contact = MutableContact().apply {
-                firstName = "First Name"
-                lastName = "Last Name"
-            }
-        )
-    }
-
 
     @Composable
     private fun NavBar(onUpClick: () -> Unit) {

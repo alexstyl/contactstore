@@ -160,7 +160,7 @@ class AccountInfoResolver(
          * platforms. If you modify this also update the corresponding list in
          * ContactsProvider/PhotoPriorityResolver
          */
-        val METADATA_CONTACTS_NAMES = arrayOf(
+        val METADATA_CONTACTS_NAMES = listOf(
             "android.provider.ALTERNATE_CONTACTS_STRUCTURE",
             "android.provider.CONTACTS_STRUCTURE"
         )

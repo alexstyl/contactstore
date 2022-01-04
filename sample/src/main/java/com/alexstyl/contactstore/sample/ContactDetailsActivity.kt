@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.alexstyl.contactstore.Contact
@@ -44,7 +45,7 @@ import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactStore
 import com.alexstyl.contactstore.imageUri
-import com.alexstyl.contactstore.sample.ui.setupSystemUi
+import com.alexstyl.contactstore.sample.ui.SetupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
 import com.alexstyl.contactstore.standardColumns
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,6 +53,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+@ExperimentalCoilApi
 @AndroidEntryPoint
 class ContactDetailsActivity : ComponentActivity() {
 
@@ -97,7 +99,7 @@ class ContactDetailsActivity : ComponentActivity() {
         onUpClick: () -> Unit = {}
     ) {
         SampleAppTheme {
-            setupSystemUi()
+            SetupSystemUi()
             Scaffold {
                 Box {
                     LazyColumn(
@@ -165,7 +167,7 @@ class ContactDetailsActivity : ComponentActivity() {
                                     label = value.summary,
                                     value = value.detail,
                                     onClick = {
-                                        kotlin.runCatching {
+                                        runCatching {
                                             val intent = Intent(
                                                 Intent.ACTION_VIEW, ContentUris.withAppendedId(
                                                     ContactsContract.Data.CONTENT_URI, value.id

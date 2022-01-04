@@ -2,6 +2,7 @@ package com.alexstyl.contactstore.sample
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexstyl.contactstore.ContactPredicate
 import com.alexstyl.contactstore.ContactStore
 import com.alexstyl.contactstore.sample.ContactListState.Loaded
 import com.alexstyl.contactstore.sample.ContactListState.PermissionRequired
@@ -26,7 +27,7 @@ class ContactListViewModel @Inject constructor(
             reloadContacts.collect {
                 contactStore.fetchContacts()
                     .collect {
-                        state.emit(Loaded(it))
+                        state.emit(Loaded(it.sortedByDescending { contact -> contact.isStarred }))
                     }
             }
         }

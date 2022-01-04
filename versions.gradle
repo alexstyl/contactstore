@@ -12,9 +12,9 @@ ext {
 
     r8Version = '3.0.73'
     gradlePluginVersion = '7.0.4'
-    androidBuildToolsVersion = '30.0.2'
     kotlinVersion = '1.5.31'
     coroutinesVersion = '1.5.2'
+    hiltVersion = '2.40.5'
     junitVersion = '4.13.2'
     testRunnerVersion = '1.4.0'
     testRulesVersion = '1.4.0'

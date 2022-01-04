@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun setupSystemUi() {
+fun SetupSystemUi() {
     val systemUiController = rememberSystemUiController()
     val useDarkIcons = MaterialTheme.colors.isLight
 

@@ -16,7 +16,7 @@ buildscript {
         classpath "com.android.tools:r8:$r8Version"
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
         classpath "io.github.gradle-nexus:publish-plugin:$gradleNexusVersion"
     }
 }

@@ -27,7 +27,7 @@ class ContactListViewModel @Inject constructor(
             reloadContacts.collect {
                 contactStore.fetchContacts()
                     .collect {
-                        state.emit(Loaded(it.sortedByDescending { contact -> contact.isStarred }))
+                        state.emit(Loaded(it))
                     }
             }
         }

@@ -2,7 +2,7 @@ package com.alexstyl.contactstore
 
 import android.graphics.drawable.Drawable
 
-data class LinkedAccountValue(
+public data class LinkedAccountValue(
     val id: Long,
     val mimeType:String,
     val accountType: String,

@@ -1,12 +1,12 @@
 package com.alexstyl.contactstore
 
-data class MailAddress(val raw: String)
+public data class MailAddress(val raw: String)
 
-data class Note(val raw: String)
+public data class Note(val raw: String)
 
-data class EventDate(val dayOfMonth: Int, val month: Int, val year: Int? = null)
+public data class EventDate(val dayOfMonth: Int, val month: Int, val year: Int? = null)
 
-data class ImageData(val raw: ByteArray) {
+public data class ImageData(val raw: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -23,11 +23,11 @@ data class ImageData(val raw: ByteArray) {
     }
 }
 
-data class PhoneNumber(val raw: String)
+public data class PhoneNumber(val raw: String)
 
-data class WebAddress(val raw: String)
+public data class WebAddress(val raw: String)
 
-data class PostalAddress(
+public data class PostalAddress(
     val street: String,
     val poBox: String = "",
     val neighborhood: String = "",
@@ -38,7 +38,7 @@ data class PostalAddress(
 )
 
 @Suppress("MagicNumber")
-fun PostalAddress(fullAddress: String): PostalAddress {
+public fun PostalAddress(fullAddress: String): PostalAddress {
     val split = fullAddress.split(",").map { it.trim() }
     return PostalAddress(
         split.getOrElse(0) { "" },
@@ -51,22 +51,22 @@ fun PostalAddress(fullAddress: String): PostalAddress {
     )
 }
 
-data class GroupMembership(
+public data class GroupMembership(
     val groupId: Long,
     val _id: Long? = null,
 )
 
-data class ImAddress(
+public data class ImAddress(
     val raw: String,
     val protocol: String,
 )
 
-data class SipAddress(val raw: String)
+public data class SipAddress(val raw: String)
 
 internal fun GroupMembership.requireId(): Long {
     return requireNotNull(_id)
 }
 
-data class LookupKey(val value: String)
+public data class LookupKey(val value: String)
 
-data class Relation(val name: String)
+public data class Relation(val name: String)

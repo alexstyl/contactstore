@@ -19,7 +19,7 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 @Ignore("#27")
-class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
+internal class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun updatesNames(): Unit = runBlocking {

@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Rule
 
 
-abstract class ContactStoreTestBase {
+internal abstract class ContactStoreTestBase {
 
     @get:Rule
     var grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(

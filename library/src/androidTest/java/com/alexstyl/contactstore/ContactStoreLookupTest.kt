@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class ContactStoreLookupTest : ContactStoreTestBase() {
+internal class ContactStoreLookupTest : ContactStoreTestBase() {
 
     @Before
     override fun before(): Unit = runBlocking {

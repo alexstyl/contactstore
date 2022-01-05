@@ -16,7 +16,7 @@ import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
-class PartialContact constructor(
+public class PartialContact constructor(
     override val contactId: Long,
     override val lookupKey: LookupKey?,
     override val columns: List<ContactColumn>,
@@ -48,29 +48,29 @@ class PartialContact constructor(
     linkedAccountValues: List<LinkedAccountValue> = emptyList(),
     relations: List<LabeledValue<Relation>> = emptyList()
 ) : Contact {
-    override val prefix by requireColumn(Names, prefix)
-    override val firstName by requireColumn(Names, firstName)
-    override val middleName by requireColumn(Names, middleName)
-    override val lastName by requireColumn(Names, lastName)
-    override val imAddresses by requireColumn(ImAddresses, imAddresses)
-    override val suffix by requireColumn(Names, suffix)
-    override val phoneticFirstName by requireColumn(Names, phoneticFirstName)
-    override val phoneticMiddleName by requireColumn(Names, phoneticMiddleName)
-    override val phoneticLastName by requireColumn(Names, phoneticLastName)
-    override val nickname by requireColumn(Nickname, nickname)
-    override val fullNameStyle by requireColumn(Names, fullNameStyle)
-    override val phoneticNameStyle by requireColumn(Names, phoneticNameStyle)
-    override val imageData by requireColumn(Image, imageData)
-    override val phones by requireColumn(Phones, phones)
-    override val mails by requireColumn(Mails, mails)
-    override val events by requireColumn(Events, events)
-    override val postalAddresses by requireColumn(PostalAddresses, postalAddresses)
-    override val note by requireColumn(Note, note)
-    override val webAddresses by requireColumn(WebAddresses, webAddresses)
-    override val sipAddresses by requireColumn(SipAddresses, sipAddresses)
-    override val organization by requireColumn(Organization, organization)
-    override val jobTitle by requireColumn(Organization, jobTitle)
-    override val linkedAccountValues by requireAnyLinkedAccountColumn(linkedAccountValues)
+    override val prefix: String? by requireColumn(Names, prefix)
+    override val firstName: String? by requireColumn(Names, firstName)
+    override val middleName: String? by requireColumn(Names, middleName)
+    override val lastName: String? by requireColumn(Names, lastName)
+    override val imAddresses: List<LabeledValue<ImAddress>> by requireColumn(ImAddresses, imAddresses)
+    override val suffix: String? by requireColumn(Names, suffix)
+    override val phoneticFirstName: String? by requireColumn(Names, phoneticFirstName)
+    override val phoneticMiddleName: String? by requireColumn(Names, phoneticMiddleName)
+    override val phoneticLastName: String? by requireColumn(Names, phoneticLastName)
+    override val nickname: String? by requireColumn(Nickname, nickname)
+    override val fullNameStyle: Int by requireColumn(Names, fullNameStyle)
+    override val phoneticNameStyle: Int by requireColumn(Names, phoneticNameStyle)
+    override val imageData: ImageData? by requireColumn(Image, imageData)
+    override val phones: List<LabeledValue<PhoneNumber>> by requireColumn(Phones, phones)
+    override val mails: List<LabeledValue<MailAddress>> by requireColumn(Mails, mails)
+    override val events: List<LabeledValue<EventDate>> by requireColumn(Events, events)
+    override val postalAddresses: List<LabeledValue<PostalAddress>> by requireColumn(PostalAddresses, postalAddresses)
+    override val note: com.alexstyl.contactstore.Note? by requireColumn(Note, note)
+    override val webAddresses: List<LabeledValue<WebAddress>> by requireColumn(WebAddresses, webAddresses)
+    override val sipAddresses: List<LabeledValue<SipAddress>> by requireColumn(SipAddresses, sipAddresses)
+    override val organization: String? by requireColumn(Organization, organization)
+    override val jobTitle: String? by requireColumn(Organization, jobTitle)
+    override val linkedAccountValues: List<LinkedAccountValue> by requireAnyLinkedAccountColumn(linkedAccountValues)
     override val groups: List<GroupMembership> by requireColumn(GroupMemberships, groups)
     override val relations: List<LabeledValue<Relation>> by requireColumn(Relations, relations)
 

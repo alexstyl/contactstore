@@ -427,7 +427,7 @@ internal class NewContactOperationsFactory {
     }
 }
 
-fun ContentProviderOperation.Builder.withRelationLabel(
+internal fun ContentProviderOperation.Builder.withRelationLabel(
     label: Label
 ): ContentProviderOperation.Builder {
     return when (label) {
@@ -502,7 +502,7 @@ fun ContentProviderOperation.Builder.withRelationLabel(
     }
 }
 
-fun ContentProviderOperation.Builder.withSipLabel(
+internal fun ContentProviderOperation.Builder.withSipLabel(
     label: Label
 ): ContentProviderOperation.Builder {
     return when (label) {

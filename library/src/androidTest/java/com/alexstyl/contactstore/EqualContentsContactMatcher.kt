@@ -17,11 +17,11 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeDiagnosingMatcher
 
-fun equalContents(expected: Contact): Matcher<in Contact> {
+internal fun equalContents(expected: Contact): Matcher<in Contact> {
     return EqualContentsContactMatcher(expected)
 }
 
-class EqualContentsContactMatcher(
+private class EqualContentsContactMatcher(
     private val expected: Contact
 ) : TypeSafeDiagnosingMatcher<Contact>() {
     override fun describeTo(description: Description) {

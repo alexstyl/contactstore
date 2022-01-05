@@ -16,7 +16,7 @@ import android.provider.ContactsContract
 import android.util.Xml
 import org.xmlpull.v1.XmlPullParser
 
-class AccountInfoResolver(
+internal class AccountInfoResolver(
     private val context: Context,
     private val accountManager: AccountManager,
     private val packageManager: PackageManager,

@@ -9,11 +9,11 @@ import com.alexstyl.contactstore.ContactOperation.Update
  *
  * @see [ContactStore.execute]
  */
-class SaveRequest {
+public class SaveRequest {
 
     private val _requests = mutableListOf<ContactOperation>()
 
-    val requests: List<ContactOperation>
+    public val requests: List<ContactOperation>
         get() = _requests.toList()
 
     /**
@@ -24,15 +24,15 @@ class SaveRequest {
      *
      * This is done to prevent accidental value overrides.
      */
-    fun update(mutableContact: MutableContact) {
+    public fun update(mutableContact: MutableContact) {
         _requests.add(Update(mutableContact))
     }
 
-    fun insert(mutableContact: MutableContact) {
+    public fun insert(mutableContact: MutableContact) {
         _requests.add(Insert(mutableContact))
     }
 
-    fun delete(contactId: Long) {
+    public fun delete(contactId: Long) {
         _requests.add(Delete(contactId))
     }
 

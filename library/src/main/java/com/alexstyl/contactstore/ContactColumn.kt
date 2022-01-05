@@ -1,63 +1,63 @@
 package com.alexstyl.contactstore
 
-sealed class ContactColumn {
+public sealed class ContactColumn {
     /**
      * A column that will populate the [Contact.phones] field of all queried contacts when requested.
      */
-    object Phones : ContactColumn()
+    public object Phones : ContactColumn()
 
     /**
      * A column that will populate the [Contact.mails] field of all queried contacts when requested.
      */
-    object Mails : ContactColumn()
+    public object Mails : ContactColumn()
 
     /**
      * A column that will populate the [Contact.note] field of all queried contacts when requested.
      */
-    object Note : ContactColumn()
+    public object Note : ContactColumn()
 
     /**
      * A column that will populate the [Contact.events] field of all queried contacts when requested.
      *
      */
-    object Events : ContactColumn()
+    public object Events : ContactColumn()
 
     /**
      * A column that will populate the [Contact.postalAddresses] field of all queried contacts when requested.
      */
-    object PostalAddresses : ContactColumn()
+    public object PostalAddresses : ContactColumn()
 
     /**
      * A column that will populate the [Contact.imageData] field of all queried contacts when requested.
      *
      * @see Contact.imageData
      */
-    object Image : ContactColumn()
+    public object Image : ContactColumn()
 
     /**
      * A column that will populate the [Contact.prefix], [Contact.firstName],[Contact.middleName],[Contact.lastName], [Contact.suffix] fields of all queried contacts when requested.
      */
-    object Names : ContactColumn()
+    public object Names : ContactColumn()
 
     /**
      * A column that will populate the [Contact.nickname] field of all queried contacts when requested.
      */
-    object Nickname : ContactColumn()
+    public object Nickname : ContactColumn()
 
     /**
      * A column that will populate the [Contact.webAddresses] field of all queried contacts when requested.
      */
-    object WebAddresses : ContactColumn()
+    public object WebAddresses : ContactColumn()
 
     /**
      * A column that will populate the [Contact.organization] and [Contact.jobTitle] fields of all queried contacts when requested.
      */
-    object Organization : ContactColumn()
+    public object Organization : ContactColumn()
 
     /**
      * A column that will populate the [Contact.groups] field of all queried contacts when requested.
      */
-    object GroupMemberships : ContactColumn()
+    public object GroupMemberships : ContactColumn()
 
     /**
      * A column that will populate the [Contact.linkedAccountValues] field of all queried contacts when requested.
@@ -65,25 +65,25 @@ sealed class ContactColumn {
      * Each 3rd party app specifies a unique account type when syncing web contacts into the device.
      * See [SyncColumns.ACCOUNT_TYPE][android.provider.ContactsContract.SyncColumns.ACCOUNT_TYPE] for more details.
      */
-    data class LinkedAccountValues(val accountType: String) : ContactColumn()
+    public data class LinkedAccountValues(val accountType: String) : ContactColumn()
 
     /**
      * A column that will populate the [Contact.imAddresses] field of all queried contacts when requested.
      */
-    object ImAddresses : ContactColumn()
+    public object ImAddresses : ContactColumn()
 
     /**
      * A column that will populate the [Contact.sipAddresses] field of all queried contacts when requested.
      */
-    object SipAddresses : ContactColumn()
+    public object SipAddresses : ContactColumn()
 
     /**
      * A column that will populate the [Contact.relations] field of all queried contacts when requested.
      */
-    object Relations : ContactColumn()
+    public object Relations : ContactColumn()
 }
 
-fun standardColumns(): List<ContactColumn> {
+public fun standardColumns(): List<ContactColumn> {
     return listOf(
         ContactColumn.Phones,
         ContactColumn.Mails,

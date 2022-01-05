@@ -2,7 +2,7 @@ package com.alexstyl.contactstore
 
 import android.provider.ContactsContract
 
-data class MutableContactBuilder(
+public data class MutableContactBuilder(
     var prefix: String = "",
     var firstName: String = "",
     var middleName: String = "",
@@ -55,27 +55,27 @@ data class MutableContactBuilder(
     val relations: List<LabeledValue<Relation>>
         get() = _relations.toList()
 
-    fun phone(
+    public fun phone(
         number: String,
         label: Label
     ) {
         _phones.add(LabeledValue(PhoneNumber(number), label))
     }
 
-    fun mail(
+    public fun mail(
         address: String,
         label: Label
     ) {
         _mails.add(LabeledValue(MailAddress(address), label))
     }
 
-    fun event(dayOfMonth: Int, month: Int, year: Int? = null, label: Label) {
+    public fun event(dayOfMonth: Int, month: Int, year: Int? = null, label: Label) {
         _events.add(
             LabeledValue(EventDate(dayOfMonth = dayOfMonth, month = month, year = year), label)
         )
     }
 
-    fun postalAddress(
+    public fun postalAddress(
         street: String,
         poBox: String = "",
         neighborhood: String = "",
@@ -101,7 +101,7 @@ data class MutableContactBuilder(
         )
     }
 
-    fun postalAddress(fullAddress: String, label: Label) {
+    public fun postalAddress(fullAddress: String, label: Label) {
         _postalAddresses.add(
             LabeledValue(
                 value = PostalAddress(fullAddress),
@@ -110,27 +110,27 @@ data class MutableContactBuilder(
         )
     }
 
-    fun webAddress(address: String, label: Label) {
+    public fun webAddress(address: String, label: Label) {
         _webAddresses.add(LabeledValue(WebAddress(address), label))
     }
 
-    fun groupMembership(groupId: Long) {
+    public fun groupMembership(groupId: Long) {
         _groups.add(
             GroupMembership(groupId)
         )
     }
 
-    fun imAddress(address: String, protocol: String, label: Label) {
+    public fun imAddress(address: String, protocol: String, label: Label) {
         _imAddresses.add(
             LabeledValue(ImAddress(raw = address, protocol = protocol), label)
         )
     }
 
-    fun relation(name: String, label: Label) {
+    public fun relation(name: String, label: Label) {
         _relations.add(LabeledValue(Relation(name = name), label))
     }
 
-    fun sipAddress(address: String, label: Label) {
+    public fun sipAddress(address: String, label: Label) {
         _sipAddresses.add(LabeledValue(SipAddress(address), label))
     }
 }

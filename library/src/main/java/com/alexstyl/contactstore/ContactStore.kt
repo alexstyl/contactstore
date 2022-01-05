@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.Flow
  * @see [newInstance]
  *
  */
-interface ContactStore {
+public interface ContactStore {
 
     @Deprecated(
         "Prefer the version of this function that receives a lambda",
         ReplaceWith("execute {}")
     )
-    suspend fun execute(request: SaveRequest)
+    public suspend fun execute(request: SaveRequest)
 
     /**
      * Returns a [Flow] that emits the contacts of the device matching the given [predicate].
@@ -29,16 +29,16 @@ interface ContactStore {
      * @param predicate The conditions that a contact need to meet in order to be fetched
      * @param columnsToFetch The columns of the contact you need to be fetched
      */
-    fun fetchContacts(
+    public fun fetchContacts(
         predicate: ContactPredicate? = null,
         columnsToFetch: List<ContactColumn> = emptyList()
     ): Flow<List<Contact>>
 
-    companion object {
+    public companion object {
         /**
          * The entry point to ContactStore
          */
-        fun newInstance(context: Context): ContactStore {
+        public fun newInstance(context: Context): ContactStore {
             val contentResolver = context.contentResolver
             val resources = context.resources
             val contactsQueries = ContactQueries(

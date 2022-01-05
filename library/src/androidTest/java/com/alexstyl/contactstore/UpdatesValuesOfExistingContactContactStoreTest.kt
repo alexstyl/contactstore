@@ -12,7 +12,7 @@ import org.junit.Ignore
 import org.junit.Test
 
 @Ignore("#27")
-class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTestBase() {
+internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test
     fun updatesExistingPhone(): Unit = runBlocking {

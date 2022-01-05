@@ -1,6 +1,6 @@
 package com.alexstyl.contactstore
 
-data class LabeledValue<T>(
+public data class LabeledValue<T>(
     val value: T,
     val label: Label,
     val id: Long? = null,

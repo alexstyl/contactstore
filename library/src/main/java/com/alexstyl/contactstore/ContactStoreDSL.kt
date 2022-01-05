@@ -1,10 +1,10 @@
 package com.alexstyl.contactstore
 
-suspend fun ContactStore.execute(request: SaveRequest.() -> Unit) {
+public suspend fun ContactStore.execute(request: SaveRequest.() -> Unit) {
     execute(SaveRequest().apply(request))
 }
 
-fun SaveRequest.insert(builder: MutableContactBuilder.() -> Unit) {
+public fun SaveRequest.insert(builder: MutableContactBuilder.() -> Unit) {
     val values = MutableContactBuilder().apply(builder)
     insert(MutableContact().apply {
         isStarred = values.isStarred

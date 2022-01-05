@@ -25,75 +25,75 @@ import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
-interface Contact {
-    val contactId: Long
-    val displayName: String?
+public interface Contact {
+    public val contactId: Long
+    public val displayName: String?
 
-    val lookupKey: LookupKey?
-
-    /**
-     * Requires: [ContactColumn.Names]
-     */
-    val prefix: String?
+    public val lookupKey: LookupKey?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    val firstName: String?
+    public val prefix: String?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    val middleName: String?
+    public val firstName: String?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    val lastName: String?
+    public val middleName: String?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    val suffix: String?
+    public val lastName: String?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    val phoneticFirstName: String?
+    public val suffix: String?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    val phoneticMiddleName: String?
+    public val phoneticFirstName: String?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    val phoneticLastName: String?
+    public val phoneticMiddleName: String?
+
+    /**
+     * Requires: [ContactColumn.Names]
+     */
+    public val phoneticLastName: String?
 
     /**
      * Requires: [ContactColumn.Nickname]
      */
-    val nickname: String?
+    public val nickname: String?
 
     /**
      * Requires: [ContactColumn.GroupMemberships]
      */
-    val groups: List<GroupMembership>
+    public val groups: List<GroupMembership>
 
     /**
      * Requires: [ContactColumn.Names]
      *
      * See [ContactsContract.FullNameStyle]
      */
-    val fullNameStyle: Int
+    public val fullNameStyle: Int
 
     /**
      * Requires: [ContactColumn.Names]
      *
      * See [ContactsContract.PhoneticNameStyle]
      */
-    val phoneticNameStyle: Int
+    public val phoneticNameStyle: Int
 
     /**
      * Requires: [ContactColumn.Image]
@@ -101,76 +101,76 @@ interface Contact {
      * *NOTE*: If you need the contact image for UI purposes, you probably need [Contact.imageUri] instead.
      * [ImageData] contains the raw [ByteArray] of the image, which might consume a lot of memory.
      */
-    val imageData: ImageData?
+    public val imageData: ImageData?
 
     /**
      * Requires: [ContactColumn.Phones]
      */
-    val phones: List<LabeledValue<PhoneNumber>>
+    public val phones: List<LabeledValue<PhoneNumber>>
 
     /**
      * Requires: [ContactColumn.SipAddresses]
      */
-    val sipAddresses: List<LabeledValue<SipAddress>>
+    public val sipAddresses: List<LabeledValue<SipAddress>>
 
     /**
      * Requires: [ContactColumn.Mails]
      */
-    val mails: List<LabeledValue<MailAddress>>
+    public val mails: List<LabeledValue<MailAddress>>
 
     /**
      * Requires: [ContactColumn.Events]
      */
-    val events: List<LabeledValue<EventDate>>
+    public val events: List<LabeledValue<EventDate>>
 
     /**
      * Requires: [ContactColumn.PostalAddresses]
      */
-    val postalAddresses: List<LabeledValue<PostalAddress>>
+    public val postalAddresses: List<LabeledValue<PostalAddress>>
 
     /**
      * Requires: [ContactColumn.WebAddresses]
      */
-    val webAddresses: List<LabeledValue<WebAddress>>
+    public val webAddresses: List<LabeledValue<WebAddress>>
 
     /**
      * Requires : [ContactColumn.LinkedAccountValues]
      */
-    val linkedAccountValues: List<LinkedAccountValue>
+    public val linkedAccountValues: List<LinkedAccountValue>
 
     /**
      * Requires : [ContactColumn.ImAddresses]
      */
-    val imAddresses: List<LabeledValue<ImAddress>>
+    public val imAddresses: List<LabeledValue<ImAddress>>
 
     /**
      * Requires: [ContactColumn.Note]
      */
-    val note: com.alexstyl.contactstore.Note?
+    public val note: com.alexstyl.contactstore.Note?
 
     /**
      * Requires: [ContactColumn.Organization]
      */
-    val organization: String?
+    public val organization: String?
 
     /**
      * Requires: [ContactColumn.Relations]
      */
-    val relations: List<LabeledValue<Relation>>
+    public val relations: List<LabeledValue<Relation>>
 
     /**
      * Requires: [ContactColumn.Organization]
      */
-    val jobTitle: String?
-    val isStarred: Boolean
-    val columns: List<ContactColumn>
+    public val jobTitle: String?
+    public val isStarred: Boolean
+    public val columns: List<ContactColumn>
 }
 
-fun Contact.containsColumn(column: ContactColumn): Boolean {
+public fun Contact.containsColumn(column: ContactColumn): Boolean {
     return columns.any { it == column }
 }
 
-fun Contact.containsLinkedAccountColumns(): Boolean {
+public fun Contact.containsLinkedAccountColumns(): Boolean {
     return columns.any { it is LinkedAccountValues }
 }
 
@@ -180,7 +180,7 @@ fun Contact.containsLinkedAccountColumns(): Boolean {
  * Modifying the properties of the contact will not affect the stored contact of the device.
  * See [ContactStore] to learn how to persist your changes.
  */
-fun Contact.mutableCopy(): MutableContact {
+public fun Contact.mutableCopy(): MutableContact {
     return MutableContact(
         contactId = contactId,
         firstName = if (containsColumn(Names)) firstName else null,
@@ -229,7 +229,7 @@ fun Contact.mutableCopy(): MutableContact {
 /**
  * Creates a [Uri] pointing to the image assigned to the contact
  */
-val Contact.imageUri: Uri
+public val Contact.imageUri: Uri
     get() {
         val contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId)
         return Uri.withAppendedPath(contactUri, Photo.CONTENT_DIRECTORY)

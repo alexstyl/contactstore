@@ -4,4 +4,4 @@ package com.alexstyl.contactstore
     level = RequiresOptIn.Level.WARNING,
     message = "This is an experimental API. It may be changed or removed in the future."
 )
-annotation class ExperimentalContactStoreApi
+public annotation class ExperimentalContactStoreApi

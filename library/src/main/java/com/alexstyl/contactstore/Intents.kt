@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
  *
  * @param lookupKey The [LookupKey] of the contact to be shared
  */
-fun shareVCardIntent(lookupKey: LookupKey): Intent {
+public fun shareVCardIntent(lookupKey: LookupKey): Intent {
     val shareUri = Uri.withAppendedPath(
         ContactsContract.Contacts.CONTENT_VCARD_URI,
         lookupKey.value
@@ -29,7 +29,7 @@ fun shareVCardIntent(lookupKey: LookupKey): Intent {
  * @param lookupKeys The [LookupKey]s of the contacts to be shared
  */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun shareVCardIntent(lookupKeys: List<LookupKey>): Intent {
+public fun shareVCardIntent(lookupKeys: List<LookupKey>): Intent {
     if (lookupKeys.size == 1) return shareVCardIntent(lookupKeys.first())
 
     val uriListBuilder = buildString {

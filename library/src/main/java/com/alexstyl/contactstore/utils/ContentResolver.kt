@@ -43,6 +43,6 @@ internal fun ContentResolver.runQueryFlow(
         }
 }
 
-fun valueIn(values: List<Any>): String {
+internal fun valueIn(values: List<Any>): String {
     return values.joinToString(",", prefix = "(", postfix = ")")
 }

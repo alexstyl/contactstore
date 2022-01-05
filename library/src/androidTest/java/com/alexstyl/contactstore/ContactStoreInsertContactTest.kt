@@ -20,7 +20,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class ContactStoreInsertContactTest : ContactStoreTestBase() {
+internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
 
     @Test
     fun insertsContactWithNames(): Unit = runBlocking {

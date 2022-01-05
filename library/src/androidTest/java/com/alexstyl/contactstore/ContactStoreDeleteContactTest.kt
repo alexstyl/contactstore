@@ -8,7 +8,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class ContactStoreDeleteContactTest : ContactStoreTestBase() {
+internal class ContactStoreDeleteContactTest : ContactStoreTestBase() {
 
     @Test
     fun deletesContact(): Unit = runBlocking {

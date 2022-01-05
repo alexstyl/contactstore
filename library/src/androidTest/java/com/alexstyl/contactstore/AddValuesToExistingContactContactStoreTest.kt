@@ -14,9 +14,11 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.RelationManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import org.junit.Ignore
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
+@Ignore("#27")
 class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test

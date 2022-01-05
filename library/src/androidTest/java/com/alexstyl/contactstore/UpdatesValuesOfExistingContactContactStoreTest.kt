@@ -8,8 +8,10 @@ import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.LocationHome
 import kotlinx.coroutines.runBlocking
+import org.junit.Ignore
 import org.junit.Test
 
+@Ignore("#27")
 class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test

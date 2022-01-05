@@ -1,6 +1,5 @@
 package com.alexstyl.contactstore.test
 
-import com.alexstyl.contactstore.ContactFixtures
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
 import com.alexstyl.contactstore.ContactPredicate.NameLookup
@@ -9,7 +8,6 @@ import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.MailAddress
 import com.alexstyl.contactstore.PartialContact
 import com.alexstyl.contactstore.PhoneNumber
-import com.alexstyl.contactstore.SnapshotFixtures
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat

@@ -1,7 +1,6 @@
 package com.alexstyl.contactstore.test
 
 import com.alexstyl.contactstore.ContactColumn
-import com.alexstyl.contactstore.ContactFixtures
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.GroupMembership
 import com.alexstyl.contactstore.ImageData
@@ -11,7 +10,6 @@ import com.alexstyl.contactstore.MailAddress
 import com.alexstyl.contactstore.Note
 import com.alexstyl.contactstore.PartialContact
 import com.alexstyl.contactstore.PostalAddress
-import com.alexstyl.contactstore.SnapshotFixtures
 import com.alexstyl.contactstore.WebAddress
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

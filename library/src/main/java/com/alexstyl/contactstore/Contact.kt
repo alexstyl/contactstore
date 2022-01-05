@@ -216,7 +216,7 @@ public fun Contact.mutableCopy(): MutableContact {
         phoneticLastName = if (containsColumn(Names)) phoneticLastName else null,
         phoneticMiddleName = if (containsColumn(Names)) phoneticMiddleName else null,
         groups = if (containsColumn(GroupMemberships)) groups.toMutableList() else mutableListOf(),
-        fullNameStyle = if (containsColumn(Names)) phoneticNameStyle else FullNameStyle.UNDEFINED,
+        fullNameStyle = if (containsColumn(Names)) fullNameStyle else FullNameStyle.UNDEFINED,
         nickname = if (containsColumn(Nickname)) nickname else null,
         linkedAccountValues = if (containsLinkedAccountColumns()) {
             linkedAccountValues

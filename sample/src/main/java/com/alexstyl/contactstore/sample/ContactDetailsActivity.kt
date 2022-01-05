@@ -47,6 +47,7 @@ import com.alexstyl.contactstore.ContactStore
 import com.alexstyl.contactstore.imageUri
 import com.alexstyl.contactstore.sample.ui.SetupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
+import com.alexstyl.contactstore.shareVCardIntent
 import com.alexstyl.contactstore.standardColumns
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -88,7 +89,11 @@ class ContactDetailsActivity : ComponentActivity() {
         setContent {
             ContactDetailsScreen(
                 contact = contact,
-                onUpClick = { finish() }
+                onUpClick = { finish() },
+                onShareClick = {
+                    val intent = shareVCardIntent(requireNotNull(contact.lookupKey))
+                    startActivity(intent)
+                }
             )
         }
     }
@@ -96,7 +101,8 @@ class ContactDetailsActivity : ComponentActivity() {
     @Composable
     private fun ContactDetailsScreen(
         contact: Contact,
-        onUpClick: () -> Unit = {}
+        onUpClick: () -> Unit = {},
+        onShareClick: () -> Unit = {},
     ) {
         SampleAppTheme {
             SetupSystemUi()
@@ -188,7 +194,8 @@ class ContactDetailsActivity : ComponentActivity() {
                     }
 
                     NavBar(
-                        onUpClick = { onUpClick() }
+                        onUpClick = onUpClick,
+                        onShareClick = onShareClick
                     )
                 }
             }
@@ -261,24 +268,44 @@ class ContactDetailsActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun NavBar(onUpClick: () -> Unit) {
-        Surface(
-            color = Color.Transparent,
-            shape = CircleShape,
-            modifier = Modifier
-                .padding(8.dp)
-                .size(56.dp),
-            onClick = onUpClick,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_back),
-                contentDescription = "Go back",
-                modifier = Modifier.wrapContentSize(
-                    align = Alignment.Center
+    private fun NavBar(onUpClick: () -> Unit, onShareClick: () -> Unit) {
+        Row {
+            Surface(
+                color = Color.Transparent,
+                shape = CircleShape,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(56.dp),
+                onClick = onUpClick,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_back),
+                    contentDescription = "Go back",
+                    modifier = Modifier.wrapContentSize(
+                        align = Alignment.Center
+                    )
                 )
-            )
-        }
 
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Surface(
+                color = Color.Transparent,
+                shape = CircleShape,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(56.dp),
+                onClick = onShareClick,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_share),
+                    contentDescription = "Share",
+                    modifier = Modifier.wrapContentSize(
+                        align = Alignment.Center
+                    )
+                )
+
+            }
+        }
     }
 
     companion object {

@@ -24,6 +24,11 @@ internal class ContactStoreDSLKtTest {
                 jobTitle = "Job Title"
                 organization = "Org"
 
+                phoneticFirstName = "Paolo"
+                phoneticMiddleName = "Mid"
+                phoneticLastName = "Melendez"
+                nickname = "Pao"
+
                 imageData = ImageData("image data".toByteArray())
                 isStarred = false
                 phone(
@@ -65,6 +70,11 @@ internal class ContactStoreDSLKtTest {
                     note = Note("Note to self")
                     jobTitle = "Job Title"
                     organization = "Org"
+
+                    phoneticFirstName = "Paolo"
+                    phoneticMiddleName = "Mid"
+                    phoneticLastName = "Melendez"
+                    nickname = "Pao"
 
                     imageData = ImageData("image data".toByteArray())
                     isStarred = false

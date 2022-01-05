@@ -14,7 +14,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 @ExperimentalContactStoreApi
-class ExecuteTestContactStoreTest {
+internal class ExecuteTestContactStoreTest {
     @Test
     fun `inserts contact`(): Unit = runBlocking {
         val store = TestContactStore(

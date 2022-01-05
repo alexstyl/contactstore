@@ -12,7 +12,13 @@ ext {
 apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
 
 android {
-    kotlinOptions.useIR = true
+    kotlinOptions {
+        jvmTarget = javaVersion
+        useIR = true
+        freeCompilerArgs = [
+                "-Xexplicit-api=strict"
+        ]
+    }
     compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {

@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.map
  * Do not use this class as a source of truth of how a real device will behave.
  */
 @ExperimentalContactStoreApi
-class TestContactStore(
+public class TestContactStore(
     contactsSnapshot: List<StoredContact> = emptyList()
 ) : ContactStore {
 

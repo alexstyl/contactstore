@@ -2,7 +2,7 @@ package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.test.StoredContact
 
-object SnapshotFixtures {
+internal object SnapshotFixtures {
     val KIM_CLAY = StoredContact(
         contactId = 1,
         firstName = "Kim",
@@ -41,7 +41,7 @@ object SnapshotFixtures {
     )
 }
 
-object ContactFixtures {
+internal object ContactFixtures {
     val PAOLO_MELENDEZ = PartialContact(
         contactId = 0L,
         displayName = "Prefix Paolo Mid Melendez, Suffix",

@@ -11,7 +11,7 @@ import com.alexstyl.contactstore.PhoneNumber
 import com.alexstyl.contactstore.PostalAddress
 import com.alexstyl.contactstore.WebAddress
 
-data class StoredContact(
+public data class StoredContact(
     val contactId: Long,
     val isStarred: Boolean = false,
     val prefix: String? = null,

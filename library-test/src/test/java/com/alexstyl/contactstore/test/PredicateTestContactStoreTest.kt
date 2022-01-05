@@ -16,7 +16,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 @ExperimentalContactStoreApi
-class PredicateTestContactStoreTest {
+internal class PredicateTestContactStoreTest {
     @Test
     fun `phone lookup`(): Unit = runBlocking {
         val store = TestContactStore(

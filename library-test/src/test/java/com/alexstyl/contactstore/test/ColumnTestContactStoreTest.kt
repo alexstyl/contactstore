@@ -19,7 +19,7 @@ import org.assertj.core.api.Assertions
 import org.junit.Test
 
 @ExperimentalContactStoreApi
-class ColumnTestContactStoreTest {
+internal class ColumnTestContactStoreTest {
     @Test
     fun `fetches minimum details from snapshot`(): Unit = runBlocking {
         val store = TestContactStore(

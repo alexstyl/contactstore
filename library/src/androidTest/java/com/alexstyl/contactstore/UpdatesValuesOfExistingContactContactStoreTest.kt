@@ -1,17 +1,10 @@
 package com.alexstyl.contactstore
 
-import com.alexstyl.contactstore.ContactColumn.Events
-import com.alexstyl.contactstore.ContactColumn.Mails
-import com.alexstyl.contactstore.ContactColumn.Names
-import com.alexstyl.contactstore.ContactColumn.Phones
-import com.alexstyl.contactstore.ContactColumn.PostalAddresses
-import com.alexstyl.contactstore.ContactColumn.WebAddresses
+import com.alexstyl.contactstore.ContactColumn.*
 import com.alexstyl.contactstore.Label.LocationHome
 import kotlinx.coroutines.runBlocking
-import org.junit.Ignore
 import org.junit.Test
 
-@Ignore("#27")
 internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test

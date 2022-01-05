@@ -1,24 +1,13 @@
 package com.alexstyl.contactstore
 
-import com.alexstyl.contactstore.ContactColumn.Events
-import com.alexstyl.contactstore.ContactColumn.ImAddresses
-import com.alexstyl.contactstore.ContactColumn.Mails
-import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.*
 import com.alexstyl.contactstore.ContactColumn.Note
-import com.alexstyl.contactstore.ContactColumn.Organization
-import com.alexstyl.contactstore.ContactColumn.Phones
-import com.alexstyl.contactstore.ContactColumn.PostalAddresses
-import com.alexstyl.contactstore.ContactColumn.Relations
-import com.alexstyl.contactstore.ContactColumn.SipAddresses
-import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.RelationManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.junit.Ignore
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-@Ignore("#27")
 internal class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase() {
 
     @Test

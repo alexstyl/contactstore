@@ -25,7 +25,7 @@ internal abstract class ContactStoreTestBase {
         val actual = store.fetchContacts(
             predicate = ContactPredicate.ContactLookup(inContactIds = listOf(editedContact.contactId)),
             columnsToFetch = editedContact.columns
-        ).first().first().mutableCopy()
+        ).first().first()
 
         assertThat(actual, equalContents(editedContact))
     }

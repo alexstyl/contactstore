@@ -10,6 +10,7 @@ internal class ContactStoreDSLKtTest {
 
     @Test
     fun insert(): Unit = runBlocking {
+        error("BOOM! @ unit test")
         val store = contactStore()
         store.execute {
             insert {

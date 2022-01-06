@@ -12,7 +12,6 @@ internal class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase
 
     @Test
     fun updatesNames(): Unit = runBlocking {
-        error("BOOM! @ BaseTest")
         val contact = buildStoreContact(Names) {
             firstName = "Paolo"
             lastName = "Melendez"

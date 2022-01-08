@@ -180,6 +180,16 @@ public fun Contact.containsLinkedAccountColumns(): Boolean {
  * Modifying the properties of the contact will not affect the stored contact of the device.
  * See [ContactStore] to learn how to persist your changes.
  */
+public fun Contact.mutableCopy(builder: MutableContact.() -> Unit): MutableContact {
+    return mutableCopy().apply(builder)
+}
+
+/**
+ * Creates a copy of the Contact that can have its properties modified.
+ *
+ * Modifying the properties of the contact will not affect the stored contact of the device.
+ * See [ContactStore] to learn how to persist your changes.
+ */
 public fun Contact.mutableCopy(): MutableContact {
     return MutableContact(
         contactId = contactId,
@@ -205,7 +215,7 @@ public fun Contact.mutableCopy(): MutableContact {
         else
             mutableListOf(),
         imAddresses = if (containsColumn(ImAddresses)) imAddresses.toMutableList() else mutableListOf(),
-        relations = if(containsColumn(Relations)) relations.toMutableList() else mutableListOf(),
+        relations = if (containsColumn(Relations)) relations.toMutableList() else mutableListOf(),
         note = if (containsColumn(Note)) note else null,
         columns = columns,
         middleName = if (containsColumn(Names)) middleName else null,

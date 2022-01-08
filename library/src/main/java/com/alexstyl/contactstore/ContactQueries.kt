@@ -87,7 +87,7 @@ internal class ContactQueries(
                 .build(),
             projection = SimpleQuery.PROJECTION,
             selection = null,
-            sortOrder = Contacts.DISPLAY_NAME_PRIMARY
+            sortOrder = Contacts.SORT_KEY_PRIMARY
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
@@ -106,7 +106,7 @@ internal class ContactQueries(
             contentUri = Contacts.CONTENT_URI,
             projection = SimpleQuery.PROJECTION,
             selection = buildColumnsToFetchSelection(predicate),
-            sortOrder = Contacts.DISPLAY_NAME_PRIMARY
+            sortOrder = Contacts.SORT_KEY_PRIMARY
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
@@ -132,7 +132,7 @@ internal class ContactQueries(
                 EmailColumns.LOOKUP_KEY,
             ),
             selection = null,
-            sortOrder = Contacts.DISPLAY_NAME_PRIMARY
+            sortOrder = EmailColumns.SORT_KEY_PRIMARY
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
@@ -171,9 +171,10 @@ internal class ContactQueries(
                 PHONE_LOOKUP_CONTACT_ID,
                 ContactsContract.PhoneLookup.DISPLAY_NAME_PRIMARY,
                 ContactsContract.PhoneLookup.STARRED,
-                ContactsContract.PhoneLookup.LOOKUP_KEY,
+                ContactsContract.PhoneLookup.LOOKUP_KEY
             ),
-            selection = null,
+            // using DISPLAY_NAME_PRIMARY as ContactsContract.PhoneLookup.SORT_KEY_PRIMARY
+            // throws an column name ambiguous error
             sortOrder = Contacts.DISPLAY_NAME_PRIMARY
         ).map { cursor ->
             cursor.mapEachRow {
@@ -194,7 +195,7 @@ internal class ContactQueries(
             contentUri = Contacts.CONTENT_URI,
             projection = SimpleQuery.PROJECTION,
             selection = null,
-            sortOrder = Contacts.DISPLAY_NAME_PRIMARY
+            sortOrder = Contacts.SORT_KEY_PRIMARY
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(

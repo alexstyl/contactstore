@@ -4,7 +4,7 @@ This community seeks the following types of contributions:
 
 - **Ideas**: participate in an issue thread or start your own to have your voice heard.
 - **Bug reporting**: report any bug you encounter while using the API.
-- **Open issues**: feel free to work on any Github issue is currently open.
+- **Open issues**: feel free to work on any Github issue that is not currently assigned to someone else.
 
 Kindly, do *not* open a PR with work that is not listed as a Github issue or you haven't reached out first.   
 

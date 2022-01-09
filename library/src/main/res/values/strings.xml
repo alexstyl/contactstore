@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blog">Blog</string>
+    <string name="ftp">FTP</string>
+    <string name="home_page">Home Page</string>
+    <string name="profile">Profile</string>
+</resources>

@@ -28,10 +28,12 @@ public interface ContactStore {
      *
      * @param predicate The conditions that a contact need to meet in order to be fetched
      * @param columnsToFetch The columns of the contact you need to be fetched
+     * @param displayNameStyle The preferred style for the [Contact.displayName] to be returned. The fetched contacts' sorting order will match this option.
      */
     public fun fetchContacts(
         predicate: ContactPredicate? = null,
-        columnsToFetch: List<ContactColumn> = emptyList()
+        columnsToFetch: List<ContactColumn> = emptyList(),
+        displayNameStyle: DisplayNameStyle = DisplayNameStyle.Primary
     ): Flow<List<Contact>>
 
     public companion object {

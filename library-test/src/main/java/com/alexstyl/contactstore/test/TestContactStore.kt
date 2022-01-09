@@ -6,6 +6,7 @@ import com.alexstyl.contactstore.ContactColumn
 import com.alexstyl.contactstore.ContactOperation
 import com.alexstyl.contactstore.ContactPredicate
 import com.alexstyl.contactstore.ContactStore
+import com.alexstyl.contactstore.DisplayNameStyle
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.MutableContact
 import com.alexstyl.contactstore.PartialContact
@@ -168,7 +169,8 @@ public class TestContactStore(
 
     override fun fetchContacts(
         predicate: ContactPredicate?,
-        columnsToFetch: List<ContactColumn>
+        columnsToFetch: List<ContactColumn>,
+        displayNameStyle: DisplayNameStyle
     ): Flow<List<Contact>> {
         return snapshot
             .map { contacts ->

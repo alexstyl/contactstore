@@ -124,7 +124,8 @@ internal class ContactStoreDSLKtTest {
 
         override fun fetchContacts(
             predicate: ContactPredicate?,
-            columnsToFetch: List<ContactColumn>
+            columnsToFetch: List<ContactColumn>,
+            displayNameStyle: DisplayNameStyle
         ): Flow<List<Contact>> {
             return emptyFlow()
         }

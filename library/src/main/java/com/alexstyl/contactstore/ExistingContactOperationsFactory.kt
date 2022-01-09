@@ -53,7 +53,8 @@ internal class ExistingContactOperationsFactory(
     private suspend fun updateSuspend(contact: MutableContact): List<ContentProviderOperation> {
         val existingContact = contactQueries.queryContacts(
             predicate = ContactPredicate.ContactLookup(inContactIds = listOf(contact.contactId)),
-            columnsToFetch = contact.columns
+            columnsToFetch = contact.columns,
+            displayNameStyle = DisplayNameStyle.Primary
         ).first().firstOrNull() ?: return emptyList()
         return updatesNames(contact) +
                 replacePhoto(contact) +

@@ -2,7 +2,9 @@ package com.alexstyl.contactstore
 
 import android.content.ContentResolver
 import android.provider.ContactsContract
-import com.alexstyl.contactstore.ContactOperation.*
+import com.alexstyl.contactstore.ContactOperation.Delete
+import com.alexstyl.contactstore.ContactOperation.Insert
+import com.alexstyl.contactstore.ContactOperation.Update
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -28,8 +30,9 @@ internal class AndroidContactStore(
 
     override fun fetchContacts(
         predicate: ContactPredicate?,
-        columnsToFetch: List<ContactColumn>
+        columnsToFetch: List<ContactColumn>,
+        displayNameStyle: DisplayNameStyle
     ): Flow<List<Contact>> {
-        return contactQueries.queryContacts(predicate, columnsToFetch)
+        return contactQueries.queryContacts(predicate, columnsToFetch, displayNameStyle)
     }
 }

@@ -58,9 +58,10 @@ internal class ContactQueries(
 
     fun queryContacts(
         predicate: ContactPredicate?,
-        columnsToFetch: List<ContactColumn>
+        columnsToFetch: List<ContactColumn>,
+        displayNameStyle: DisplayNameStyle
     ): Flow<List<Contact>> {
-        return queryContacts(predicate)
+        return queryContacts(predicate, displayNameStyle)
             .map { contacts ->
                 if (columnsToFetch.isEmpty()) {
                     contacts
@@ -70,78 +71,81 @@ internal class ContactQueries(
             }
     }
 
-    private fun queryContacts(predicate: ContactPredicate?): Flow<List<PartialContact>> {
+    private fun queryContacts(
+        predicate: ContactPredicate?,
+        displayNameStyle: DisplayNameStyle
+    ): Flow<List<PartialContact>> {
         return when (predicate) {
-            null -> queryAllContacts()
-            is ContactLookup -> lookupFromPredicate(predicate)
-            is MailLookup -> lookupFromMail(predicate.mailAddress)
-            is PhoneLookup -> lookupFromPhone(predicate.phoneNumber)
-            is NameLookup -> lookupFromName(predicate.partOfName)
+            null -> queryAllContacts(displayNameStyle)
+            is ContactLookup -> lookupFromPredicate(predicate, displayNameStyle)
+            is MailLookup -> lookupFromMail(predicate.mailAddress, displayNameStyle)
+            is PhoneLookup -> lookupFromPhone(predicate.phoneNumber, displayNameStyle)
+            is NameLookup -> lookupFromName(predicate.partOfName, displayNameStyle)
         }
     }
 
-    private fun lookupFromName(name: String): Flow<List<PartialContact>> {
+    private fun lookupFromName(
+        name: String,
+        displayNameStyle: DisplayNameStyle
+    ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = Contacts.CONTENT_FILTER_URI.buildUpon()
                 .appendEncodedPath(name)
                 .build(),
-            projection = SimpleQuery.PROJECTION,
-            selection = null,
-            sortOrder = Contacts.SORT_KEY_PRIMARY
+            projection = ContactsQuery.projection(displayNameStyle),
+            sortOrder = ContactsQuery.sortOrder(displayNameStyle),
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
-                    contactId = SimpleQuery.getContactId(it),
-                    lookupKey = SimpleQuery.getLookupKey(it),
-                    displayName = SimpleQuery.getDisplayName(it),
-                    isStarred = SimpleQuery.getIsStarred(it),
+                    contactId = ContactsQuery.getContactId(it),
+                    lookupKey = ContactsQuery.getLookupKey(it),
+                    displayName = ContactsQuery.getDisplayName(it),
+                    isStarred = ContactsQuery.getIsStarred(it),
                     columns = emptyList()
                 )
             }
         }
     }
 
-    private fun lookupFromPredicate(predicate: ContactLookup): Flow<List<PartialContact>> {
+    private fun lookupFromPredicate(
+        predicate: ContactLookup,
+        displayNameStyle: DisplayNameStyle
+    ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = Contacts.CONTENT_URI,
-            projection = SimpleQuery.PROJECTION,
+            projection = ContactsQuery.projection(displayNameStyle),
             selection = buildColumnsToFetchSelection(predicate),
-            sortOrder = Contacts.SORT_KEY_PRIMARY
+            sortOrder = ContactsQuery.sortOrder(displayNameStyle)
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
-                    contactId = SimpleQuery.getContactId(it),
-                    lookupKey = SimpleQuery.getLookupKey(it),
-                    displayName = SimpleQuery.getDisplayName(it),
-                    isStarred = SimpleQuery.getIsStarred(it),
+                    contactId = ContactsQuery.getContactId(it),
+                    lookupKey = ContactsQuery.getLookupKey(it),
+                    displayName = ContactsQuery.getDisplayName(it),
+                    isStarred = ContactsQuery.getIsStarred(it),
                     columns = emptyList()
                 )
             }
         }
     }
 
-    private fun lookupFromMail(mailAddress: MailAddress): Flow<List<PartialContact>> {
+    private fun lookupFromMail(
+        mailAddress: MailAddress,
+        displayNameStyle: DisplayNameStyle
+    ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = EmailColumns.CONTENT_FILTER_URI.buildUpon()
                 .appendEncodedPath(mailAddress.raw)
                 .build(),
-            projection = arrayOf(
-                EmailColumns.CONTACT_ID,
-                EmailColumns.DISPLAY_NAME_PRIMARY,
-                EmailColumns.STARRED,
-                EmailColumns.LOOKUP_KEY,
-            ),
-            selection = null,
-            sortOrder = EmailColumns.SORT_KEY_PRIMARY
+            projection = FilterQuery.projection(displayNameStyle),
+            sortOrder = FilterQuery.sortOrder(displayNameStyle)
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
-                    contactId = it.getLong(0),
-                    displayName = it.getString(1),
-                    isStarred = it.getInt(2) == 1,
-                    lookupKey = it.getString(3)?.let { raw ->
-                        LookupKey(raw)
-                    },
+                    contactId = FilterQuery.getContactId(it),
+                    displayName = FilterQuery.getDisplayName(it),
+                    isStarred = FilterQuery.getIsStarred(it),
+                    lookupKey = FilterQuery.getLookupKey(it),
                     columns = emptyList()
                 )
             }
@@ -162,20 +166,29 @@ internal class ContactQueries(
         }
     }
 
-    private fun lookupFromPhone(phoneNumber: PhoneNumber): Flow<List<PartialContact>> {
+    private fun lookupFromPhone(
+        phoneNumber: PhoneNumber,
+        displayNameStyle: DisplayNameStyle
+    ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = ContactsContract.PhoneLookup.CONTENT_FILTER_URI.buildUpon()
                 .appendEncodedPath(phoneNumber.raw)
                 .build(),
             projection = arrayOf(
                 PHONE_LOOKUP_CONTACT_ID,
-                ContactsContract.PhoneLookup.DISPLAY_NAME_PRIMARY,
+                if (displayNameStyle == DisplayNameStyle.Primary) {
+                    ContactsContract.PhoneLookup.DISPLAY_NAME_PRIMARY
+                } else {
+                    ContactsContract.PhoneLookup.DISPLAY_NAME_ALTERNATIVE
+                },
                 ContactsContract.PhoneLookup.STARRED,
                 ContactsContract.PhoneLookup.LOOKUP_KEY
             ),
-            // using DISPLAY_NAME_PRIMARY as ContactsContract.PhoneLookup.SORT_KEY_PRIMARY
-            // throws an column name ambiguous error
-            sortOrder = Contacts.DISPLAY_NAME_PRIMARY
+            sortOrder = if (displayNameStyle == DisplayNameStyle.Primary) {
+                ContactsContract.PhoneLookup.DISPLAY_NAME_PRIMARY
+            } else {
+                ContactsContract.PhoneLookup.DISPLAY_NAME_ALTERNATIVE
+            }
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
@@ -190,19 +203,20 @@ internal class ContactQueries(
 
     }
 
-    private fun queryAllContacts(): Flow<List<PartialContact>> {
+    private fun queryAllContacts(
+        displayNameStyle: DisplayNameStyle
+    ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = Contacts.CONTENT_URI,
-            projection = SimpleQuery.PROJECTION,
-            selection = null,
-            sortOrder = Contacts.SORT_KEY_PRIMARY
+            projection = ContactsQuery.projection(displayNameStyle),
+            sortOrder = ContactsQuery.sortOrder(displayNameStyle)
         ).map { cursor ->
             cursor.mapEachRow {
                 PartialContact(
-                    contactId = SimpleQuery.getContactId(it),
-                    lookupKey = SimpleQuery.getLookupKey(it),
-                    displayName = SimpleQuery.getDisplayName(it),
-                    isStarred = SimpleQuery.getIsStarred(it),
+                    contactId = ContactsQuery.getContactId(it),
+                    lookupKey = ContactsQuery.getLookupKey(it),
+                    displayName = ContactsQuery.getDisplayName(it),
+                    isStarred = ContactsQuery.getIsStarred(it),
                     columns = emptyList()
                 )
             }
@@ -648,20 +662,43 @@ internal class ContactQueries(
         }
     }
 
-    private object SimpleQuery {
-        val PROJECTION = arrayOf(
+    private object ContactsQuery {
+        fun projection(displayNameStyle: DisplayNameStyle): Array<String> {
+            return when (displayNameStyle) {
+                DisplayNameStyle.Primary -> PROJECTION
+                DisplayNameStyle.Alternative -> PROJECTION_ALT
+            }
+        }
+
+        private val PROJECTION = arrayOf(
             Contacts._ID,
             Contacts.DISPLAY_NAME_PRIMARY,
             Contacts.STARRED,
             Contacts.LOOKUP_KEY
         )
 
+        private val PROJECTION_ALT = arrayOf(
+            Contacts._ID,
+            Contacts.DISPLAY_NAME_ALTERNATIVE,
+            Contacts.STARRED,
+            Contacts.LOOKUP_KEY
+        )
+
+        private const val SORT_ORDER = Contacts.SORT_KEY_PRIMARY
+        private const val SORT_ORDER_ALT = Contacts.SORT_KEY_ALTERNATIVE
+
         fun getContactId(it: Cursor): Long {
             return it.getLong(0)
         }
 
-        fun getDisplayName(it: Cursor): String? {
-            return it.getString(1)
+        fun getDisplayName(cursor: Cursor): String? {
+            val indexPrimary = cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)
+            return if (indexPrimary == -1) {
+                val indexAlternative = cursor.getColumnIndex(Contacts.DISPLAY_NAME_ALTERNATIVE)
+                cursor.getString(indexAlternative)
+            } else {
+                cursor.getString(indexPrimary)
+            }
         }
 
         fun getIsStarred(it: Cursor): Boolean {
@@ -671,6 +708,70 @@ internal class ContactQueries(
         fun getLookupKey(it: Cursor): LookupKey? {
             return it.getString(3)?.let { raw ->
                 LookupKey(raw)
+            }
+        }
+
+        fun sortOrder(displayNameStyle: DisplayNameStyle): String {
+            return when (displayNameStyle) {
+                DisplayNameStyle.Primary -> SORT_ORDER
+                DisplayNameStyle.Alternative -> SORT_ORDER_ALT
+            }
+        }
+    }
+
+    private object FilterQuery {
+        fun projection(displayNameStyle: DisplayNameStyle): Array<String> {
+            return when (displayNameStyle) {
+                DisplayNameStyle.Primary -> PROJECTION
+                DisplayNameStyle.Alternative -> PROJECTION_ALT
+            }
+        }
+
+        private val PROJECTION = arrayOf(
+            EmailColumns.CONTACT_ID,
+            EmailColumns.DISPLAY_NAME_PRIMARY,
+            EmailColumns.STARRED,
+            EmailColumns.LOOKUP_KEY
+        )
+
+        private val PROJECTION_ALT = arrayOf(
+            EmailColumns.CONTACT_ID,
+            EmailColumns.DISPLAY_NAME_ALTERNATIVE,
+            EmailColumns.STARRED,
+            EmailColumns.LOOKUP_KEY
+        )
+
+        private const val SORT_ORDER = EmailColumns.SORT_KEY_PRIMARY
+        private const val SORT_ORDER_ALT = EmailColumns.SORT_KEY_ALTERNATIVE
+
+        fun getContactId(it: Cursor): Long {
+            return it.getLong(0)
+        }
+
+        fun getDisplayName(cursor: Cursor): String? {
+            val indexPrimary = cursor.getColumnIndex(EmailColumns.DISPLAY_NAME_PRIMARY)
+            return if (indexPrimary == -1) {
+                val indexAlternative = cursor.getColumnIndex(EmailColumns.DISPLAY_NAME_ALTERNATIVE)
+                cursor.getString(indexAlternative)
+            } else {
+                cursor.getString(indexPrimary)
+            }
+        }
+
+        fun getIsStarred(it: Cursor): Boolean {
+            return it.getInt(2) == 1
+        }
+
+        fun getLookupKey(it: Cursor): LookupKey? {
+            return it.getString(3)?.let { raw ->
+                LookupKey(raw)
+            }
+        }
+
+        fun sortOrder(displayNameStyle: DisplayNameStyle): String {
+            return when (displayNameStyle) {
+                DisplayNameStyle.Primary -> SORT_ORDER
+                DisplayNameStyle.Alternative -> SORT_ORDER_ALT
             }
         }
     }

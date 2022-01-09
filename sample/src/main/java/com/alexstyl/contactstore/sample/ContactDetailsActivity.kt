@@ -44,6 +44,7 @@ import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactStore
+import com.alexstyl.contactstore.getLocalizedString
 import com.alexstyl.contactstore.imageUri
 import com.alexstyl.contactstore.sample.ui.SetupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
@@ -121,7 +122,7 @@ class ContactDetailsActivity : ComponentActivity() {
                             item {
                                 Contactable(
                                     icon = drawableResource(R.drawable.ic_call),
-                                    label = "Phone",
+                                    label = phone.label.getLocalizedString(resources),
                                     value = phone.value.raw,
                                     onClick = {
                                         val intent = Intent(Intent.ACTION_DIAL).apply {
@@ -136,7 +137,7 @@ class ContactDetailsActivity : ComponentActivity() {
                             item {
                                 Contactable(
                                     icon = drawableResource(R.drawable.ic_mail),
-                                    label = "Mail",
+                                    label = mail.label.getLocalizedString(resources),
                                     value = mail.value.raw,
                                     onClick = {
                                         val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -158,9 +159,10 @@ class ContactDetailsActivity : ComponentActivity() {
                                 }
                                 Contactable(
                                     icon = drawableResource(R.drawable.ic_event),
-                                    label = "Event",
+                                    label = event.label.getLocalizedString(resources),
                                     value = value,
                                     onClick = {
+
                                     }
                                 )
                             }

@@ -62,8 +62,10 @@ public fun Label.getLocalizedString(resources: Resources): String {
         is Label.Custom -> this.label
         Label.DateAnniversary -> resources.getString(Event.getTypeResource(Event.TYPE_ANNIVERSARY))
         Label.DateBirthday -> resources.getString(Event.getTypeResource(Event.TYPE_BIRTHDAY))
-        Label.LocationHome -> resources.getString(Event.getTypeResource(Event.TYPE_BIRTHDAY))
+
+        Label.LocationHome -> resources.getString(StructuredPostal.getTypeLabelResource(StructuredPostal.TYPE_HOME))
         Label.LocationWork -> resources.getString(StructuredPostal.getTypeLabelResource(StructuredPostal.TYPE_WORK))
+
         Label.Main -> resources.getString(Phone.getTypeLabelResource(Phone.TYPE_MAIN))
         Label.Other -> resources.getString(Phone.getTypeLabelResource(Phone.TYPE_OTHER))
         Label.PhoneNumberAssistant -> resources.getString(Phone.getTypeLabelResource(Phone.TYPE_ASSISTANT))
@@ -82,6 +84,7 @@ public fun Label.getLocalizedString(resources: Resources): String {
         Label.PhoneNumberTtyTdd -> resources.getString(Phone.getTypeLabelResource(Phone.TYPE_TTY_TDD))
         Label.PhoneNumberWorkMobile -> resources.getString(Phone.getTypeLabelResource(Phone.TYPE_WORK_MOBILE))
         Label.PhoneNumberWorkPager -> resources.getString(Phone.getTypeLabelResource(Phone.TYPE_WORK_PAGER))
+
         Label.RelationBrother -> resources.getString(Relation.getTypeLabelResource(Relation.TYPE_BROTHER))
         Label.RelationChild -> resources.getString(Relation.getTypeLabelResource(Relation.TYPE_CHILD))
         Label.RelationDomesticPartner -> resources.getString(Relation.getTypeLabelResource(Relation.TYPE_DOMESTIC_PARTNER))
@@ -95,6 +98,7 @@ public fun Label.getLocalizedString(resources: Resources): String {
         Label.RelationRelative -> resources.getString(Relation.getTypeLabelResource(Relation.TYPE_RELATIVE))
         Label.RelationSister -> resources.getString(Relation.getTypeLabelResource(Relation.TYPE_SISTER))
         Label.RelationSpouse -> resources.getString(Relation.getTypeLabelResource(Relation.TYPE_SPOUSE))
+
         Label.WebsiteBlog -> resources.getString(R.string.blog)
         Label.WebsiteFtp -> resources.getString(R.string.ftp)
         Label.WebsiteHomePage -> resources.getString(R.string.home_page)

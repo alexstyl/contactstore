@@ -22,7 +22,7 @@ internal class RequiredReadColumn<T>(
         return if (contact.containsColumn(column)) {
             value
         } else {
-            error("Tried to get ${property.name}, but the contact did not contain column $column")
+            error("Tried to get ${property.name}, but the contact did not contain column ${column.javaClass.simpleName}")
         }
     }
 }
@@ -54,7 +54,7 @@ internal fun <T> Contact.readWriteField(
 
         override fun getValue(thisRef: Contact, property: KProperty<*>): T {
             if (thisRef.containsColumn(requiredColumn)) return mutableValue
-            error("Tried to get ${property.name}, but the contact did not contain column $requiredColumn")
+            error("Tried to get ${property.name}, but the contact did not contain column ${requiredColumn.javaClass.simpleName}")
         }
 
         override fun setValue(thisRef: Contact, property: KProperty<*>, value: T) {

@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 public suspend fun ContactStore.execute(request: SaveRequest.() -> Unit) {
+    @Suppress("DEPRECATION")
     execute(SaveRequest().apply(request))
 }
 

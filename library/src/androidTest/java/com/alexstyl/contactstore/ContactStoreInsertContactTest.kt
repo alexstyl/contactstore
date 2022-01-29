@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore
 
+import android.net.Uri
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Mails
@@ -217,7 +218,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
                 MutableContact().apply {
                     webAddresses.add(
                         LabeledValue(
-                            value = WebAddress("https://acme.corp"),
+                            value = WebAddress(Uri.parse("https://acme.corp")),
                             label = Label.WebsiteHomePage,
                             id = 0
                         )
@@ -231,7 +232,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             columns = listOf(WebAddresses),
             webAddresses = listOf(
                 LabeledValue(
-                    WebAddress("https://acme.corp"),
+                    WebAddress(Uri.parse("https://acme.corp")),
                     Label.WebsiteHomePage,
                     id = 0
                 )

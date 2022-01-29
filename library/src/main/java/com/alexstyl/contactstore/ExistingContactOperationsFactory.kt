@@ -400,7 +400,7 @@ internal class ExistingContactOperationsFactory(
             oldValues = oldContact.webAddresses,
             newValues = newContact.webAddresses
         ) { labeledValue ->
-            withValue(WebAddressColumns.URL, labeledValue.value.raw)
+            withValue(WebAddressColumns.URL, labeledValue.value.raw.toString())
                 .withWebAddressLabel(labeledValue.label)
         }
     }

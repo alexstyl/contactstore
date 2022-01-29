@@ -1,11 +1,15 @@
 package com.alexstyl.contactstore
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 internal class ContactStoreDSLKtTest {
 
     @Test
@@ -46,7 +50,7 @@ internal class ContactStoreDSLKtTest {
                 )
 
                 webAddress(
-                    address = "www.paolo.com",
+                    address = Uri.parse("www.paolo.com"),
                     label = Label.LocationWork
                 )
                 groupMembership(groupId = 123)
@@ -98,7 +102,7 @@ internal class ContactStoreDSLKtTest {
 
                     webAddresses.add(
                         LabeledValue(
-                            value = WebAddress("www.paolo.com"),
+                            value = WebAddress(Uri.parse("www.paolo.com")),
                             label = Label.LocationWork
                         )
                     )

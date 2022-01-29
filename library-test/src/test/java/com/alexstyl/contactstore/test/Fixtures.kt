@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore.test
 
+import android.net.Uri
 import com.alexstyl.contactstore.EventDate
 import com.alexstyl.contactstore.GroupMembership
 import com.alexstyl.contactstore.ImageData
@@ -38,7 +39,7 @@ internal object SnapshotFixtures {
         organization = "Organization",
         jobTitle = "Job Title",
         webAddresses = listOf(
-            LabeledValue(WebAddress("www.web.com"), Label.WebsiteHomePage)
+            LabeledValue(WebAddress(Uri.parse("www.web.com")), Label.WebsiteHomePage)
         ),
         events = listOf(
             LabeledValue(EventDate(1, 1, 2021), Label.DateBirthday)
@@ -73,7 +74,7 @@ internal object ContactFixtures {
         organization = "Organization",
         jobTitle = "Job Title",
         webAddresses = listOf(
-            LabeledValue(WebAddress("www.web.com"), Label.WebsiteHomePage)
+            LabeledValue(WebAddress(Uri.parse("www.web.com")), Label.WebsiteHomePage)
         ),
         events = listOf(
             LabeledValue(EventDate(1, 1, 2021), Label.DateBirthday)

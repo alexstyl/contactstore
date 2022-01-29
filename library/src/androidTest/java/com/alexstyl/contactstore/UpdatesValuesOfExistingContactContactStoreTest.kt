@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore
 
+import android.net.Uri
 import com.alexstyl.contactstore.ContactColumn.*
 import com.alexstyl.contactstore.Label.LocationHome
 import kotlinx.coroutines.runBlocking
@@ -115,7 +116,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
             firstName = "Paolo"
             lastName = "Melendez"
             webAddresses.add(
-                LabeledValue(WebAddress("https://web/address"), Label.WebsiteProfile)
+                LabeledValue(WebAddress(Uri.parse("https://web/address")), Label.WebsiteProfile)
             )
         }
 
@@ -124,7 +125,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
             webAddresses.replaceId(
                 id,
                 LabeledValue(
-                    WebAddress("https://web/address.com"),
+                    WebAddress(Uri.parse("https://web/address.com")),
                     Label.WebsiteProfile,
                     id
                 )

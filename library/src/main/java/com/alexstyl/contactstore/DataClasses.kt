@@ -1,5 +1,7 @@
 package com.alexstyl.contactstore
 
+import android.net.Uri
+
 public data class MailAddress(val raw: String)
 
 public data class Note(val raw: String)
@@ -25,7 +27,13 @@ public data class ImageData(val raw: ByteArray) {
 
 public data class PhoneNumber(val raw: String)
 
-public data class WebAddress(val raw: String)
+public data class WebAddress(val raw: Uri)
+
+@Deprecated(
+    "This function will be removed in 1.0.0",
+    ReplaceWith("WebAddress(Uri.parse(raw))", "import android.net.Uri")
+)
+public fun WebAddress(raw: String): WebAddress = WebAddress(Uri.parse(raw))
 
 public data class PostalAddress(
     val street: String,

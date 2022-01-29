@@ -322,7 +322,7 @@ internal class ContactQueries(
                         val webAddressString = row[WebColumns.URL]
                         val id = row[WebColumns._ID].toLongOrNull()
                         if (webAddressString.isNotBlank() && id != null) {
-                            val mailAddress = WebAddress(webAddressString)
+                            val mailAddress = WebAddress(Uri.parse(webAddressString))
                             webAddresses.add(
                                 LabeledValue(mailAddress, webLabelFrom(row), id)
                             )

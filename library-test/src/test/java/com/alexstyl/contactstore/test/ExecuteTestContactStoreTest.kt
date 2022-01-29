@@ -10,8 +10,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 @ExperimentalContactStoreApi
+@RunWith(RobolectricTestRunner::class)
 internal class ExecuteTestContactStoreTest {
     @Test
     fun `inserts contact`(): Unit = runBlocking {

@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore
 
+import android.net.Uri
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Mails
@@ -142,7 +143,7 @@ internal class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase
         val expected = contact.mutableCopy {
             webAddresses.add(
                 LabeledValue(
-                    WebAddress("https://web/address"),
+                    WebAddress(Uri.parse("https://web/address")),
                     Label.WebsiteProfile
                 )
             )

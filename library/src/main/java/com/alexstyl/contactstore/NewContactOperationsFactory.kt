@@ -66,7 +66,7 @@ internal class NewContactOperationsFactory {
         return newInsert(Data.CONTENT_URI)
             .withValueBackReference(Data.RAW_CONTACT_ID, NEW_CONTACT_INDEX)
             .withValue(Data.MIMETYPE, WebsiteColumns.CONTENT_ITEM_TYPE)
-            .withValue(WebsiteColumns.URL, labeledValue.value.raw)
+            .withValue(WebsiteColumns.URL, labeledValue.value.raw.toString())
             .withWebsiteLabel(labeledValue.label)
             .build()
     }

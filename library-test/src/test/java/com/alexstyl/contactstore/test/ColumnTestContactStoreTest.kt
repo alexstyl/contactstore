@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore.test
 
+import android.net.Uri
 import com.alexstyl.contactstore.ContactColumn
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.GroupMembership
@@ -15,8 +16,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 @ExperimentalContactStoreApi
+@RunWith(RobolectricTestRunner::class)
 internal class ColumnTestContactStoreTest {
     @Test
     fun `fetches minimum details from snapshot`(): Unit = runBlocking {
@@ -259,7 +263,7 @@ internal class ColumnTestContactStoreTest {
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.WebAddresses),
                 webAddresses = listOf(
-                    LabeledValue(WebAddress("www.web.com"), Label.WebsiteHomePage)
+                    LabeledValue(WebAddress(Uri.parse("www.web.com")), Label.WebsiteHomePage)
                 ),
                 lookupKey = null,
             )

@@ -98,8 +98,7 @@ public interface Contact {
     /**
      * Requires: [ContactColumn.Image]
      *
-     * *NOTE*: If you need the contact image for UI purposes, you probably need [Contact.imageUri] instead.
-     * [ImageData] contains the raw [ByteArray] of the image, which might consume a lot of memory.
+     * *NOTE*: Consider using [Contact.thumbnailUri] instead if you do not need the high-res version of the photo.
      */
     public val imageData: ImageData?
 
@@ -237,10 +236,19 @@ public fun Contact.mutableCopy(): MutableContact {
 }
 
 /**
- * Creates a [Uri] pointing to the image assigned to the contact
+ * Creates a [Uri] pointing to the thumbnail image assigned to the contact
  */
-public val Contact.imageUri: Uri
+public val Contact.thumbnailUri: Uri
     get() {
         val contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId)
         return Uri.withAppendedPath(contactUri, Photo.CONTENT_DIRECTORY)
+    }
+
+@Deprecated(
+    "This function has been renamed and will be removed in 1.0.0",
+    ReplaceWith("thumbnailUri")
+)
+public val Contact.imageUri: Uri
+    get() {
+        return thumbnailUri
     }

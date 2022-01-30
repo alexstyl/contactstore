@@ -3,7 +3,6 @@ package com.alexstyl.contactstore.test
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.MutableContact
 import com.alexstyl.contactstore.PartialContact
-import com.alexstyl.contactstore.execute
 import com.alexstyl.contactstore.mutableCopy
 import com.alexstyl.contactstore.standardColumns
 import kotlinx.coroutines.flow.first

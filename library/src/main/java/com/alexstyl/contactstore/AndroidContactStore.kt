@@ -15,7 +15,16 @@ internal class AndroidContactStore(
     private val existingContactOperationsFactory: ExistingContactOperationsFactory,
     private val contactQueries: ContactQueries
 ) : ContactStore {
-    override suspend fun execute(request: SaveRequest) = withContext(Dispatchers.IO) {
+
+    override suspend fun execute(request: SaveRequest.() -> Unit) {
+        executeInternal(SaveRequest().apply(request))
+    }
+
+    override suspend fun execute(request: SaveRequest) {
+        executeInternal(request)
+    }
+
+    private suspend fun executeInternal(request: SaveRequest) = withContext(Dispatchers.IO) {
         request.requests.map { operation ->
             when (operation) {
                 is Update -> existingContactOperationsFactory.updateOperation(operation.contact)

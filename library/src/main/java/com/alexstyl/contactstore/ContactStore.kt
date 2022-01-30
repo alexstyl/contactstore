@@ -20,6 +20,8 @@ public interface ContactStore {
     )
     public suspend fun execute(request: SaveRequest)
 
+    public suspend fun execute(request: SaveRequest.() -> Unit)
+
     /**
      * Returns a [Flow] that emits the contacts of the device matching the given [predicate].
      *

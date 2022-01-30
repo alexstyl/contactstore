@@ -126,6 +126,10 @@ internal class ContactStoreDSLKtTest {
             this.request = request
         }
 
+        override suspend fun execute(request: SaveRequest.() -> Unit) {
+            this.request = SaveRequest().apply(request)
+        }
+
         override fun fetchContacts(
             predicate: ContactPredicate?,
             columnsToFetch: List<ContactColumn>,

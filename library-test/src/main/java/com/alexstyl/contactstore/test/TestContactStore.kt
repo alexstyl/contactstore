@@ -45,6 +45,17 @@ public class TestContactStore(
         }
     }
 
+    override suspend fun execute(request: SaveRequest.() -> Unit) {
+        val saveRequest = SaveRequest().apply(request)
+        saveRequest.requests.forEach { operation ->
+            when (operation) {
+                is ContactOperation.Delete -> deleteContact(withId = operation.contactId)
+                is ContactOperation.Insert -> insertContact(operation.contact)
+                is ContactOperation.Update -> updateContact(operation.contact)
+            }
+        }
+    }
+
     private suspend fun deleteContact(withId: Long) {
         snapshot.emit(
             snapshot.value.dropWhile { it.contactId == withId }

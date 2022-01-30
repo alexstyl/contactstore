@@ -1,9 +1,5 @@
 package com.alexstyl.contactstore
 
-public suspend fun ContactStore.execute(request: SaveRequest.() -> Unit) {
-    @Suppress("DEPRECATION")
-    execute(SaveRequest().apply(request))
-}
 
 public fun SaveRequest.insert(builder: MutableContactBuilder.() -> Unit) {
     val values = MutableContactBuilder().apply(builder)

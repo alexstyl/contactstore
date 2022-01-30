@@ -540,13 +540,7 @@ internal class ContactQueries(
             if (standardColumns.isNotEmpty()) {
                 append(
                     " ${Data.MIMETYPE} IN ${
-                        valueIn(standardColumns.map { column ->
-                            when (column) {
-                                is LinkedAccountValues ->
-                                    error("Tried to map a LinkedAccountColumn as standard column")
-                                else -> "?"
-                            }
-                        })
+                        valueIn(List(standardColumns.size) { "?" })
                     }"
                 )
             }
@@ -556,7 +550,7 @@ internal class ContactQueries(
                 }
                 append(
                     " ${RawContacts.ACCOUNT_TYPE} IN ${
-                        valueIn(linkedAccountColumns.map { "?" })
+                        valueIn(List(linkedAccountColumns.size) { "?" })
                     }"
                 )
             }

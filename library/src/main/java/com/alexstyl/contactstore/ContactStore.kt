@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 public interface ContactStore {
 
     @Deprecated(
-        "Prefer the version of this function that receives a lambda. This function will be remove in 1.0.0",
+        "Prefer the version of this function that receives a lambda. This function will be removed in 1.0.0",
         ReplaceWith("execute {}")
     )
     public suspend fun execute(request: SaveRequest)
@@ -23,10 +23,9 @@ public interface ContactStore {
     public suspend fun execute(request: SaveRequest.() -> Unit)
 
     /**
-     * Returns a [Flow] that emits the contacts of the device matching the given [predicate].
+     * Returns a [Flow] that emits all contacts matching the given [predicate].
      *
      * The Flow will continue emitting once a change is detected (i.e. an other app adds a new contact or a Content Provider syncs a new account) and never completes.
-     * Changes caused by other apps might take some seconds to register, as the underlying implementation uses Android's ContentObserver.
      *
      * @param predicate The conditions that a contact need to meet in order to be fetched
      * @param columnsToFetch The columns of the contact you need to be fetched

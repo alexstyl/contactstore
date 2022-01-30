@@ -59,10 +59,7 @@ public fun PostalAddress(fullAddress: String): PostalAddress {
     )
 }
 
-public data class GroupMembership(
-    val groupId: Long,
-    val _id: Long? = null,
-)
+public data class GroupMembership(val groupId: Long)
 
 public data class ImAddress(
     val raw: String,
@@ -70,10 +67,6 @@ public data class ImAddress(
 )
 
 public data class SipAddress(val raw: String)
-
-internal fun GroupMembership.requireId(): Long {
-    return requireNotNull(_id)
-}
 
 public data class LookupKey(val value: String)
 

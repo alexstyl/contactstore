@@ -92,9 +92,9 @@ internal class ExistingContactOperationsFactory(
         } + deleted.map { value ->
             newDelete(Data.CONTENT_URI)
                 .withSelection(
-                    "${Data.CONTACT_ID} = $forContactId" +
-                            " AND ${Data.MIMETYPE} = ?" +
-                            " AND ${Data._ID} = ${value.requireId()}",
+                    "${GroupsColumns.CONTACT_ID} = $forContactId" +
+                            " AND ${GroupsColumns.MIMETYPE} = ?" +
+                            " AND ${GroupsColumns.GROUP_ROW_ID} = ${value.groupId}",
                     arrayOf(GroupsColumns.CONTENT_ITEM_TYPE)
                 )
                 .build()

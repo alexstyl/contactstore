@@ -27,7 +27,6 @@ import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
 import android.provider.ContactsContract.RawContacts
-import android.util.Log
 import com.alexstyl.contactstore.ContactColumn.*
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
@@ -266,12 +265,8 @@ internal class ContactQueries(
                     }
                     GroupColumns.CONTENT_ITEM_TYPE -> {
                         val groupId = row[GroupColumns.GROUP_ROW_ID].toLongOrNull()
-                        val id = row[GroupColumns._ID].toLongOrNull()
-                        if (groupId != null && id != null) {
-                            groupIds.add(GroupMembership(_id = id, groupId = groupId))
-                        } else {
-                            Log.e("parse error", "Error parsing groupId: $groupId or id: $groupId ")
-                            return@iterate
+                        if (groupId != null) {
+                            groupIds.add(GroupMembership(groupId))
                         }
                     }
                     NameColumns.CONTENT_ITEM_TYPE -> {

@@ -7,6 +7,7 @@ import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Nickname
 import com.alexstyl.contactstore.ContactColumn.Note
 import com.alexstyl.contactstore.ContactColumn.Organization
 import com.alexstyl.contactstore.ContactColumn.Phones
@@ -84,7 +85,7 @@ public class MutableContact internal constructor(
     override var phoneticMiddleName: String? by readWriteField(Names, phoneticMiddleName)
     override var fullNameStyle: Int by readWriteField(Names, fullNameStyle)
     override var phoneticNameStyle: Int by readWriteField(Names, phoneticNameStyle)
-    override var nickname: String? by readWriteField(Names, nickname)
+    override var nickname: String? by readWriteField(Nickname, nickname)
 
     public constructor() : this(
         contactId = -1L,

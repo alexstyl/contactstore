@@ -35,7 +35,7 @@ public sealed class ContactColumn {
     public object Image : ContactColumn()
 
     /**
-     * A column that will populate the [Contact.prefix], [Contact.firstName],[Contact.middleName],[Contact.lastName], [Contact.suffix] fields of all queried contacts when requested.
+     * A column that will populate the [Contact.prefix], [Contact.firstName],[Contact.middleName],[Contact.lastName], [Contact.suffix], [Contact.phoneticFirstName], [Contact.phoneticMiddleName], [Contact.phoneticLastName] fields of all queried contacts when requested.
      */
     public object Names : ContactColumn()
 

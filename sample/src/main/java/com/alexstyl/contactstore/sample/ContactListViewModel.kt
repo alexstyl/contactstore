@@ -2,8 +2,11 @@ package com.alexstyl.contactstore.sample
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexstyl.contactstore.ContactColumn
+import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactPredicate
 import com.alexstyl.contactstore.ContactStore
+import com.alexstyl.contactstore.DisplayNameStyle
 import com.alexstyl.contactstore.sample.ContactListState.Loaded
 import com.alexstyl.contactstore.sample.ContactListState.PermissionRequired
 import dagger.hilt.android.lifecycle.HiltViewModel

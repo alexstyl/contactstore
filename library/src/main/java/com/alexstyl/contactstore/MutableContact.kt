@@ -67,7 +67,10 @@ public class MutableContact internal constructor(
 
     override val groups: MutableList<GroupMembership> by requireColumn(GroupMemberships, groups)
 
-    override val relations: MutableList<LabeledValue<Relation>> by requireColumn(Relations, relations)
+    override val relations: MutableList<LabeledValue<Relation>> by requireColumn(
+        Relations,
+        relations
+    )
 
     override var organization: String? by readWriteField(Organization, organization)
     override var jobTitle: String? by readWriteField(Organization, jobTitle)
@@ -115,27 +118,7 @@ public class MutableContact internal constructor(
     )
 
     override val displayName: String
-        get() = buildString {
-            appendWord(buildStringFromNames())
-
-            if (isEmpty()) {
-                phoneticFirstName?.let { append(it) }
-                phoneticMiddleName?.let { appendWord(it) }
-                phoneticLastName?.let { appendWord(it) }
-            }
-            if (isEmpty()) {
-                append(nickname.orEmpty())
-            }
-            if (isEmpty()) {
-                append(organization.orEmpty())
-            }
-            if (isEmpty()) {
-                phones.firstOrNull()?.let { append(it.value.raw) }
-            }
-            if (isEmpty()) {
-                mails.firstOrNull()?.let { append(it.value.raw) }
-            }
-        }
+        get() = displayName()
 
     override fun equals(other: Any?): Boolean {
         return equalContacts(other as Contact?)

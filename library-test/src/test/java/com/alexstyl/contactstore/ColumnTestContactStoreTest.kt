@@ -1,17 +1,7 @@
-package com.alexstyl.contactstore.test
+package com.alexstyl.contactstore
 
 import android.net.Uri
-import com.alexstyl.contactstore.ContactColumn
-import com.alexstyl.contactstore.ExperimentalContactStoreApi
-import com.alexstyl.contactstore.GroupMembership
-import com.alexstyl.contactstore.ImageData
-import com.alexstyl.contactstore.Label
-import com.alexstyl.contactstore.LabeledValue
-import com.alexstyl.contactstore.MailAddress
-import com.alexstyl.contactstore.Note
-import com.alexstyl.contactstore.PartialContact
-import com.alexstyl.contactstore.PostalAddress
-import com.alexstyl.contactstore.WebAddress
+import com.alexstyl.contactstore.test.TestContactStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions

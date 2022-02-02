@@ -5,6 +5,7 @@ import android.provider.ContactsContract
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
+import com.alexstyl.contactstore.test.samePropertiesAs
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -27,7 +28,7 @@ internal abstract class ContactStoreTestBase {
             columnsToFetch = editedContact.columns
         ).first().first()
 
-        assertThat(actual, equalContents(editedContact))
+        assertThat(actual, samePropertiesAs(editedContact))
     }
 
     suspend fun assertContactUpdatedNoId(expected: MutableContact) {
@@ -37,7 +38,7 @@ internal abstract class ContactStoreTestBase {
             columnsToFetch = expected.columns
         ).first().first()
 
-        assertThat(actual, equalContents(expected))
+        assertThat(actual, samePropertiesAs(expected))
     }
 
     protected lateinit var store: ContactStore
@@ -59,10 +60,15 @@ internal abstract class ContactStoreTestBase {
 
     protected fun contact(
         displayName: String? = null,
-        firstName: String? = null,
-        lastName: String? = null,
-        organization: String? = null,
-        jobTitle: String? = null,
+        // defaulting names to "" as Android seems to be returning empty strings instead of null
+        firstName: String = "",
+        lastName: String = "",
+        prefix: String = "",
+        middleName: String = "",
+        suffix: String = "",
+        organization: String = "",
+        jobTitle: String = "",
+        note: Note? = null,
         columns: List<ContactColumn> = emptyList(),
         phones: List<LabeledValue<PhoneNumber>> = emptyList(),
         mails: List<LabeledValue<MailAddress>> = emptyList(),
@@ -71,11 +77,7 @@ internal abstract class ContactStoreTestBase {
         webAddresses: List<LabeledValue<WebAddress>> = emptyList(),
         imAddresses: List<LabeledValue<ImAddress>> = emptyList(),
         sipAddresses: List<LabeledValue<SipAddress>> = emptyList(),
-        relations : List<LabeledValue<Relation>> = emptyList(),
-        note: Note? = null,
-        prefix: String? = null,
-        middleName: String? = null,
-        suffix: String? = null
+        relations: List<LabeledValue<Relation>> = emptyList(),
     ): PartialContact {
         return PartialContact(
             contactId = IGNORED,
@@ -89,6 +91,9 @@ internal abstract class ContactStoreTestBase {
             firstName = firstName,
             lastName = lastName,
             events = events,
+            phoneticFirstName = "",
+            phoneticLastName = "",
+            phoneticMiddleName = "",
             postalAddresses = postalAddresses,
             sipAddresses = sipAddresses,
             note = note,
@@ -119,7 +124,8 @@ internal abstract class ContactStoreTestBase {
 
     protected fun assertOnlyContact(actual: List<Contact>, expected: Contact) {
         assertThat(actual.size, equalTo(1))
-        assertThat(actual.first(), equalContents(expected))
+        assertThat(actual.first(), samePropertiesAs(expected))
+        assertThat(actual.first(), samePropertiesAs(expected))
     }
 
     private companion object {

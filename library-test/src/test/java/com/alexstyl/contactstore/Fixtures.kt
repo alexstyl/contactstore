@@ -1,18 +1,7 @@
-package com.alexstyl.contactstore.test
+package com.alexstyl.contactstore
 
 import android.net.Uri
-import com.alexstyl.contactstore.EventDate
-import com.alexstyl.contactstore.GroupMembership
-import com.alexstyl.contactstore.ImageData
-import com.alexstyl.contactstore.Label
-import com.alexstyl.contactstore.LabeledValue
-import com.alexstyl.contactstore.MailAddress
-import com.alexstyl.contactstore.Note
-import com.alexstyl.contactstore.PartialContact
-import com.alexstyl.contactstore.PhoneNumber
-import com.alexstyl.contactstore.PostalAddress
-import com.alexstyl.contactstore.WebAddress
-import com.alexstyl.contactstore.standardColumns
+import com.alexstyl.contactstore.test.StoredContact
 
 internal object SnapshotFixtures {
     val KIM_CLAY = StoredContact(

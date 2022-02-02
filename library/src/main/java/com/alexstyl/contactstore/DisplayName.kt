@@ -10,7 +10,7 @@ import com.alexstyl.contactstore.ContactColumn.Phones
 
 /**
  * Creates a display name of the given contact according to the
- * priority menitoned in [android.provider.ContactsContract.DisplayNameSources]
+ * priority mentioned in [android.provider.ContactsContract.DisplayNameSources]
  */
 internal fun MutableContact.displayName(): String {
     return buildString {

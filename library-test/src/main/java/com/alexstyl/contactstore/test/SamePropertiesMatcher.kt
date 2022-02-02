@@ -1,6 +1,11 @@
-package com.alexstyl.contactstore
+@file:JvmName("ContactMatchersKt")
 
+package com.alexstyl.contactstore.test
+
+import com.alexstyl.contactstore.Contact
+import com.alexstyl.contactstore.ContactColumn
 import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
 import com.alexstyl.contactstore.ContactColumn.Mails
@@ -13,15 +18,25 @@ import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
+import com.alexstyl.contactstore.LabeledValue
+import com.alexstyl.contactstore.containsColumn
+import com.alexstyl.contactstore.containsLinkedAccountColumns
+import com.alexstyl.contactstore.standardColumns
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeDiagnosingMatcher
 
-internal fun equalContents(expected: Contact): Matcher<in Contact> {
-    return EqualContentsContactMatcher(expected)
+/**
+ * Creates a matcher that matches when the examining object is logically equal to the passing Contact, minus any ids or lookup keys.
+ *
+ * As an example, two contacts that both contain the same phone number will match, even if their contactIds or phone ids are different.
+ *
+ */
+public fun samePropertiesAs(expected: Contact): Matcher<in Contact> {
+    return SamePropertiesMatcher(expected)
 }
 
-private class EqualContentsContactMatcher(
+private class SamePropertiesMatcher(
     private val expected: Contact
 ) : TypeSafeDiagnosingMatcher<Contact>() {
     override fun describeTo(description: Description) {
@@ -33,6 +48,7 @@ private class EqualContentsContactMatcher(
             buildString {
                 append("Columns: ${columns(contact)}")
                 append(" displayName = ${contact.displayName}")
+                append(" isStarred = ${contact.isStarred}")
 
                 if (containsColumn(Names)) {
                     putCommaIfNeeded()
@@ -41,7 +57,10 @@ private class EqualContentsContactMatcher(
                                 ", firstName = $firstName" +
                                 ", middleName = $middleName" +
                                 ", lastName = $lastName" +
-                                ", suffix = $suffix"
+                                ", suffix = $suffix" +
+                                ", phoneticFirstName = $phoneticFirstName" +
+                                ", phoneticMiddleName = $phoneticMiddleName" +
+                                ", phoneticLastName = $phoneticLastName"
                     )
                 }
                 if (containsColumn(Image)) {
@@ -92,6 +111,10 @@ private class EqualContentsContactMatcher(
                     putCommaIfNeeded()
                     append("imAddresses = ${labeledValues(imAddresses)}")
                 }
+                if (containsColumn(GroupMemberships)) {
+                    putCommaIfNeeded()
+                    append("groupMemberships = [${groups.joinToString(", ")}]")
+                }
             }
         }
     }
@@ -109,8 +132,16 @@ private class EqualContentsContactMatcher(
     override fun matchesSafely(actual: Contact, mismatchDescription: Description): Boolean {
         return with(actual) {
             when {
+                containsDifferentImageData(actual) -> {
+                    mismatchDescription.appendText("ImageData was ${actual.imageData}")
+                    false
+                }
                 containsDifferentColumns(actual) -> {
                     mismatchDescription.appendText("Columns were ${columns(actual)}")
+                    false
+                }
+                containsDifferentStarred(actual) -> {
+                    mismatchDescription.appendText("phones were ${actual.isStarred}")
                     false
                 }
                 namesAreDifferent(actual) -> {
@@ -123,8 +154,20 @@ private class EqualContentsContactMatcher(
                     )
                     false
                 }
+                phoneticNamesAreDifferent(actual) -> {
+                    mismatchDescription.appendText(
+                        "phoneticFirstName was '${actual.phoneticFirstName}'" +
+                                ", phoneticMiddleName was '${actual.phoneticMiddleName}'" +
+                                ", phoneticLastName was '${actual.phoneticLastName}'"
+                    )
+                    false
+                }
                 phonesAreDifferent(actual) -> {
                     mismatchDescription.appendText("phones were ${labeledValues(actual.phones)}")
+                    false
+                }
+                mailsAreDifferent(actual) -> {
+                    mismatchDescription.appendText("mails were ${labeledValues(actual.mails)}")
                     false
                 }
                 imAreDifferent(actual) -> {
@@ -137,10 +180,6 @@ private class EqualContentsContactMatcher(
                 }
                 organizationIsDifferent(actual) -> {
                     mismatchDescription.appendText("organization was ${actual.organization}, jobTitle was ${actual.jobTitle}")
-                    false
-                }
-                mailsAreDifferent(actual) -> {
-                    mismatchDescription.appendText("mails were ${labeledValues(actual.mails)}")
                     false
                 }
                 eventsAreDifferent(actual) -> {
@@ -159,8 +198,12 @@ private class EqualContentsContactMatcher(
                     mismatchDescription.appendText("note was ${actual.note}")
                     false
                 }
-                relationsAreDifferent(actual) ->{
+                relationsAreDifferent(actual) -> {
                     mismatchDescription.appendText("relations were ${actual.relations}")
+                    false
+                }
+                linkedAccountsAreDifferent(actual) -> {
+                    mismatchDescription.appendText("linkedAccountValues were ${actual.linkedAccountValues}")
                     false
                 }
                 displayName != expected.displayName -> {
@@ -173,10 +216,19 @@ private class EqualContentsContactMatcher(
     }
 
     private fun relationsAreDifferent(actual: Contact): Boolean {
-        if(expected.containsColumn(Relations).not()) {
+        if (expected.containsColumn(Relations).not()) {
             return false
         }
         return areLabeledValuesDifferentIgnoringId(actual.relations, expected.relations)
+    }
+
+    private fun linkedAccountsAreDifferent(actual: Contact): Boolean {
+        if (expected.containsLinkedAccountColumns().not()) {
+            return false
+        }
+        val map = actual.linkedAccountValues.map { it.copy(id = 0) }
+        val map1 = expected.linkedAccountValues.map { it.copy(id = 0) }
+        return map != map1
     }
 
     private fun imAreDifferent(actual: Contact): Boolean {
@@ -204,49 +256,69 @@ private class EqualContentsContactMatcher(
                 || actual.suffix != expected.suffix
     }
 
-    private fun notesAreDifferent(actual: Contact): Boolean {
+    private fun phoneticNamesAreDifferent(actual: Contact): Boolean {
+        if (expected.containsColumn(Names).not()) {
+            return false
+        }
+        return actual.phoneticFirstName != expected.phoneticFirstName
+                || actual.phoneticMiddleName != expected.phoneticMiddleName
+                || actual.phoneticLastName != expected.phoneticLastName
+    }
+
+    private fun notesAreDifferent(contact: Contact): Boolean {
         if (expected.containsColumn(Note).not()) {
             return false
         }
-        return actual.note != expected.note
+        return contact.note != expected.note
     }
 
-    private fun containsDifferentColumns(item: Contact): Boolean {
-        return columns(expected) != columns(item)
+    private fun containsDifferentColumns(contact: Contact): Boolean {
+        return columns(expected) != columns(contact)
     }
 
-    private fun columns(item: Contact): List<ContactColumn> {
+    private fun containsDifferentStarred(contact: Contact): Boolean {
+        return contact.isStarred != expected.isStarred
+    }
+
+    private fun columns(contact: Contact): List<ContactColumn> {
         return standardColumns()
-            .filter { item.containsColumn(it) }
+            .filter { contact.containsColumn(it) }
     }
 
-    private fun phonesAreDifferent(actual: Contact): Boolean {
+    private fun phonesAreDifferent(contact: Contact): Boolean {
         if (expected.containsColumn(Phones).not()) {
             return false
         }
-        return areLabeledValuesDifferentIgnoringId(actual.phones, expected.phones)
+        return areLabeledValuesDifferentIgnoringId(contact.phones, expected.phones)
     }
 
-    private fun organizationIsDifferent(actual: Contact): Boolean {
+    private fun organizationIsDifferent(contact: Contact): Boolean {
         if (expected.containsColumn(Organization).not()) {
             return false
         }
-        return expected.organization != actual.organization ||
-                expected.jobTitle != actual.jobTitle
+        return expected.organization != contact.organization ||
+                expected.jobTitle != contact.jobTitle
     }
 
-    private fun mailsAreDifferent(actual: Contact): Boolean {
+    private fun mailsAreDifferent(contact: Contact): Boolean {
         if (expected.containsColumn(Mails).not()) {
             return false
         }
-        return areLabeledValuesDifferentIgnoringId(actual.mails, expected.mails)
+        return areLabeledValuesDifferentIgnoringId(contact.mails, expected.mails)
     }
 
-    private fun eventsAreDifferent(actual: Contact): Boolean {
+    private fun containsDifferentImageData(contact: Contact): Boolean {
+        if (expected.containsColumn(Image).not()) {
+            return false
+        }
+        return contact.imageData != expected.imageData
+    }
+
+    private fun eventsAreDifferent(contact: Contact): Boolean {
         if (expected.containsColumn(Events).not()) {
             return false
         }
-        return areLabeledValuesDifferentIgnoringId(actual.events, expected.events)
+        return areLabeledValuesDifferentIgnoringId(contact.events, expected.events)
     }
 
     private fun postalAreDifferent(actual: Contact): Boolean {

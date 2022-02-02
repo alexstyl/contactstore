@@ -7,6 +7,7 @@ import com.alexstyl.contactstore.ContactOperation.Insert
 import com.alexstyl.contactstore.ContactOperation.Update
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 internal class AndroidContactStore(
@@ -43,5 +44,6 @@ internal class AndroidContactStore(
         displayNameStyle: DisplayNameStyle
     ): Flow<List<Contact>> {
         return contactQueries.queryContacts(predicate, columnsToFetch, displayNameStyle)
+            .flowOn(Dispatchers.IO)
     }
 }

@@ -8,11 +8,11 @@ import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
 import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
 import android.provider.ContactsContract.CommonDataKinds.Phone as PhoneColumns
 import android.provider.ContactsContract.CommonDataKinds.Photo as PhotoColumns
+import android.provider.ContactsContract.CommonDataKinds.Relation as RelationColumns
+import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebAddressColumns
-import android.provider.ContactsContract.CommonDataKinds.Relation as RelationColumns
-import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newDelete
 import android.content.ContentProviderOperation.newInsert
@@ -20,7 +20,6 @@ import android.content.ContentProviderOperation.newUpdate
 import android.content.ContentResolver
 import android.content.res.Resources
 import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.Contactables
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.RawContacts
 import com.alexstyl.contactstore.ContactColumn.Events
@@ -39,18 +38,13 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.utils.get
 import com.alexstyl.contactstore.utils.runQuery
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 internal class ExistingContactOperationsFactory(
     private val contentResolver: ContentResolver,
     private val resources: Resources,
     private val contactQueries: ContactQueries
 ) {
-    fun updateOperation(contact: MutableContact): List<ContentProviderOperation> {
-        return runBlocking { updateSuspend(contact) }
-    }
-
-    private suspend fun updateSuspend(contact: MutableContact): List<ContentProviderOperation> {
+    suspend fun updateOperation(contact: MutableContact): List<ContentProviderOperation> {
         val existingContact = contactQueries.queryContacts(
             predicate = ContactPredicate.ContactLookup(inContactIds = listOf(contact.contactId)),
             columnsToFetch = contact.columns,
@@ -216,7 +210,7 @@ internal class ExistingContactOperationsFactory(
             newValues = newContact.phones
         ) { value ->
             withValue(PhoneColumns.NUMBER, value.value.raw)
-                .withPhoneLabel(value.label)
+                .withPhoneLabel(value.label, resources)
         }
     }
 
@@ -250,7 +244,7 @@ internal class ExistingContactOperationsFactory(
             newValues = newContact.mails,
         ) { value ->
             withValue(EmailColumns.ADDRESS, value.value.raw)
-                .withMailLabel(value.label)
+                .withMailLabel(value.label, resources)
         }
     }
 
@@ -266,7 +260,7 @@ internal class ExistingContactOperationsFactory(
             newValues = newContact.events
         ) { labeledValue ->
             withValue(EventColumns.START_DATE, sqlString(forDate = labeledValue.value))
-                .withEventLabel(labeledValue.label)
+                .withEventLabel(labeledValue.label, resources)
         }
     }
 
@@ -290,7 +284,7 @@ internal class ExistingContactOperationsFactory(
                 .withValue(PostalColumns.POSTCODE, labeledValue.value.postCode)
                 .withValue(PostalColumns.REGION, labeledValue.value.region)
                 .withValue(PostalColumns.STREET, labeledValue.value.street)
-                .withPostalAddressLabel(labeledValue.label)
+                .withPostalAddressLabel(labeledValue.label, resources)
         }
     }
 
@@ -310,10 +304,10 @@ internal class ExistingContactOperationsFactory(
             withValue(ImColumns.DATA, labeledValue.value.raw)
                 .withValue(ImColumns.PROTOCOL, ImColumns.PROTOCOL_CUSTOM)
                 .withValue(ImColumns.CUSTOM_PROTOCOL, labeledValue.value.protocol)
-                .withImLabel(labeledValue.label)
+                .withImLabel(labeledValue.label, resources)
         }
     }
-    
+
     private fun updateSipAddresses(
         newContact: MutableContact,
         oldContact: Contact
@@ -328,7 +322,7 @@ internal class ExistingContactOperationsFactory(
             mimeType = SipColumns.CONTENT_ITEM_TYPE,
         ) { labeledValue ->
             withValue(SipColumns.SIP_ADDRESS, labeledValue.value.raw)
-                .withSipLabel(labeledValue.label)
+                .withSipLabel(labeledValue.label, resources)
         }
     }
 
@@ -346,7 +340,7 @@ internal class ExistingContactOperationsFactory(
             mimeType = RelationColumns.CONTENT_ITEM_TYPE,
         ) { labeledValue ->
             withValue(RelationColumns.NAME, labeledValue.value.name)
-                .withRelationLabel(labeledValue.label)
+                .withRelationLabel(labeledValue.label, resources)
         }
     }
 
@@ -401,7 +395,7 @@ internal class ExistingContactOperationsFactory(
             newValues = newContact.webAddresses
         ) { labeledValue ->
             withValue(WebAddressColumns.URL, labeledValue.value.raw.toString())
-                .withWebAddressLabel(labeledValue.label)
+                .withWebAddressLabel(labeledValue.label, resources)
         }
     }
 
@@ -425,132 +419,5 @@ internal class ExistingContactOperationsFactory(
         return newDelete(RawContacts.CONTENT_URI)
             .withSelection("${RawContacts._ID} = $rawContactId", null)
             .build()
-    }
-
-    private fun ContentProviderOperation.Builder.withPhoneLabel(
-        label: Label
-    ): ContentProviderOperation.Builder {
-        return when (label) {
-            Label.PhoneNumberMobile -> withValue(Contactables.TYPE, PhoneColumns.TYPE_MOBILE)
-            Label.LocationHome -> withValue(Contactables.TYPE, PhoneColumns.TYPE_HOME)
-            Label.LocationWork -> withValue(Contactables.TYPE, PhoneColumns.TYPE_WORK)
-            Label.PhoneNumberPager -> withValue(Contactables.TYPE, PhoneColumns.TYPE_PAGER)
-            Label.PhoneNumberCar -> withValue(Contactables.TYPE, PhoneColumns.TYPE_CAR)
-            Label.PhoneNumberFaxWork -> withValue(Contactables.TYPE, PhoneColumns.TYPE_FAX_WORK)
-            Label.PhoneNumberFaxHome -> withValue(Contactables.TYPE, PhoneColumns.TYPE_FAX_HOME)
-            Label.PhoneNumberCallback -> withValue(Contactables.TYPE, PhoneColumns.TYPE_CALLBACK)
-            Label.PhoneNumberCompanyMain -> withValue(
-                Contactables.TYPE,
-                PhoneColumns.TYPE_COMPANY_MAIN
-            )
-            Label.PhoneNumberIsdn -> withValue(Contactables.TYPE, PhoneColumns.TYPE_ISDN)
-            Label.Main -> withValue(Contactables.TYPE, PhoneColumns.TYPE_MAIN)
-            Label.PhoneNumberOtherFax -> withValue(Contactables.TYPE, PhoneColumns.TYPE_OTHER_FAX)
-            Label.PhoneNumberRadio -> withValue(Contactables.TYPE, PhoneColumns.TYPE_RADIO)
-            Label.PhoneNumberTelex -> withValue(Contactables.TYPE, PhoneColumns.TYPE_TELEX)
-            Label.PhoneNumberTtyTdd -> withValue(Contactables.TYPE, PhoneColumns.TYPE_TTY_TDD)
-            Label.PhoneNumberWorkPager -> withValue(Contactables.TYPE, PhoneColumns.TYPE_WORK_PAGER)
-            Label.PhoneNumberWorkMobile -> withValue(
-                Contactables.TYPE,
-                PhoneColumns.TYPE_WORK_MOBILE
-            )
-            Label.PhoneNumberAssistant -> withValue(Contactables.TYPE, PhoneColumns.TYPE_ASSISTANT)
-            Label.PhoneNumberMms -> withValue(Contactables.TYPE, PhoneColumns.TYPE_MMS)
-            Label.Other -> withValue(Contactables.TYPE, PhoneColumns.TYPE_OTHER)
-            Label.DateBirthday -> {
-                val typeResource = EventColumns.getTypeResource(EventColumns.TYPE_BIRTHDAY)
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, resources.getString(typeResource))
-            }
-            Label.DateAnniversary -> {
-                val typeResource = EventColumns.getTypeResource(EventColumns.TYPE_ANNIVERSARY)
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, resources.getString(typeResource))
-            }
-            is Label.Custom -> {
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, label.label)
-            }
-            else -> error("Unsupported phone label $label")
-        }
-    }
-
-    private fun ContentProviderOperation.Builder.withMailLabel(
-        label: Label
-    ): ContentProviderOperation.Builder {
-        return when (label) {
-            Label.LocationHome -> withValue(Contactables.TYPE, EmailColumns.TYPE_HOME)
-            Label.LocationWork -> withValue(Contactables.TYPE, EmailColumns.TYPE_WORK)
-            Label.Other -> withValue(Contactables.TYPE, EmailColumns.TYPE_OTHER)
-            Label.PhoneNumberMobile -> withValue(Contactables.TYPE, EmailColumns.TYPE_MOBILE)
-            is Label.Custom -> {
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, label.label)
-            }
-            else -> error("Unsupported Mail Label $label")
-        }
-    }
-
-    private fun ContentProviderOperation.Builder.withPostalAddressLabel(
-        label: Label
-    ): ContentProviderOperation.Builder {
-        return when (label) {
-            Label.LocationHome -> withValue(Contactables.TYPE, PostalColumns.TYPE_HOME)
-            Label.LocationWork -> withValue(Contactables.TYPE, PostalColumns.TYPE_WORK)
-            Label.Other -> withValue(Contactables.TYPE, PostalColumns.TYPE_OTHER)
-            is Label.Custom -> {
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, label.label)
-            }
-            else -> error("Unsupported Postal Label $label")
-        }
-    }
-
-    private fun ContentProviderOperation.Builder.withImLabel(
-        label: Label
-    ): ContentProviderOperation.Builder {
-        return when (label) {
-            Label.LocationHome -> withValue(Contactables.TYPE, ImColumns.TYPE_HOME)
-            Label.LocationWork -> withValue(Contactables.TYPE, ImColumns.TYPE_WORK)
-            Label.Other -> withValue(Contactables.TYPE, ImColumns.TYPE_OTHER)
-            is Label.Custom -> {
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, label.label)
-            }
-            else -> error("Unsupported Im Label $label")
-        }
-    }
-
-    private fun ContentProviderOperation.Builder.withWebAddressLabel(
-        label: Label
-    ): ContentProviderOperation.Builder {
-        return when (label) {
-            Label.WebsiteProfile -> withValue(Contactables.TYPE, WebAddressColumns.TYPE_PROFILE)
-            Label.LocationWork -> withValue(Contactables.TYPE, WebAddressColumns.TYPE_WORK)
-            Label.WebsiteHomePage -> withValue(Contactables.TYPE, WebAddressColumns.TYPE_HOMEPAGE)
-            Label.WebsiteFtp -> withValue(Contactables.TYPE, WebAddressColumns.TYPE_FTP)
-            Label.WebsiteBlog -> withValue(Contactables.TYPE, WebAddressColumns.TYPE_BLOG)
-            Label.Other -> withValue(Contactables.TYPE, WebAddressColumns.TYPE_OTHER)
-            is Label.Custom -> {
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, label.label)
-            }
-            else -> error("Unsupported Web Label $label")
-        }
-    }
-
-    private fun ContentProviderOperation.Builder.withEventLabel(
-        label: Label
-    ): ContentProviderOperation.Builder {
-        return when (label) {
-            Label.DateAnniversary -> withValue(Contactables.TYPE, EventColumns.TYPE_ANNIVERSARY)
-            Label.DateBirthday -> withValue(Contactables.TYPE, EventColumns.TYPE_BIRTHDAY)
-            Label.Other -> withValue(Contactables.TYPE, EventColumns.TYPE_OTHER)
-            is Label.Custom -> {
-                withValue(Contactables.TYPE, Contactables.TYPE_CUSTOM)
-                    .withValue(Contactables.LABEL, label.label)
-            }
-            else -> error("Unsupported Event Label $label")
-        }
     }
 }

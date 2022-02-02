@@ -56,7 +56,9 @@ public interface ContactStore {
             )
             return AndroidContactStore(
                 contentResolver = contentResolver,
-                newContactOperationsFactory = NewContactOperationsFactory(),
+                newContactOperationsFactory = NewContactOperationsFactory(
+                    resources
+                ),
                 existingContactOperationsFactory = ExistingContactOperationsFactory(
                     contentResolver,
                     resources,

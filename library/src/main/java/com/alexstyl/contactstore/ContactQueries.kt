@@ -643,14 +643,6 @@ internal class ContactQueries(
         }
     }
 
-    private fun Boolean.toBoolInt(): String {
-        return if (this) {
-            "1"
-        } else {
-            "0"
-        }
-    }
-
     private object ContactsQuery {
         fun projection(displayNameStyle: DisplayNameStyle): Array<String> {
             return when (displayNameStyle) {
@@ -771,5 +763,13 @@ internal class ContactQueries(
         } else {
             ContactsContract.PhoneLookup._ID
         }
+    }
+}
+
+internal fun Boolean.toBoolInt(): String {
+    return if (this) {
+        "1"
+    } else {
+        "0"
     }
 }

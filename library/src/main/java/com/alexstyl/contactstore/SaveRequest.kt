@@ -2,6 +2,7 @@ package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.ContactOperation.Delete
 import com.alexstyl.contactstore.ContactOperation.Insert
+import com.alexstyl.contactstore.ContactOperation.InsertGroup
 import com.alexstyl.contactstore.ContactOperation.Update
 
 /**
@@ -30,6 +31,10 @@ public class SaveRequest {
 
     public fun insert(mutableContact: MutableContact) {
         _requests.add(Insert(mutableContact))
+    }
+
+    public fun insertGroup(mutableContactGroup: MutableContactGroup) {
+        _requests.add(InsertGroup(mutableContactGroup))
     }
 
     public fun delete(contactId: Long) {

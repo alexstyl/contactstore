@@ -37,6 +37,10 @@ public interface ContactStore {
         displayNameStyle: DisplayNameStyle = DisplayNameStyle.Primary
     ): Flow<List<Contact>>
 
+    public fun fetchContactGroups(
+        predicate: GroupsPredicate? = null
+    ): Flow<List<ContactGroup>>
+
     public companion object {
         /**
          * The entry point to ContactStore
@@ -54,6 +58,9 @@ public interface ContactStore {
                     context.packageManager
                 )
             )
+            val groupQueries = ContactGroupQueries(
+                contentResolver = contentResolver
+            )
             return AndroidContactStore(
                 contentResolver = contentResolver,
                 newContactOperationsFactory = NewContactOperationsFactory(
@@ -65,6 +72,8 @@ public interface ContactStore {
                     contactsQueries
                 ),
                 contactQueries = contactsQueries,
+                groupQueries = groupQueries,
+                newGroupOperations = NewGroupOperationsFactory()
             )
         }
     }

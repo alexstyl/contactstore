@@ -40,7 +40,6 @@ internal class ContactStoreLookupTest : ContactStoreTestBase() {
         assertThat(actual, equalTo(expected))
     }
 
-
     @Test
     fun lookupByMail(): Unit = runBlocking {
         val actual = store.fetchContacts(

@@ -3,6 +3,7 @@ package com.alexstyl.contactstore.test
 import android.provider.ContactsContract
 import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.ContactColumn
+import com.alexstyl.contactstore.ContactGroup
 import com.alexstyl.contactstore.ContactOperation
 import com.alexstyl.contactstore.ContactPredicate
 import com.alexstyl.contactstore.ContactStore
@@ -189,6 +190,10 @@ public class TestContactStore(
                     matchesPredicate(contact = current, predicate)
                 }.keepColumns(columnsToFetch)
             }
+    }
+
+    override fun fetchContactGroups(): Flow<List<ContactGroup>> {
+        TODO("Not yet implemented")
     }
 
     private fun matchesPredicate(

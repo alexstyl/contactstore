@@ -54,6 +54,10 @@ internal abstract class ContactStoreTestBase {
         val contentResolver = context.contentResolver
         val result = contentResolver.delete(ContactsContract.RawContacts.CONTENT_URI, null, null)
         Log.w(javaClass::class.simpleName, "Deleted $result contacts")
+
+        val resultGroups = contentResolver.delete(ContactsContract.Groups.CONTENT_URI, null, null)
+        Log.w(javaClass::class.simpleName, "Deleted $resultGroups groups")
+
     }
 
     protected open val context: Application = ApplicationProvider.getApplicationContext()
@@ -112,15 +116,23 @@ internal abstract class ContactStoreTestBase {
         contactBuilder: MutableContact.() -> Unit
     ): Contact {
         store.execute {
-            insert(
-                MutableContact().apply(contactBuilder)
-            )
+            insert(MutableContact().apply(contactBuilder))
         }
 
         val contactsBefore = store.fetchContacts(columnsToFetch = withColumns.toList()).first()
-        return contactsBefore.first()
+        return contactsBefore.last()
     }
 
+    suspend fun buildStoreContactGroup(
+        contactBuilder: MutableContactGroup.() -> Unit
+    ): ContactGroup {
+        store.execute {
+            insertGroup(MutableContactGroup().apply(contactBuilder))
+        }
+
+        val contactsBefore = store.fetchContactGroups().first()
+        return contactsBefore.last()
+    }
 
     protected fun assertOnlyContact(actual: List<Contact>, expected: Contact) {
         assertThat(actual.size, equalTo(1))

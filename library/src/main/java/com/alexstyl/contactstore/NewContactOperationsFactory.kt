@@ -12,6 +12,7 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumn
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebsiteColumns
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newInsert
 import android.content.res.Resources
@@ -41,6 +42,7 @@ internal class NewContactOperationsFactory(
                 contact.imAddresses.forEach { add(insertImOperation(it)) }
                 contact.sipAddresses.forEach { add(insertSipOperation(it)) }
                 contact.relations.forEach { add(insertRelationOperation(it)) }
+                contact.groups.forEach { add(insertGroupOperation(it)) }
 
                 if (hasOrganizationDetails(contact)) {
                     add(insertOrganization(contact))
@@ -157,6 +159,14 @@ internal class NewContactOperationsFactory(
             .withValue(Data.MIMETYPE, RelationColumns.CONTENT_ITEM_TYPE)
             .withValue(RelationColumns.NAME, labeledValue.value.name)
             .withRelationLabel(labeledValue.label, resources)
+            .build()
+    }
+
+    private fun insertGroupOperation(group: GroupMembership): ContentProviderOperation {
+        return newInsert(Data.CONTENT_URI)
+            .withValueBackReference(Data.RAW_CONTACT_ID, NEW_CONTACT_INDEX)
+            .withValue(Data.MIMETYPE, GroupColumns.CONTENT_ITEM_TYPE)
+            .withValue(GroupColumns.GROUP_ROW_ID, group.groupId)
             .build()
     }
 

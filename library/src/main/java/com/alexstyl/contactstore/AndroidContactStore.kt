@@ -13,8 +13,10 @@ import kotlinx.coroutines.withContext
 internal class AndroidContactStore(
     private val contentResolver: ContentResolver,
     private val newContactOperationsFactory: NewContactOperationsFactory,
+    private val newGroupOperations: NewGroupOperationsFactory,
     private val existingContactOperationsFactory: ExistingContactOperationsFactory,
-    private val contactQueries: ContactQueries
+    private val contactQueries: ContactQueries,
+    private val groupQueries: ContactGroupQueries
 ) : ContactStore {
 
     override suspend fun execute(request: SaveRequest.() -> Unit) {
@@ -32,6 +34,7 @@ internal class AndroidContactStore(
                 is Insert -> newContactOperationsFactory.addContactsOperation(operation.contact)
                 is Delete -> existingContactOperationsFactory
                     .deleteContactOperation(operation.contactId)
+                is ContactOperation.InsertGroup -> newGroupOperations.addGroupOperation(operation.group)
             }
         }.forEach { ops ->
             contentResolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
@@ -44,6 +47,13 @@ internal class AndroidContactStore(
         displayNameStyle: DisplayNameStyle
     ): Flow<List<Contact>> {
         return contactQueries.queryContacts(predicate, columnsToFetch, displayNameStyle)
+            .flowOn(Dispatchers.IO)
+    }
+
+    override fun fetchContactGroups(
+        predicate: GroupsPredicate?
+    ): Flow<List<ContactGroup>> {
+        return groupQueries.queryGroups(predicate)
             .flowOn(Dispatchers.IO)
     }
 }

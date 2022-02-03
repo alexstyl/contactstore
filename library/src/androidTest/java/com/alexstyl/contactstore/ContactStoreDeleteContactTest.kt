@@ -13,24 +13,18 @@ internal class ContactStoreDeleteContactTest : ContactStoreTestBase() {
     @Test
     fun deletesContact(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    firstName = "Paolo"
-                    lastName = "Melendez"
-                }
-            )
-            insert(
-                MutableContact().apply {
-                    firstName = "Kim"
-                    lastName = "Clay"
-                }
-            )
-            insert(
-                MutableContact().apply {
-                    firstName = "David"
-                    lastName = "Jones"
-                }
-            )
+            insert {
+                firstName = "Paolo"
+                lastName = "Melendez"
+            }
+            insert {
+                firstName = "Kim"
+                lastName = "Clay"
+            }
+            insert {
+                firstName = "David"
+                lastName = "Jones"
+            }
         }
 
         val contactsBefore = store.fetchContacts().first()

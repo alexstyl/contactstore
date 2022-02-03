@@ -1,7 +1,12 @@
 package com.alexstyl.contactstore
 
 import android.net.Uri
-import com.alexstyl.contactstore.ContactColumn.*
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.LocationHome
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -18,15 +23,11 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
             )
         }
 
-        val editedContact = contactToUpdate.mutableCopy().apply {
+        val editedContact = contactToUpdate.mutableCopy {
             val id = phones.first().requireId()
             phones.replaceId(
                 id,
-                LabeledValue(
-                    PhoneNumber("666"),
-                    LocationHome,
-                    id
-                )
+                LabeledValue(PhoneNumber("666"), LocationHome, id)
             )
         }
         assertContactUpdated(editedContact)
@@ -42,15 +43,11 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
             )
         }
 
-        val editedContact = contactToUpdate.mutableCopy().apply {
+        val editedContact = contactToUpdate.mutableCopy {
             val id = mails.first().requireId()
             mails.replaceId(
                 id,
-                LabeledValue(
-                    MailAddress("mail@mail.eu"),
-                    LocationHome,
-                    id
-                )
+                LabeledValue(MailAddress("mail@mail.eu"), LocationHome, id)
             )
         }
 
@@ -67,15 +64,11 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
             )
         }
 
-        val editedContact = contactToUpdate.mutableCopy().apply {
+        val editedContact = contactToUpdate.mutableCopy {
             val id = postalAddresses.first().requireId()
             postalAddresses.replaceId(
                 id,
-                LabeledValue(
-                    PostalAddress("Somewhere Street 35"),
-                    LocationHome,
-                    id
-                )
+                LabeledValue(PostalAddress("Somewhere Street 35"), LocationHome, id)
             )
         }
 
@@ -93,17 +86,11 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
             )
         }
 
-        val editedContact = contactToUpdate.mutableCopy().apply {
+        val editedContact = contactToUpdate.mutableCopy {
             val id = events.first().requireId()
             events.replaceId(
                 id,
-                LabeledValue(
-                    EventDate(
-                        1,
-                        1,
-                        2021
-                    ), Label.DateBirthday, id
-                )
+                LabeledValue(EventDate(1, 1, 2021), Label.DateBirthday, id)
             )
         }
 
@@ -120,7 +107,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
             )
         }
 
-        val editedContact = contactToUpdate.mutableCopy().apply {
+        val editedContact = contactToUpdate.mutableCopy {
             val id = webAddresses.first().requireId()
             webAddresses.replaceId(
                 id,

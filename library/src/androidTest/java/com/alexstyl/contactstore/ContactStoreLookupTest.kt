@@ -16,45 +16,24 @@ internal class ContactStoreLookupTest : ContactStoreTestBase() {
     override fun before(): Unit = runBlocking {
         super.before()
         store.execute {
-            insert(
-                MutableContact().apply {
-                    firstName = "Paolo"
-                    lastName = "Melendez"
-                    phones.add(
-                        LabeledValue(
-                            PhoneNumber(
-                                "555"
-                            ), Label.LocationHome
-                        )
-                    )
-                }
-            )
-            insert(
-                MutableContact().apply {
-                    firstName = "Kim"
-                    lastName = "Clay"
-                    mails.add(
-                        LabeledValue(
-                            MailAddress(
-                                "hi@mail.com"
-                            ), Label.LocationHome
-                        )
-                    )
-                }
-            )
+            insert {
+                firstName = "Paolo"
+                lastName = "Melendez"
+                phone("555", Label.LocationHome)
+            }
+            insert {
+                firstName = "Kim"
+                lastName = "Clay"
+                mail("hi@mail.com", Label.LocationHome)
+            }
         }
     }
 
     @Test
     fun lookupByPhoneNumber(): Unit = runBlocking {
-        val actual =
-            store.fetchContacts(
-                ContactPredicate.PhoneLookup(
-                    PhoneNumber(
-                        "555"
-                    )
-                )
-            ).first()
+        val actual = store.fetchContacts(
+            ContactPredicate.PhoneLookup(PhoneNumber("555"))
+        ).first()
         val expected = listOf(
             paoloMelendez()
         )
@@ -64,14 +43,9 @@ internal class ContactStoreLookupTest : ContactStoreTestBase() {
 
     @Test
     fun lookupByMail(): Unit = runBlocking {
-        val actual =
-            store.fetchContacts(
-                ContactPredicate.MailLookup(
-                    MailAddress(
-                        "hi@mail.com"
-                    )
-                )
-            ).first()
+        val actual = store.fetchContacts(
+            ContactPredicate.MailLookup(MailAddress("hi@mail.com"))
+        ).first()
         val expected = listOf(kimClay())
 
         assertThat(actual, equalTo(expected))

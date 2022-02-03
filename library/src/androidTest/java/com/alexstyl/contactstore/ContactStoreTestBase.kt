@@ -125,7 +125,6 @@ internal abstract class ContactStoreTestBase {
     protected fun assertOnlyContact(actual: List<Contact>, expected: Contact) {
         assertThat(actual.size, equalTo(1))
         assertThat(actual.first(), samePropertiesAs(expected))
-        assertThat(actual.first(), samePropertiesAs(expected))
     }
 
     private companion object {

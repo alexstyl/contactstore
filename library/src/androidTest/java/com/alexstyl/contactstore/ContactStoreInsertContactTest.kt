@@ -26,15 +26,13 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithNames(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    prefix = "A."
-                    firstName = "Paolo"
-                    middleName = "M."
-                    lastName = "Melendez"
-                    suffix = "Z."
-                }
-            )
+            insert {
+                prefix = "A."
+                firstName = "Paolo"
+                middleName = "M."
+                lastName = "Melendez"
+                suffix = "Z."
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Names)).first()
@@ -54,17 +52,9 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithPhones(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    phones.add(
-                        LabeledValue(
-                            value = PhoneNumber("555"),
-                            label = PhoneNumberMobile,
-                            id = 0
-                        )
-                    )
-                }
-            )
+            insert {
+                phone("555", PhoneNumberMobile)
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Phones)).first()
@@ -75,7 +65,6 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
                 LabeledValue(
                     PhoneNumber("555"),
                     PhoneNumberMobile,
-                    id = 0
                 )
             )
         )
@@ -86,17 +75,9 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithMails(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    mails.add(
-                        LabeledValue(
-                            value = MailAddress("555@mail.com"),
-                            label = LocationHome,
-                            id = 0
-                        )
-                    )
-                }
-            )
+            insert {
+                mail("555@mail.com", LocationHome)
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Mails)).first()
@@ -118,29 +99,16 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithEvents(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    events.add(
-                        LabeledValue(
-                            EventDate(
-                                1,
-                                1,
-                                2021
-                            ), DateBirthday, id = 0
-                        )
-                    )
-                }
-            )
+            insert {
+                event(dayOfMonth = 1, month = 1, year = 2021, DateBirthday)
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Events)).first()
         val expected = contact(
             columns = listOf(Events),
             events = listOf(
-                LabeledValue(
-                    EventDate(1, 1, 2021), DateBirthday,
-                    id = 0
-                )
+                LabeledValue(EventDate(1, 1, 2021), DateBirthday)
             )
         )
 
@@ -150,24 +118,18 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithPostalAddress(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    postalAddresses.add(
-                        LabeledValue(
-                            PostalAddress(
-                                street = "Somestreet",
-                                poBox = "12345",
-                                neighborhood = "Hood",
-                                city = "City",
-                                region = "",
-                                postCode = "",
-                                country = ""
-                            ), LocationHome,
-                            id = 0
-                        )
-                    )
-                }
-            )
+            insert {
+                postalAddress(
+                    street = "Somestreet",
+                    poBox = "12345",
+                    neighborhood = "Hood",
+                    city = "City",
+                    region = "",
+                    postCode = "",
+                    country = "",
+                    label = LocationHome
+                )
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(PostalAddresses)).first()
@@ -183,8 +145,8 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
                         region = "",
                         postCode = "",
                         country = ""
-                    ), LocationHome,
-                    id = 0
+                    ),
+                    LocationHome,
                 )
             )
         )
@@ -195,11 +157,9 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithNote(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    note = Note("Cool guy")
-                }
-            )
+            insert {
+                note = "Cool guy"
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Note)).first()
@@ -214,17 +174,9 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithWebAddresses(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    webAddresses.add(
-                        LabeledValue(
-                            value = WebAddress(Uri.parse("https://acme.corp")),
-                            label = Label.WebsiteHomePage,
-                            id = 0
-                        )
-                    )
-                }
-            )
+            insert {
+                webAddress(Uri.parse("https://acme.corp"), Label.WebsiteHomePage)
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(WebAddresses)).first()
@@ -245,12 +197,10 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
     @Test
     fun insertsContactWithOrganization(): Unit = runBlocking {
         store.execute {
-            insert(
-                MutableContact().apply {
-                    organization = "Acme"
-                    jobTitle = "Member"
-                }
-            )
+            insert {
+                organization = "Acme"
+                jobTitle = "Member"
+            }
         }
 
         val actual = store.fetchContacts(columnsToFetch = listOf(Organization)).first()

@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.ContactOperation.Delete
+import com.alexstyl.contactstore.ContactOperation.DeleteGroup
 import com.alexstyl.contactstore.ContactOperation.Insert
 import com.alexstyl.contactstore.ContactOperation.InsertGroup
 import com.alexstyl.contactstore.ContactOperation.Update
@@ -40,6 +41,10 @@ public class SaveRequest {
 
     public fun delete(contactId: Long) {
         _requests.add(Delete(contactId))
+    }
+
+    public fun deleteGroup(groupId: Long) {
+        _requests.add(DeleteGroup(groupId))
     }
 
     override fun equals(other: Any?): Boolean {

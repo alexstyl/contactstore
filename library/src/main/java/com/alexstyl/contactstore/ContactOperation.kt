@@ -6,4 +6,5 @@ public sealed class ContactOperation {
     public data class Delete(val contactId: Long) : ContactOperation()
     public data class InsertGroup(val group: MutableContactGroup) : ContactOperation()
     public data class UpdateGroup(val group: MutableContactGroup) : ContactOperation()
+    public data class DeleteGroup(val groupId: Long) : ContactOperation()
 }

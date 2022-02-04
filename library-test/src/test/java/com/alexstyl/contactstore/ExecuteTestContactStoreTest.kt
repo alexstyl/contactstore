@@ -55,9 +55,11 @@ internal class ExecuteTestContactStoreTest {
             )
         )
 
+        val updated = store.fetchContacts(columnsToFetch = standardColumns()).first()
+            .first { it.contactId == SNAPSHOT_PAOLO.contactId }
+
         store.execute {
-            update(MutableContact().apply {
-                contactId = SNAPSHOT_PAOLO.contactId
+            update(updated.mutableCopy {
                 firstName = "Peter"
             })
         }

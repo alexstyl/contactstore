@@ -27,3 +27,17 @@ public data class ImmutableContactGroup(
     override val contactCount: Int,
     override val note: String?,
 ) : ContactGroup
+
+
+public fun ContactGroup.mutableCopy(): MutableContactGroup {
+    return MutableContactGroup(
+        groupId = groupId,
+        title = title,
+        contactCount = contactCount,
+        note = note
+    )
+}
+
+public fun ContactGroup.mutableCopy(builder: MutableContactGroup.() -> Unit): MutableContactGroup {
+    return mutableCopy().apply(builder)
+}

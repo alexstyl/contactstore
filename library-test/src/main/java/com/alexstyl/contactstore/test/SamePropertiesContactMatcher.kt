@@ -18,6 +18,7 @@ import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
+import com.alexstyl.contactstore.ContactGroup
 import com.alexstyl.contactstore.LabeledValue
 import com.alexstyl.contactstore.containsColumn
 import com.alexstyl.contactstore.containsLinkedAccountColumns
@@ -33,10 +34,10 @@ import org.hamcrest.TypeSafeDiagnosingMatcher
  *
  */
 public fun samePropertiesAs(expected: Contact): Matcher<in Contact> {
-    return SamePropertiesMatcher(expected)
+    return SamePropertiesContactMatcher(expected)
 }
 
-private class SamePropertiesMatcher(
+private class SamePropertiesContactMatcher(
     private val expected: Contact
 ) : TypeSafeDiagnosingMatcher<Contact>() {
     override fun describeTo(description: Description) {

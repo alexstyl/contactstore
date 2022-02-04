@@ -2,9 +2,7 @@ package com.alexstyl.contactstore
 
 import android.content.ContentResolver
 import android.provider.ContactsContract
-import com.alexstyl.contactstore.ContactOperation.Delete
-import com.alexstyl.contactstore.ContactOperation.Insert
-import com.alexstyl.contactstore.ContactOperation.Update
+import com.alexstyl.contactstore.ContactOperation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -13,7 +11,7 @@ import kotlinx.coroutines.withContext
 internal class AndroidContactStore(
     private val contentResolver: ContentResolver,
     private val newContactOperationsFactory: NewContactOperationsFactory,
-    private val newGroupOperations: NewGroupOperationsFactory,
+    private val newGroupOperations: GroupOperationsFactory,
     private val existingContactOperationsFactory: ExistingContactOperationsFactory,
     private val contactQueries: ContactQueries,
     private val groupQueries: ContactGroupQueries
@@ -34,7 +32,8 @@ internal class AndroidContactStore(
                 is Insert -> newContactOperationsFactory.addContactsOperation(operation.contact)
                 is Delete -> existingContactOperationsFactory
                     .deleteContactOperation(operation.contactId)
-                is ContactOperation.InsertGroup -> newGroupOperations.addGroupOperation(operation.group)
+                is InsertGroup -> newGroupOperations.addGroupOperation(operation.group)
+                is UpdateGroup -> newGroupOperations.updateGroupOperation(operation.group)
             }
         }.forEach { ops ->
             contentResolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))

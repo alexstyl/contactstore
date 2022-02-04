@@ -45,11 +45,11 @@ internal abstract class ContactStoreTestBase {
 
     @Before
     open fun before() {
-        deleteAllContacts()
+        wipeContactsProvider()
         store = ContactStore.newInstance(context)
     }
 
-    private fun deleteAllContacts() {
+    private fun wipeContactsProvider() {
         Log.w(javaClass::class.simpleName, "CLEANING UP CONTACTS")
         val contentResolver = context.contentResolver
         val result = contentResolver.delete(ContactsContract.RawContacts.CONTENT_URI, null, null)
@@ -113,10 +113,10 @@ internal abstract class ContactStoreTestBase {
 
     suspend fun buildStoreContact(
         vararg withColumns: ContactColumn,
-        contactBuilder: MutableContact.() -> Unit
+        contactBuilder: MutableContactBuilder.() -> Unit
     ): Contact {
         store.execute {
-            insert(MutableContact().apply(contactBuilder))
+            insert(contactBuilder)
         }
 
         val contactsBefore = store.fetchContacts(columnsToFetch = withColumns.toList()).first()

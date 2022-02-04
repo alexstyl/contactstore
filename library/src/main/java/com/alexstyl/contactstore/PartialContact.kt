@@ -52,7 +52,10 @@ public class PartialContact constructor(
     override val firstName: String? by requireColumn(Names, firstName)
     override val middleName: String? by requireColumn(Names, middleName)
     override val lastName: String? by requireColumn(Names, lastName)
-    override val imAddresses: List<LabeledValue<ImAddress>> by requireColumn(ImAddresses, imAddresses)
+    override val imAddresses: List<LabeledValue<ImAddress>> by requireColumn(
+        ImAddresses,
+        imAddresses
+    )
     override val suffix: String? by requireColumn(Names, suffix)
     override val phoneticFirstName: String? by requireColumn(Names, phoneticFirstName)
     override val phoneticMiddleName: String? by requireColumn(Names, phoneticMiddleName)
@@ -64,13 +67,24 @@ public class PartialContact constructor(
     override val phones: List<LabeledValue<PhoneNumber>> by requireColumn(Phones, phones)
     override val mails: List<LabeledValue<MailAddress>> by requireColumn(Mails, mails)
     override val events: List<LabeledValue<EventDate>> by requireColumn(Events, events)
-    override val postalAddresses: List<LabeledValue<PostalAddress>> by requireColumn(PostalAddresses, postalAddresses)
+    override val postalAddresses: List<LabeledValue<PostalAddress>> by requireColumn(
+        PostalAddresses,
+        postalAddresses
+    )
     override val note: com.alexstyl.contactstore.Note? by requireColumn(Note, note)
-    override val webAddresses: List<LabeledValue<WebAddress>> by requireColumn(WebAddresses, webAddresses)
-    override val sipAddresses: List<LabeledValue<SipAddress>> by requireColumn(SipAddresses, sipAddresses)
+    override val webAddresses: List<LabeledValue<WebAddress>> by requireColumn(
+        WebAddresses,
+        webAddresses
+    )
+    override val sipAddresses: List<LabeledValue<SipAddress>> by requireColumn(
+        SipAddresses,
+        sipAddresses
+    )
     override val organization: String? by requireColumn(Organization, organization)
     override val jobTitle: String? by requireColumn(Organization, jobTitle)
-    override val linkedAccountValues: List<LinkedAccountValue> by requireAnyLinkedAccountColumn(linkedAccountValues)
+    override val linkedAccountValues: List<LinkedAccountValue> by requireAnyLinkedAccountColumn(
+        linkedAccountValues
+    )
     override val groups: List<GroupMembership> by requireColumn(GroupMemberships, groups)
     override val relations: List<LabeledValue<Relation>> by requireColumn(Relations, relations)
 

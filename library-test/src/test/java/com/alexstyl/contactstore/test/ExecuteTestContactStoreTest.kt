@@ -1,6 +1,9 @@
-package com.alexstyl.contactstore
+package com.alexstyl.contactstore.test
 
-import com.alexstyl.contactstore.test.TestContactStore
+import com.alexstyl.contactstore.ExperimentalContactStoreApi
+import com.alexstyl.contactstore.PartialContact
+import com.alexstyl.contactstore.mutableCopy
+import com.alexstyl.contactstore.standardColumns
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -41,9 +44,7 @@ internal class ExecuteTestContactStoreTest {
             delete(paoloMelendez().contactId)
         }
         val actual = store.fetchContacts().first()
-        assertThat(actual).containsOnly(
-            kimClay()
-        )
+        assertThat(actual).containsOnly(kimClay())
     }
 
     @Test

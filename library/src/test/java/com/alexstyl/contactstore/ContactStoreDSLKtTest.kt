@@ -137,5 +137,9 @@ internal class ContactStoreDSLKtTest {
         ): Flow<List<Contact>> {
             return emptyFlow()
         }
+
+        override fun fetchContactGroups(predicate: GroupsPredicate?): Flow<List<ContactGroup>> {
+            return emptyFlow()
+        }
     }
 }

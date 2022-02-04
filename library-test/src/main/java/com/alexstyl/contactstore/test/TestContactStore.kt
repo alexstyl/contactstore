@@ -4,17 +4,26 @@ import android.provider.ContactsContract
 import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.ContactColumn
 import com.alexstyl.contactstore.ContactGroup
-import com.alexstyl.contactstore.ContactOperation
+import com.alexstyl.contactstore.ContactOperation.Delete
+import com.alexstyl.contactstore.ContactOperation.DeleteGroup
+import com.alexstyl.contactstore.ContactOperation.Insert
+import com.alexstyl.contactstore.ContactOperation.InsertGroup
+import com.alexstyl.contactstore.ContactOperation.Update
+import com.alexstyl.contactstore.ContactOperation.UpdateGroup
 import com.alexstyl.contactstore.ContactPredicate
 import com.alexstyl.contactstore.ContactStore
 import com.alexstyl.contactstore.DisplayNameStyle
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
+import com.alexstyl.contactstore.GroupsPredicate
+import com.alexstyl.contactstore.ImmutableContactGroup
 import com.alexstyl.contactstore.MutableContact
+import com.alexstyl.contactstore.MutableContactGroup
 import com.alexstyl.contactstore.PartialContact
 import com.alexstyl.contactstore.SaveRequest
 import com.alexstyl.contactstore.containsColumn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 /**
@@ -31,41 +40,81 @@ import kotlinx.coroutines.flow.map
  */
 @ExperimentalContactStoreApi
 public class TestContactStore(
-    contactsSnapshot: List<StoredContact> = emptyList()
+    contactsSnapshot: List<StoredContact> = emptyList(),
+    contactGroupsSnapshot: List<StoredContactGroup> = emptyList(),
 ) : ContactStore {
 
-    private val snapshot: MutableStateFlow<List<StoredContact>> = MutableStateFlow(contactsSnapshot)
-
-    override suspend fun execute(request: SaveRequest) {
-        request.requests.forEach { operation ->
-            when (operation) {
-                is ContactOperation.Delete -> deleteContact(withId = operation.contactId)
-                is ContactOperation.Insert -> insertContact(operation.contact)
-                is ContactOperation.Update -> updateContact(operation.contact)
-            }
-        }
-    }
+    private val contacts: MutableStateFlow<List<StoredContact>> = MutableStateFlow(contactsSnapshot)
+    private val contactGroups: MutableStateFlow<List<StoredContactGroup>> =
+        MutableStateFlow(contactGroupsSnapshot)
 
     override suspend fun execute(request: SaveRequest.() -> Unit) {
         val saveRequest = SaveRequest().apply(request)
+        executeInternal(saveRequest)
+    }
+
+    override suspend fun execute(request: SaveRequest) {
+        executeInternal(request)
+    }
+
+    private suspend fun executeInternal(saveRequest: SaveRequest) {
         saveRequest.requests.forEach { operation ->
             when (operation) {
-                is ContactOperation.Delete -> deleteContact(withId = operation.contactId)
-                is ContactOperation.Insert -> insertContact(operation.contact)
-                is ContactOperation.Update -> updateContact(operation.contact)
+                is Delete -> deleteContact(withId = operation.contactId)
+                is Insert -> insertContact(operation.contact)
+                is Update -> updateContact(operation.contact)
+                is DeleteGroup -> deleteContactGroup(operation.groupId)
+                is InsertGroup -> insertGroup(operation.group)
+                is UpdateGroup -> updateGroup(operation.group)
             }
         }
     }
 
+    private suspend fun updateGroup(group: MutableContactGroup) {
+        val currentGroup = contactGroups.value
+            .find { it.groupId == group.groupId } ?: return
+        val updatedGroup = currentGroup.copy(
+            title = group.title,
+            note = group.note
+        )
+        val newList = contactGroups.value.toMutableList()
+            .replace(updatedGroup) {
+                it.groupId == group.groupId
+            }
+            .toList()
+        contactGroups.emit(newList)
+    }
+
     private suspend fun deleteContact(withId: Long) {
-        snapshot.emit(
-            snapshot.value.dropWhile { it.contactId == withId }
+        contacts.emit(
+            contacts.value.dropWhile { it.contactId == withId }
+        )
+    }
+
+    private suspend fun deleteContactGroup(withId: Long) {
+        contactGroups.emit(
+            contactGroups.value.dropWhile { it.groupId == withId }
+        )
+    }
+
+    private suspend fun insertGroup(group: MutableContactGroup) {
+        val current = contactGroups.value
+        contactGroups.emit(
+            current.toMutableList().apply {
+                add(
+                    StoredContactGroup(
+                        groupId = group.groupId,
+                        title = group.title,
+                        note = group.note
+                    )
+                )
+            }
         )
     }
 
     private suspend fun insertContact(contact: MutableContact) {
-        val current = snapshot.value
-        snapshot.emit(
+        val current = contacts.value
+        contacts.emit(
             current.toMutableList()
                 .apply {
                     add(
@@ -118,7 +167,7 @@ public class TestContactStore(
     }
 
     private suspend fun updateContact(contact: MutableContact) {
-        val currentContact = snapshot.value
+        val currentContact = contacts.value
             .find { it.contactId == contact.contactId } ?: return
         val updatedContact = currentContact.copy(
             firstName = contact.takeIfContains(ContactColumn.Names) { contact.firstName }
@@ -156,7 +205,8 @@ public class TestContactStore(
                 ?: currentContact.events,
             postalAddresses = contact.takeIfContains(ContactColumn.PostalAddresses) { contact.postalAddresses }
                 ?: currentContact.postalAddresses,
-            note = contact.takeIfContains(ContactColumn.Note) { contact.note } ?: currentContact.note,
+            note = contact.takeIfContains(ContactColumn.Note) { contact.note }
+                ?: currentContact.note,
             nickname = contact.takeIfContains(ContactColumn.Nickname) { contact.nickname }
                 ?: currentContact.nickname,
             groups = contact
@@ -165,12 +215,12 @@ public class TestContactStore(
             fullNameStyle = contact.takeIfContains(ContactColumn.Names) { contact.fullNameStyle }
                 ?: currentContact.fullNameStyle
         )
-        val newList = snapshot.value.toMutableList()
+        val newList = contacts.value.toMutableList()
             .replace(updatedContact) {
                 it.contactId == contact.contactId
             }
             .toList()
-        snapshot.emit(newList)
+        contacts.emit(newList)
     }
 
     private fun <T> List<T>.replace(newValue: T, block: (T) -> Boolean): List<T> {
@@ -184,7 +234,7 @@ public class TestContactStore(
         columnsToFetch: List<ContactColumn>,
         displayNameStyle: DisplayNameStyle
     ): Flow<List<Contact>> {
-        return snapshot
+        return contacts
             .map { contacts ->
                 contacts.filter { current ->
                     matchesPredicate(contact = current, predicate)
@@ -192,8 +242,24 @@ public class TestContactStore(
             }
     }
 
-    override fun fetchContactGroups(): Flow<List<ContactGroup>> {
-        TODO("Not yet implemented")
+    override fun fetchContactGroups(predicate: GroupsPredicate?): Flow<List<ContactGroup>> {
+        return combine(contactGroups.map { groups ->
+            groups.filter { group ->
+                matchesPredicate(group, predicate)
+            }
+        }, contacts) { groups, contacts ->
+            groups
+                .map { group ->
+                    ImmutableContactGroup(
+                        groupId = group.groupId,
+                        title = group.title,
+                        note = group.note,
+                        contactCount = contacts.count { contact ->
+                            contact.groups.any { membership -> membership.groupId == group.groupId }
+                        }
+                    )
+                }
+        }
     }
 
     private fun matchesPredicate(
@@ -211,6 +277,26 @@ public class TestContactStore(
             is ContactPredicate.PhoneLookup -> matchesPhone(predicate, contact)
         }
     }
+
+    private fun matchesPredicate(
+        group: StoredContactGroup,
+        predicate: GroupsPredicate?
+    ): Boolean {
+        if (predicate == null) return group.isDeleted.not()
+        return when (predicate) {
+            is GroupsPredicate.GroupLookup -> {
+                val passesIdCheck = predicate.inGroupIds == null || predicate.inGroupIds.orEmpty()
+                    .contains(group.groupId)
+                val passedDeletedCheck = if (predicate.includeDeleted) {
+                    true
+                } else {
+                    group.isDeleted.not()
+                }
+                passesIdCheck && passedDeletedCheck
+            }
+        }
+    }
+
 
     private fun matchesContact(
         predicate: ContactPredicate.ContactLookup,

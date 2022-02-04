@@ -1,10 +1,21 @@
-package com.alexstyl.contactstore
+package com.alexstyl.contactstore.test
 
 import android.net.Uri
-import com.alexstyl.contactstore.test.TestContactStore
+import com.alexstyl.contactstore.ContactColumn
+import com.alexstyl.contactstore.ExperimentalContactStoreApi
+import com.alexstyl.contactstore.GroupMembership
+import com.alexstyl.contactstore.ImageData
+import com.alexstyl.contactstore.Label
+import com.alexstyl.contactstore.LabeledValue
+import com.alexstyl.contactstore.MailAddress
+import com.alexstyl.contactstore.Note
+import com.alexstyl.contactstore.PartialContact
+import com.alexstyl.contactstore.PostalAddress
+import com.alexstyl.contactstore.WebAddress
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -22,7 +33,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts().first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -45,7 +56,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.Names)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -73,7 +84,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.Phones)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -97,7 +108,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.Mails)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -123,7 +134,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.Organization)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -148,7 +159,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.Image)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -172,7 +183,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.Note)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -196,7 +207,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.PostalAddresses)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -222,7 +233,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.Nickname)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -246,7 +257,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.WebAddresses)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
@@ -272,7 +283,7 @@ internal class ColumnTestContactStoreTest {
             columnsToFetch = listOf(ContactColumn.GroupMemberships)
         ).first()
 
-        Assertions.assertThat(actual).containsOnly(
+        assertThat(actual).containsOnly(
             PartialContact(
                 contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,

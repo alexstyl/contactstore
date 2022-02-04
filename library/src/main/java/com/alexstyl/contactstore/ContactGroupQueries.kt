@@ -49,7 +49,7 @@ internal class ContactGroupQueries(
         val buildString = buildString {
             val groupLookup = from as? GroupsPredicate.GroupLookup
 
-            val deleted = intOf(groupLookup?.deleted ?: false)
+            val deleted = intOf(groupLookup?.includeDeleted ?: false)
             append("${Groups.DELETED} = $deleted")
             append(" AND ${Groups.GROUP_IS_READ_ONLY} = 0")
 

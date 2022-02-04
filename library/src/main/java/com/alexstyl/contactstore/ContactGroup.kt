@@ -55,7 +55,12 @@ public data class ImmutableContactGroup(
     override fun hashCode(): Int = hashCodeGroup()
 }
 
-
+/**
+ * Creates a copy of the ContactGroup that can have its properties modified.
+ *
+ * Modifying the properties of the group will not affect the stored group of the device.
+ * See [ContactStore] to learn how to persist your changes.
+ */
 public fun ContactGroup.mutableCopy(): MutableContactGroup {
     return MutableContactGroup(
         groupId = groupId,
@@ -65,6 +70,12 @@ public fun ContactGroup.mutableCopy(): MutableContactGroup {
     )
 }
 
+/**
+ * Creates a copy of the ContactGroup that can have its properties modified.
+ *
+ * Modifying the properties of the group will not affect the stored group of the device.
+ * See [ContactStore] to learn how to persist your changes.
+ */
 public fun ContactGroup.mutableCopy(builder: MutableContactGroup.() -> Unit): MutableContactGroup {
     return mutableCopy().apply(builder)
 }

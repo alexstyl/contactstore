@@ -5,6 +5,26 @@ public interface ContactGroup {
     public val title: String
     public val contactCount: Int
     public val note: String?
+
+    public fun equalsGroup(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ContactGroup) return false
+
+        if (groupId != other.groupId) return false
+        if (title != other.title) return false
+        if (contactCount != other.contactCount) return false
+        if (note != other.note) return false
+
+        return true
+    }
+
+    public fun hashCodeGroup(): Int {
+        var result = groupId.hashCode()
+        result = 31 * result + title.hashCode()
+        result = 31 * result + contactCount
+        result = 31 * result + (note?.hashCode() ?: 0)
+        return result
+    }
 }
 
 public data class MutableContactGroup internal constructor(
@@ -13,12 +33,16 @@ public data class MutableContactGroup internal constructor(
     override val contactCount: Int,
     override var note: String?
 ) : ContactGroup {
+
     public constructor() : this(
         groupId = -1L,
         title = "",
         contactCount = 0,
         note = null
     )
+
+    override fun equals(other: Any?): Boolean = equalsGroup(other)
+    override fun hashCode(): Int = hashCodeGroup()
 }
 
 public data class ImmutableContactGroup(
@@ -26,7 +50,10 @@ public data class ImmutableContactGroup(
     override val title: String,
     override val contactCount: Int,
     override val note: String?,
-) : ContactGroup
+) : ContactGroup {
+    override fun equals(other: Any?): Boolean = equalsGroup(other)
+    override fun hashCode(): Int = hashCodeGroup()
+}
 
 
 public fun ContactGroup.mutableCopy(): MutableContactGroup {

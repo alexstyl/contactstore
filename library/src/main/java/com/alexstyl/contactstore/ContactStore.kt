@@ -37,6 +37,13 @@ public interface ContactStore {
         displayNameStyle: DisplayNameStyle = DisplayNameStyle.Primary
     ): Flow<List<Contact>>
 
+    /**
+     * Returns a [Flow] that emits all contact groups matching the given [predicate].
+     *
+     * The Flow will continue emitting once a change is detected (i.e. an other app adds a new contact or a Content Provider syncs a new account) and never completes.
+     *
+     * @param predicate The conditions that a contact group need to meet in order to be fetched
+     */
     public fun fetchContactGroups(
         predicate: GroupsPredicate? = null
     ): Flow<List<ContactGroup>>

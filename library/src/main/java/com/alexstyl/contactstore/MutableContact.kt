@@ -17,8 +17,8 @@ import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 public class MutableContact internal constructor(
-    override var contactId: Long = -1L,
-    override val lookupKey: LookupKey? = null,
+    override val contactId: Long,
+    override val lookupKey: LookupKey?,
     imageData: ImageData?,
     phones: MutableList<LabeledValue<PhoneNumber>>,
     mails: MutableList<LabeledValue<MailAddress>>,
@@ -89,6 +89,7 @@ public class MutableContact internal constructor(
 
     public constructor() : this(
         contactId = -1L,
+        lookupKey = null,
         imageData = null,
         phones = mutableListOf(),
         mails = mutableListOf(),

@@ -162,6 +162,7 @@ internal class DisplayNameKtTest {
     ): MutableContact {
         return MutableContact(
             contactId = -1L,
+            lookupKey = null,
             firstName = firstName,
             organization = organization,
             jobTitle = jobTitle,

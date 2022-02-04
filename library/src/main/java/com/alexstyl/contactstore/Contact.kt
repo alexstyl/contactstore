@@ -192,6 +192,7 @@ public fun Contact.mutableCopy(builder: MutableContact.() -> Unit): MutableConta
 public fun Contact.mutableCopy(): MutableContact {
     return MutableContact(
         contactId = contactId,
+        lookupKey = lookupKey,
         firstName = if (containsColumn(Names)) firstName else null,
         organization = if (containsColumn(Organization)) organization else null,
         jobTitle = if (containsColumn(Organization)) jobTitle else null,

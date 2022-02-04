@@ -73,7 +73,7 @@ public interface ContactStore {
                 ),
                 contactQueries = contactsQueries,
                 groupQueries = groupQueries,
-                newGroupOperations = GroupOperationsFactory()
+                contactGroupOperations = GroupOperationsFactory()
             )
         }
     }

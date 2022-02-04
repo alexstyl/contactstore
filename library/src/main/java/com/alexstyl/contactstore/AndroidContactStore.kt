@@ -2,7 +2,12 @@ package com.alexstyl.contactstore
 
 import android.content.ContentResolver
 import android.provider.ContactsContract
-import com.alexstyl.contactstore.ContactOperation.*
+import com.alexstyl.contactstore.ContactOperation.Delete
+import com.alexstyl.contactstore.ContactOperation.DeleteGroup
+import com.alexstyl.contactstore.ContactOperation.Insert
+import com.alexstyl.contactstore.ContactOperation.InsertGroup
+import com.alexstyl.contactstore.ContactOperation.Update
+import com.alexstyl.contactstore.ContactOperation.UpdateGroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -11,7 +16,7 @@ import kotlinx.coroutines.withContext
 internal class AndroidContactStore(
     private val contentResolver: ContentResolver,
     private val newContactOperationsFactory: NewContactOperationsFactory,
-    private val newGroupOperations: GroupOperationsFactory,
+    private val contactGroupOperations: GroupOperationsFactory,
     private val existingContactOperationsFactory: ExistingContactOperationsFactory,
     private val contactQueries: ContactQueries,
     private val groupQueries: ContactGroupQueries
@@ -30,10 +35,10 @@ internal class AndroidContactStore(
             when (operation) {
                 is Update -> existingContactOperationsFactory.updateOperation(operation.contact)
                 is Insert -> newContactOperationsFactory.addContactsOperation(operation.contact)
-                is Delete -> existingContactOperationsFactory
-                    .deleteContactOperation(operation.contactId)
-                is InsertGroup -> newGroupOperations.addGroupOperation(operation.group)
-                is UpdateGroup -> newGroupOperations.updateGroupOperation(operation.group)
+                is Delete -> existingContactOperationsFactory.deleteContactOperation(operation.contactId)
+                is InsertGroup -> contactGroupOperations.addGroupOperation(operation.group)
+                is UpdateGroup -> contactGroupOperations.updateGroupOperation(operation.group)
+                is DeleteGroup -> contactGroupOperations.deleteGroupOperation(operation.groupId)
             }
         }.forEach { ops ->
             contentResolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))

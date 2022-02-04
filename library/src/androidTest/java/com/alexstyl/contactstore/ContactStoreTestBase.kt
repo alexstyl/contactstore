@@ -124,7 +124,7 @@ internal abstract class ContactStoreTestBase {
     }
 
     suspend fun buildStoreContactGroup(
-        contactBuilder: MutableContactGroup.() -> Unit
+        contactBuilder: MutableContactGroup.() -> Unit = {}
     ): ContactGroup {
         store.execute {
             insertGroup(MutableContactGroup().apply(contactBuilder))

@@ -18,9 +18,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
         val contactToUpdate = buildStoreContact(Names, Phones) {
             firstName = "Paolo"
             lastName = "Melendez"
-            phones.add(
-                LabeledValue(PhoneNumber("555"), LocationHome)
-            )
+            phone("555", LocationHome)
         }
 
         val editedContact = contactToUpdate.mutableCopy {
@@ -38,9 +36,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
         val contactToUpdate = buildStoreContact(Names, Mails) {
             firstName = "Paolo"
             lastName = "Melendez"
-            mails.add(
-                LabeledValue(MailAddress("mail@mail.com"), LocationHome)
-            )
+            mail("mail@mail.com", LocationHome)
         }
 
         val editedContact = contactToUpdate.mutableCopy {
@@ -59,9 +55,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
         val contactToUpdate = buildStoreContact(Names, PostalAddresses) {
             firstName = "Paolo"
             lastName = "Melendez"
-            postalAddresses.add(
-                LabeledValue(PostalAddress("Somewhere Street 53"), LocationHome)
-            )
+            postalAddress("Somewhere Street 53", LocationHome)
         }
 
         val editedContact = contactToUpdate.mutableCopy {
@@ -81,9 +75,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
         val contactToUpdate = buildStoreContact(Names, Events) {
             firstName = "Paolo"
             lastName = "Melendez"
-            events.add(
-                LabeledValue(EventDate(1, 1, 2020), Label.DateBirthday)
-            )
+            event(1, 1, 20202, Label.DateBirthday)
         }
 
         val editedContact = contactToUpdate.mutableCopy {
@@ -102,9 +94,7 @@ internal class UpdatesValuesOfExistingContactContactStoreTest : ContactStoreTest
         val contactToUpdate = buildStoreContact(Names, WebAddresses) {
             firstName = "Paolo"
             lastName = "Melendez"
-            webAddresses.add(
-                LabeledValue(WebAddress(Uri.parse("https://web/address")), Label.WebsiteProfile)
-            )
+            webAddress(Uri.parse("https://web/address"), Label.WebsiteProfile)
         }
 
         val editedContact = contactToUpdate.mutableCopy {

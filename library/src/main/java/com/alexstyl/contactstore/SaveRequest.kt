@@ -4,6 +4,7 @@ import com.alexstyl.contactstore.ContactOperation.Delete
 import com.alexstyl.contactstore.ContactOperation.Insert
 import com.alexstyl.contactstore.ContactOperation.InsertGroup
 import com.alexstyl.contactstore.ContactOperation.Update
+import com.alexstyl.contactstore.ContactOperation.UpdateGroup
 
 /**
  * A [SaveRequest] is responsible of keeping track of any contact modifications you want to perform.
@@ -58,5 +59,9 @@ public class SaveRequest {
 
     override fun toString(): String {
         return "SaveRequest(_requests=$_requests)"
+    }
+
+    public fun updateGroup(mutableContactGroup: MutableContactGroup) {
+        _requests.add(UpdateGroup(mutableContactGroup))
     }
 }

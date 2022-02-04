@@ -35,3 +35,11 @@ public fun SaveRequest.insert(builder: MutableContactBuilder.() -> Unit) {
         imAddresses.addAll(values.imAddresses)
     })
 }
+
+public fun SaveRequest.insertGroup(builder: MutableContactGroupBuilder.() -> Unit) {
+    val values = MutableContactGroupBuilder().apply(builder)
+    insertGroup(MutableContactGroup().apply {
+        note = values.note
+        title = values.title
+    })
+}

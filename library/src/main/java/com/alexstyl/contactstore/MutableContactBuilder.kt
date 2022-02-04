@@ -3,57 +3,57 @@ package com.alexstyl.contactstore
 import android.net.Uri
 import android.provider.ContactsContract
 
-public data class MutableContactBuilder(
-    var prefix: String = "",
-    var firstName: String = "",
-    var middleName: String = "",
-    var lastName: String = "",
-    var suffix: String = "",
-    var fullNameStyle: Int = ContactsContract.FullNameStyle.UNDEFINED,
-    var phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
-    var phoneticFirstName: String? = null,
-    var phoneticMiddleName: String? = null,
-    var phoneticLastName: String? = null,
-    var nickname: String? = null,
-    var note: String? = null,
-    var jobTitle: String = "",
-    var organization: String = "",
-    var imageData: ImageData? = null,
-    var isStarred: Boolean = false,
+public class MutableContactBuilder(
+    public var prefix: String = "",
+    public var firstName: String = "",
+    public var middleName: String = "",
+    public var lastName: String = "",
+    public var suffix: String = "",
+    public var fullNameStyle: Int = ContactsContract.FullNameStyle.UNDEFINED,
+    public var phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
+    public var phoneticFirstName: String? = null,
+    public var phoneticMiddleName: String? = null,
+    public var phoneticLastName: String? = null,
+    public var nickname: String? = null,
+    public var note: String? = null,
+    public var jobTitle: String = "",
+    public var organization: String = "",
+    public var imageData: ImageData? = null,
+    public var isStarred: Boolean = false,
 ) {
     private val _phones: MutableList<LabeledValue<PhoneNumber>> = mutableListOf()
-    val phones: List<LabeledValue<PhoneNumber>>
+    internal val phones: List<LabeledValue<PhoneNumber>>
         get() = _phones.toList()
 
     private val _mails: MutableList<LabeledValue<MailAddress>> = mutableListOf()
-    val mails: List<LabeledValue<MailAddress>>
+    internal val mails: List<LabeledValue<MailAddress>>
         get() = _mails.toList()
 
     private val _events: MutableList<LabeledValue<EventDate>> = mutableListOf()
-    val events: List<LabeledValue<EventDate>>
+    internal val events: List<LabeledValue<EventDate>>
         get() = _events.toList()
 
     private val _postalAddresses: MutableList<LabeledValue<PostalAddress>> = mutableListOf()
-    val postalAddresses: List<LabeledValue<PostalAddress>>
+    internal val postalAddresses: List<LabeledValue<PostalAddress>>
         get() = _postalAddresses.toList()
 
     private val _webAddresses: MutableList<LabeledValue<WebAddress>> = mutableListOf()
-    val webAddresses: List<LabeledValue<WebAddress>>
+    internal val webAddresses: List<LabeledValue<WebAddress>>
         get() = _webAddresses.toList()
 
     private val _groups: MutableList<GroupMembership> = mutableListOf()
     private val _imAddresses: MutableList<LabeledValue<ImAddress>> = mutableListOf()
-    val imAddresses: List<LabeledValue<ImAddress>>
+    internal val imAddresses: List<LabeledValue<ImAddress>>
         get() = _imAddresses.toList()
-    val groupMemberships: List<GroupMembership>
+    internal val groupMemberships: List<GroupMembership>
         get() = _groups.toList()
 
     private val _sipAddresses: MutableList<LabeledValue<SipAddress>> = mutableListOf()
-    val sipAddresses: List<LabeledValue<SipAddress>>
+    internal val sipAddresses: List<LabeledValue<SipAddress>>
         get() = _sipAddresses.toList()
 
     private val _relations: MutableList<LabeledValue<Relation>> = mutableListOf()
-    val relations: List<LabeledValue<Relation>>
+    internal val relations: List<LabeledValue<Relation>>
         get() = _relations.toList()
 
     public fun phone(

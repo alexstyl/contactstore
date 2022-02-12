@@ -1,0 +1,23 @@
+site_name: "Contact Store"
+site_author: "Alex Styl"
+repo_url: https://github.com/alexstyl/contactstore
+repo_name: alexstyl/contactstore
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    scheme: default
+    primary: indigo
+    accent: light blue
+  features:
+      - content.code.annotate
+plugins:
+  - search
+markdown_extensions:
+  - pymdownx.betterem
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - codehilite:
+      guess_lang: false

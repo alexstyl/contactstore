@@ -1,19 +1,22 @@
 # Introduction
 
-ContactStore is a modern API that aims to make access to contacts on Android devices simple to use for everyone.
+ContactStore is a modern API that aims to make access to contacts on Android devices simple to use
+for everyone.
 
 [The default way of accessing contacts on Android](https://developer.android.com/guide/topics/providers/contacts-provider)
-is based off ContentProviders. Despite powerful, it can be error-prone and frustrating to use. 
-In addition, given that the API is based off the metaphor of tables in a database, it can be hard to understand how to set everything up.  
+is based off ContentProviders. Despite powerful, it can be error-prone and frustrating to use. In
+addition, given that the API is based off the metaphor of tables in a database, it can be hard to
+understand how to set everything up.
 
-ContactStore is a refreshed take to the contacts API by providing a simpler mental model to work with.
-It provides solutions to contacts' most frequent use cases and utilises modern best practices and language features.
+ContactStore is a refreshed take to the contacts API by providing a simpler mental model to work
+with. It provides solutions to contacts' most frequent use cases and utilises modern best practices
+and language features.
 
 ## State of development
 
-ContactStore's API is currently under development. There might be breaking changes
-between versions, even though I am extremely cautious to provide ways to handle (such as via
-Kotlin's Deprecated tools).
+ContactStore's API is currently under development. There might be breaking changes between versions,
+even though I am extremely cautious to keep them to a minimum or provide automatic ways to migrate to
+(such as via Kotlin's Deprecated tools).
 
 As soon as version 1.0.0 is released, there will be no breaking changes between version.
 

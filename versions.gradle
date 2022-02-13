@@ -11,7 +11,7 @@ ext {
     androidMinSdkVersion = 14
 
     r8Version = '3.0.73'
-    gradlePluginVersion = '7.1.0'
+    gradlePluginVersion = '7.1.1'
     kotlinVersion = '1.5.31'
     coroutinesVersion = '1.6.0'
     hiltVersion = '2.40.5'

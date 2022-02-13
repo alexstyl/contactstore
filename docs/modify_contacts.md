@@ -1,10 +1,11 @@
-The following snippets show how to edit contacts in the device. 
+Inserting new contacts to the device, updating or deleting existing ones are done
+using `ContactStore#execute`.
 
-> ⚠️ Your app must have already been 
-granted the [WRITE_CONTACTS](https://developer.android.com/reference/android/Manifest.permission#WRITE_CONTACTS)
+> ⚠️ Your app must have already been
+granted the [WRITE_CONTACTS](https://developer.android.com/reference/android/Manifest.permission#WRITE_CONTACTS) 
 permission before calling `execute()`.
 
-### Insert a new contact
+## Insert a new contact
 
 ```kotlin
 val store = ContactStore.newInstance(application)
@@ -40,7 +41,7 @@ store.execute {
 }
 ```
 
-### Update an existing contact
+## Update an existing contact
 
 In order to update a contact, you first need to get a reference to the contact from the store. Only
 the values queried will be updated. This is by design, in order to prevent accidental value
@@ -64,7 +65,7 @@ store.execute {
 }
 ```
 
-### Deleting a contact
+## Deleting a contact
 
 The following code shows how to delete a contact by id:
 

@@ -1,3 +1,8 @@
+All fetch operations in ContactStore come from the `ContactStore#fetchContacts()` function. The
+function creates a [Flow](https://developer.android.com/kotlin/flow) which will emit the contacts
+requested. This Flow never completes and will continue emitting as soon as an update to the contacts
+is detected.
+
 Each contact in ContactStore comes with some basic information, such as their contact ID, their
 display name and whether they are starred or not.
 

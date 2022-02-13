@@ -25,7 +25,7 @@ theme:
 nav:
   - 'Introduction': index.md
   - 'Fetch contacts' : fetch_contacts.md
-#  - 'Fetching contacts' : fetch_contacts.md
+  - 'Modify contacts' : modify_contacts.md
 #  - 'How-tos':
 #      - 'Contacts app': contact_manager.md
 #      - 'Images': api/insets/

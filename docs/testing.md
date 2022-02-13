@@ -1,4 +1,4 @@
-ContactStore provides an optional `com.alexstyl:contactstore-test` dependency with testing utilities
+Contact Store provides an optional `com.alexstyl:contactstore-test` dependency with testing utilities
 around contacts.
 
 ## ContactStore in unit tests
@@ -7,7 +7,7 @@ As contacts are part of the Android framework, unit testing can be tricky. Devel
 required to depend on frameworks such as Robolectric (which can slow down builds) or implement their
 own fake abstraction around contacts to hide the dependency to the framework.
 
-ContactStore provides a test implementation that is suitable for testing purposes,
+Contact Store provides a test implementation that is suitable for testing purposes,
 called `TestContactStore`.
 
 You can initialize the store by providing a list of `StoredContact`s. This can be used for emulating

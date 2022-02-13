@@ -1,4 +1,4 @@
-ContactStore supports both high resolution images of contacts and thumbnails.
+Contact Store supports both high resolution images of contacts and thumbnails.
 
 High res images can be memory heavy, so it is recommended to use them only when it makes sense to
 show a good amount of detail in your UI. For the case of rendering a list of contacts, it is advices

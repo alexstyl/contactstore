@@ -174,7 +174,7 @@ store.execute {
 }
 ```
 
-## Using ContactStore in unit tests (experimental)
+## Using Contact Store in unit tests (experimental)
 
 The optional `com.alexstyl:contactstore-test` dependency provides a pure Kotlin implementation of `ContactStore`, named `TestContactStore`. 
 

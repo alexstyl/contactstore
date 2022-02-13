@@ -1,9 +1,9 @@
-All fetch operations in ContactStore come from the `ContactStore#fetchContacts()` function. The
+All fetch operations in Contact Store come from the `ContactStore#fetchContacts()` function. The
 function creates a [Flow](https://developer.android.com/kotlin/flow) which will emit the contacts
 requested. This Flow never completes and will continue emitting as soon as an update to the contacts
 is detected.
 
-Each contact in ContactStore comes with some basic information, such as their contact ID, their
+Each contact in Contact Store comes with some basic information, such as their contact ID, their
 display name and whether they are starred or not.
 
 ## Fetching all contacts (Contact List)
@@ -70,7 +70,7 @@ Such information could be phone numbers, e-mails, postal addresses and others.
 
 ### Available columns
 
-The following table shows the mapping between Android's original API and ContactStore's
+The following table shows the mapping between Android's original API and Contact Store's
 ContactColumn:
 
 | CommonDataKinds | ContactColumn | Contact's field(s) populated |
@@ -122,6 +122,8 @@ store.fetchContacts(
 
 You are not limited by looking up contacts by IDs. Other provided predicates allow you to query for
 contact's names, phones numbers and emails.
+
+> ⚠️ ContactPredicate#PhoneLookup
 
 ## Linked accounts
 

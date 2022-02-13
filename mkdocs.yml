@@ -26,11 +26,11 @@ nav:
   - 'Introduction': index.md
   - 'Fetch contacts' : fetch_contacts.md
   - 'Modify contacts' : modify_contacts.md
-#  - 'How-tos':
-#      - 'Contacts app': contact_manager.md
-#      - 'Images': api/insets/
-#      - 'Number recognition': insets.md
-#      - 'Email recognition': insets.md
+  - 'How-tos':
+      - 'Contact photos': contact_photos.md
+#      - 'Contact app': contact_app.md
+#      - 'Number recognition': number_recognition.md
+#      - 'Email recognition': mail_recognition.md
   - 'Contributing' : contributing.md
   - 'Testing (experimental)': testing.md
 

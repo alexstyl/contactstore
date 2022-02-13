@@ -189,3 +189,13 @@ if (linkedAccountValue != null) {
 | Kik | `kik.android` | 
 | Duo | `com.google.android.apps.tachyon` | 
 | Threema | `ch.threema.app` | 
+
+## Display Name Style
+
+You can specify the style of the display name you prefer when fetching contacts:
+
+The `Primary` (default) style will return display names in a "given name first" fashion for Western names.
+
+The `Alternative` style will return them in a "family name first" fashion instead.
+
+The returned contacts will be sorted according to the style requested.

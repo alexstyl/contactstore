@@ -24,13 +24,15 @@ theme:
 
 nav:
   - 'Introduction': index.md
-  - 'Contributing' : contributing.md
-  - 'Testing (experimental)': testing.md
+  - 'Fetch contacts' : fetch_contacts.md
+#  - 'Fetching contacts' : fetch_contacts.md
 #  - 'How-tos':
 #      - 'Contacts app': contact_manager.md
 #      - 'Images': api/insets/
 #      - 'Number recognition': insets.md
 #      - 'Email recognition': insets.md
+  - 'Contributing' : contributing.md
+  - 'Testing (experimental)': testing.md
 
 plugins:
   - search

@@ -1,17 +1,21 @@
-# Overview
+# Introduction
 
-Access to contacts is one of the most frequent use cases in Android applications. Even if your app is
-not a contact management app, there are various cases where you might need access to the device
-contacts (such as referring other users to the app).
+ContactStore is a modern API that aims to make access to contacts on Android devices simple to use for everyone.
 
-For developers to access the device
-contacts, [they need to use ContentProviders](https://developer.android.com/guide/topics/providers/contacts-provider). This introduces a lot of frustrations and complications. For someone that has never worked with
-`ContentProvider`s before, the documentation can be tedious to go through. The lack of a type-safe
-API leads to repeated errors, developer frustration, along with a waste of time and resources for
-the developer and the team.
+[The default way of accessing contacts on Android](https://developer.android.com/guide/topics/providers/contacts-provider)
+is based off ContentProviders. Despite powerful, it can be error-prone and frustrating to use. 
+In addition, given that the API is based off the metaphor of tables in a database, it can be hard to understand how to set everything up.  
 
-Contact Store is a modern contacts Android API written in Kotlin. It utilises Coroutine's Flow to
-notify the developer for updates happening to the Contacts database.
+ContactStore is a refreshed take to the contacts API by providing a simpler mental model to work with.
+It provides solutions to contacts' most frequent use cases and utilises modern best practices and language features.
+
+## State of development
+
+ContactStore's API is currently under development. There might be breaking changes
+between versions, even though I am extremely cautious to provide ways to handle (such as via
+Kotlin's Deprecated tools).
+
+As soon as version 1.0.0 is released, there will be no breaking changes between version.
 
 ## Installation
 
@@ -31,24 +35,6 @@ dependencies {
 }
 ```
 
-## Building the project
-
-After you clone the repository locally, you will notice that the build will fail.
-
-This is because one of the scripts used to push a new version to Maven requires some credentials to be present.
-
-In order to fix this add the following to your `/local.properties` file.
-```
-sonatypeStagingProfileId=
-ossrhUsername=
-ossrhPassword=
-signing.keyId=
-signing.key=
-signing.password=
-```
-
-and you are set. You can try running the sample app and everything should work. If not, open a new issue.
-
 ## Getting Help
 
 To report a specific problem or feature request, [open a new issue on Github][2].
@@ -59,7 +45,9 @@ Apache 2.0. See the [LICENSE](/LICENSE) file for details.
 
 ## Author
 
-Made by Alex Styl. [Follow @alexstyl](https://www.twitter.com/alexstyl) on Twitter for future updates.
+Made by Alex Styl. [Follow @alexstyl](https://www.twitter.com/alexstyl) on Twitter for future
+updates.
 
 [1]: https://github.com/alexstyl/contactstore/releases
+
 [2]: https://github.com/alexstyl/contactstore/issues

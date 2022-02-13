@@ -1,7 +1,11 @@
 site_name: "Contact Store"
+site_description: 'A modern contacts Android API.'
 site_author: "Alex Styl"
 repo_url: https://github.com/alexstyl/contactstore
 repo_name: alexstyl/contactstore
+site_url: 'https://alexstyl.github.io/contactstore/'
+edit_uri: 'tree/main/docs/'
+remote_branch: gh-pages
 
 theme:
   name: material
@@ -11,8 +15,23 @@ theme:
     scheme: default
     primary: indigo
     accent: light blue
+  font:
+      text: 'Roboto'
+      code: 'JetBrains Mono'
+
   features:
       - content.code.annotate
+
+nav:
+  - 'Introduction': index.md
+  - 'Contributing' : contributing.md
+  - 'Testing (experimental)': testing.md
+#  - 'How-tos':
+#      - 'Contacts app': contact_manager.md
+#      - 'Images': api/insets/
+#      - 'Number recognition': insets.md
+#      - 'Email recognition': insets.md
+
 plugins:
   - search
 markdown_extensions:

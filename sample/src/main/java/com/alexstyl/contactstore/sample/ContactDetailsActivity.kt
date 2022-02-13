@@ -55,7 +55,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-@ExperimentalCoilApi
 @AndroidEntryPoint
 class ContactDetailsActivity : ComponentActivity() {
 
@@ -209,14 +208,15 @@ class ContactDetailsActivity : ComponentActivity() {
         Spacer(Modifier.height(40.dp))
         Image(
             rememberImagePainter(
-                contact.imageUri,
+                data = contact.imageData?.raw,
                 builder = {
                     transformations(CircleCropTransformation())
+                        .crossfade(true)
                         .placeholder(R.drawable.ic_avatar_placeholder)
                         .error(R.drawable.ic_avatar_placeholder)
                 },
             ),
-            modifier = Modifier.size(96.dp),
+            modifier = Modifier.size(120.dp),
             contentDescription = null
         )
         Spacer(Modifier.height(20.dp))

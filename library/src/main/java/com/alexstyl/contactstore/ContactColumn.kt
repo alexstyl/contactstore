@@ -6,6 +6,7 @@ public sealed class ContactColumn {
      */
     public object Phones : ContactColumn()
 
+
     /**
      * A column that will populate the [Contact.mails] field of all queried contacts when requested.
      */

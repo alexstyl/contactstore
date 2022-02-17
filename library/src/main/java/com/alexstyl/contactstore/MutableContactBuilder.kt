@@ -4,22 +4,22 @@ import android.net.Uri
 import android.provider.ContactsContract
 
 public class MutableContactBuilder(
-    public var prefix: String = "",
-    public var firstName: String = "",
-    public var middleName: String = "",
-    public var lastName: String = "",
-    public var suffix: String = "",
-    public var fullNameStyle: Int = ContactsContract.FullNameStyle.UNDEFINED,
-    public var phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
-    public var phoneticFirstName: String? = null,
-    public var phoneticMiddleName: String? = null,
-    public var phoneticLastName: String? = null,
-    public var nickname: String? = null,
-    public var note: String? = null,
-    public var jobTitle: String = "",
-    public var organization: String = "",
-    public var imageData: ImageData? = null,
-    public var isStarred: Boolean = false,
+    internal var prefix: String = "",
+    internal var firstName: String = "",
+    internal var middleName: String = "",
+    internal var lastName: String = "",
+    internal var suffix: String = "",
+    internal var fullNameStyle: Int = ContactsContract.FullNameStyle.UNDEFINED,
+    internal var phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
+    internal var phoneticFirstName: String? = null,
+    internal var phoneticMiddleName: String? = null,
+    internal var phoneticLastName: String? = null,
+    internal var nickname: String? = null,
+    internal var note: String? = null,
+    internal var jobTitle: String = "",
+    internal var organization: String = "",
+    internal var imageData: ImageData? = null,
+    internal var isStarred: Boolean = false,
 ) {
     private val _phones: MutableList<LabeledValue<PhoneNumber>> = mutableListOf()
     internal val phones: List<LabeledValue<PhoneNumber>>

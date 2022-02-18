@@ -2,19 +2,22 @@ package com.alexstyl.contactstore
 
 import android.accounts.Account
 
-public typealias AccountInfo = Account
-
 public data class LabeledValue<T> internal constructor(
     val value: T,
     val label: Label,
     val id: Long?,
-    val accountInfo: AccountInfo? = null
+    /**
+     * The account in which the value belongs to.
+     *
+     * Absence of an Account means that the value is stored locally on the device.
+     */
+    val accountInfo: Account?
 ) where T : Any {
-    public constructor(value: T, label: Label, accountInfo: AccountInfo? = null) : this(
-        value,
-        label,
-        null,
-        accountInfo
+    public constructor(value: T, label: Label) : this(
+        value = value,
+        label = label,
+        id = null,
+        accountInfo = null
     )
 }
 

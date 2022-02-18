@@ -26,19 +26,14 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.BaseTypes
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Contacts.Entity
-import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
-import android.provider.ContactsContract.RawContacts
-import com.alexstyl.contactstore.ContactColumn.*
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
 import com.alexstyl.contactstore.ContactPredicate.NameLookup
 import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
 import com.alexstyl.contactstore.utils.DateParser
-import com.alexstyl.contactstore.utils.iterate
 import com.alexstyl.contactstore.utils.mapEachRow
-import com.alexstyl.contactstore.utils.runQuery
 import com.alexstyl.contactstore.utils.runQueryFlow
 import com.alexstyl.contactstore.utils.valueIn
 import kotlinx.coroutines.flow.Flow
@@ -49,6 +44,7 @@ internal class ContactQueries(
     private val contentResolver: ContentResolver,
     private val resources: Resources,
     private val dateParser: DateParser,
+    private val rawContactQueries: RawContactQueries,
     private val accountInfoResolver: AccountInfoResolver
 ) {
     private val linkedAccountMimeTypes by lazy {
@@ -229,7 +225,7 @@ internal class ContactQueries(
         columnsToFetch: List<ContactColumn>
     ): List<Contact> {
         return forContacts.map { contact ->
-            val rawContacts = fetchRawContacts(contact)
+            val rawContacts = rawContactQueries.fetchRawContacts(contact)
 
             val contactId = contact.contactId
             var firstName: String? = null
@@ -303,7 +299,7 @@ internal class ContactQueries(
                         PhoneColumns.CONTENT_ITEM_TYPE -> {
                             val phoneNumberString = item.getAsString(PhoneColumns.NUMBER)
                             val id = item.getAsLong(PhoneColumns._ID)
-                            if (phoneNumberString.isNotBlank() && id != null) {
+                            if (phoneNumberString.orEmpty().isNotBlank() && id != null) {
                                 val value = PhoneNumber(phoneNumberString)
                                 val phoneEntry =
                                     LabeledValue(value, phoneLabelFrom(item), id, account)
@@ -313,7 +309,7 @@ internal class ContactQueries(
                         EmailColumns.CONTENT_ITEM_TYPE -> {
                             val mailAddressString = item.getAsString(EmailColumns.ADDRESS)
                             val id = item.getAsLong(EmailColumns._ID)
-                            if (mailAddressString.isNotBlank() && id != null) {
+                            if (mailAddressString.orEmpty().isNotBlank() && id != null) {
                                 val mailAddress = MailAddress(mailAddressString)
                                 mails.add(
                                     LabeledValue(
@@ -328,7 +324,7 @@ internal class ContactQueries(
                         WebColumns.CONTENT_ITEM_TYPE -> {
                             val webAddressString = item.getAsString(WebColumns.URL)
                             val id = item.getAsLong(WebColumns._ID)
-                            if (webAddressString.isNotBlank() && id != null) {
+                            if (webAddressString.orEmpty().isNotBlank() && id != null) {
                                 val mailAddress = WebAddress(Uri.parse(webAddressString))
                                 webAddresses.add(
                                     LabeledValue(mailAddress, webLabelFrom(item), id, account)
@@ -337,7 +333,7 @@ internal class ContactQueries(
                         }
                         NoteColumns.CONTENT_ITEM_TYPE -> {
                             val noteString = item.getAsString(NoteColumns.NOTE)
-                            if (noteString.isNotBlank()) {
+                            if (noteString.orEmpty().isNotBlank()) {
                                 note = Note(noteString)
                             }
                         }
@@ -354,7 +350,7 @@ internal class ContactQueries(
                         SipColumns.CONTENT_ITEM_TYPE -> {
                             val address = item.getAsString(SipColumns.SIP_ADDRESS)
                             val id = item.getAsLong(SipColumns._ID)
-                            if (address.isNotBlank() && id != null) {
+                            if (address.orEmpty().isNotBlank() && id != null) {
                                 val value =
                                     LabeledValue(SipAddress(address), sipLabel(item), id, account)
                                 sipAddresses.add(value)
@@ -363,15 +359,17 @@ internal class ContactQueries(
                         PostalColumns.CONTENT_ITEM_TYPE -> {
                             val formattedAddress = item.getAsString(PostalColumns.FORMATTED_ADDRESS)
                             val id = item.getAsLong(PostalColumns._ID)
-                            if (formattedAddress.isNotBlank() && id != null) {
-                                val street = item.getAsString(PostalColumns.STREET).trim()
-                                val poBox = item.getAsString(PostalColumns.POBOX).trim()
+                            if (formattedAddress.orEmpty().isNotBlank() && id != null) {
+                                val street = item.getAsString(PostalColumns.STREET).orEmpty().trim()
+                                val poBox = item.getAsString(PostalColumns.POBOX).orEmpty().trim()
                                 val neighborhood =
-                                    item.getAsString(PostalColumns.NEIGHBORHOOD).trim()
-                                val city = item.getAsString(PostalColumns.CITY).trim()
-                                val region = item.getAsString(PostalColumns.REGION).trim()
-                                val postCode = item.getAsString(PostalColumns.POSTCODE).trim()
-                                val country = item.getAsString(PostalColumns.COUNTRY).trim()
+                                    item.getAsString(PostalColumns.NEIGHBORHOOD).orEmpty().trim()
+                                val city = item.getAsString(PostalColumns.CITY).orEmpty().trim()
+                                val region = item.getAsString(PostalColumns.REGION).orEmpty().trim()
+                                val postCode =
+                                    item.getAsString(PostalColumns.POSTCODE).orEmpty().trim()
+                                val country =
+                                    item.getAsString(PostalColumns.COUNTRY).orEmpty().trim()
                                 val value = PostalAddress(
                                     street = street,
                                     poBox = poBox,
@@ -394,7 +392,7 @@ internal class ContactQueries(
                         ImColumns.CONTENT_ITEM_TYPE -> {
                             val imAddressString = item.getAsString(ImColumns.DATA)
                             val id = item.getAsLong(ImColumns._ID)
-                            if (imAddressString.isNotBlank() && id != null) {
+                            if (imAddressString.orEmpty().isNotBlank() && id != null) {
                                 val protocol = getImProtocol(item)
                                 val imAddress =
                                     ImAddress(raw = imAddressString, protocol = protocol)
@@ -407,7 +405,7 @@ internal class ContactQueries(
                         RelationColumns.CONTENT_ITEM_TYPE -> {
                             val name = item.getAsString(RelationColumns.NAME)
                             val id = item.getAsLong(RelationColumns._ID)
-                            if (name.isNotBlank() && id != null) {
+                            if (name.orEmpty().isNotBlank() && id != null) {
                                 val label = relationLabel(item)
                                 relations.add(LabeledValue(Relation(name), label, id, account))
                             }
@@ -469,110 +467,6 @@ internal class ContactQueries(
         }
     }
 
-    private fun fetchRawContacts(contact: PartialContact): MutableList<RawContact> {
-        var rawContact: RawContact? = null
-        var currentRawContactId: Long = -1
-        val rawContacts = mutableListOf<RawContact>()
-
-        contentResolver.runQuery(
-            contentUri = entityUri(contact),
-            projection = ContactQuery.COLUMNS,
-            sortOrder = Entity.RAW_CONTACT_ID
-        ).iterate { cursor ->
-            val rawContactId = cursor.getLong(ContactQuery.RAW_CONTACT_ID)
-            if (currentRawContactId != rawContactId) {
-                currentRawContactId = rawContactId
-                rawContact = RawContact(loadRawContactValues(cursor))
-                rawContacts.add(rawContact!!)
-            }
-            if (!cursor.isNull(ContactQuery.DATA_ID)) {
-                val data: ContentValues = loadDataValues(cursor)
-                rawContact!!.addDataItemValues(data)
-            }
-        }
-        return rawContacts
-    }
-
-    private fun entityUri(forContact: PartialContact): Uri {
-        val contactId = forContact.contactId
-        val contactUri = ensureIsContactUri(
-            contentResolver,
-            uri = Contacts.getLookupUri(contactId, forContact.lookupKey?.value)
-        )
-        return Uri.withAppendedPath(contactUri, Entity.CONTENT_DIRECTORY)
-    }
-
-    private fun loadDataValues(cursor: Cursor): ContentValues {
-        val cv = ContentValues()
-        cv.put(Data._ID, cursor.getLong(ContactQuery.DATA_ID))
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA1)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA2)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA3)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA4)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA5)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA6)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA7)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA8)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA9)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA10)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA11)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA12)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA13)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA14)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA15)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA_SYNC1)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA_SYNC2)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA_SYNC3)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA_SYNC4)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA_VERSION)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.IS_PRIMARY)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.IS_SUPERPRIMARY)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.MIMETYPE)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.GROUP_SOURCE_ID)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.CHAT_CAPABILITY)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            cursorColumnToContentValues(cursor, cv, ContactQuery.CARRIER_PRESENCE)
-        }
-        return cv
-    }
-
-    private fun loadRawContactValues(cursor: Cursor): ContentValues {
-        val cv = ContentValues()
-        cv.put(RawContacts._ID, cursor.getLong(ContactQuery.RAW_CONTACT_ID))
-        cursorColumnToContentValues(cursor, cv, ContactQuery.ACCOUNT_NAME)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.ACCOUNT_TYPE)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DATA_SET)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DIRTY)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.VERSION)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.SOURCE_ID)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.SYNC1)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.SYNC2)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.SYNC3)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.SYNC4)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.DELETED)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.CONTACT_ID)
-        cursorColumnToContentValues(cursor, cv, ContactQuery.STARRED)
-        return cv
-    }
-
-    private fun cursorColumnToContentValues(
-        cursor: Cursor, values: ContentValues, index: Int
-    ) {
-        when (cursor.getType(index)) {
-            Cursor.FIELD_TYPE_NULL -> {}
-            Cursor.FIELD_TYPE_INTEGER -> values.put(
-                ContactQuery.COLUMNS[index],
-                cursor.getLong(index)
-            )
-            Cursor.FIELD_TYPE_STRING -> values.put(
-                ContactQuery.COLUMNS[index],
-                cursor.getString(index)
-            )
-            Cursor.FIELD_TYPE_BLOB -> values.put(ContactQuery.COLUMNS[index], cursor.getBlob(index))
-            else -> throw IllegalStateException("Invalid or unhandled data type")
-        }
-    }
-
     private fun sipLabel(values: ContentValues): Label {
         return when (values.getAsInteger(SipColumns.TYPE)) {
             SipColumns.TYPE_HOME -> Label.LocationHome
@@ -626,114 +520,6 @@ internal class ContactQueries(
 
     private fun InputStream.toByteArray(): ByteArray {
         return buffered().use { it.readBytes() }
-    }
-
-    private val standardMimeTypes = listOf(
-        PhoneColumns.CONTENT_ITEM_TYPE,
-        EmailColumns.CONTENT_ITEM_TYPE,
-        NoteColumns.CONTENT_ITEM_TYPE,
-        EventColumns.CONTENT_ITEM_TYPE,
-        PostalColumns.CONTENT_ITEM_TYPE,
-        PhotoColumns.CONTENT_ITEM_TYPE,
-        NameColumns.CONTENT_ITEM_TYPE,
-        WebColumns.CONTENT_ITEM_TYPE,
-        OrganizationColumns.CONTENT_ITEM_TYPE,
-        NicknameColumns.CONTENT_ITEM_TYPE,
-        GroupColumns.CONTENT_ITEM_TYPE,
-        ImColumns.CONTENT_ITEM_TYPE,
-        RelationColumns.CONTENT_ITEM_TYPE,
-        SipColumns.CONTENT_ITEM_TYPE,
-    )
-
-    private fun buildSelectionArgs(columnsToFetch: List<ContactColumn>): Array<String> {
-        val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountValues>()
-        val standardColumns = columnsToFetch - linkedAccountColumns
-        return standardColumns.map { column ->
-            when (column) {
-                Phones -> PhoneColumns.CONTENT_ITEM_TYPE
-                Mails -> EmailColumns.CONTENT_ITEM_TYPE
-                Note -> NoteColumns.CONTENT_ITEM_TYPE
-                Events -> EventColumns.CONTENT_ITEM_TYPE
-                PostalAddresses -> PostalColumns.CONTENT_ITEM_TYPE
-                Image -> PhotoColumns.CONTENT_ITEM_TYPE
-                Names -> NameColumns.CONTENT_ITEM_TYPE
-                WebAddresses -> WebColumns.CONTENT_ITEM_TYPE
-                Organization -> OrganizationColumns.CONTENT_ITEM_TYPE
-                Nickname -> NicknameColumns.CONTENT_ITEM_TYPE
-                GroupMemberships -> GroupColumns.CONTENT_ITEM_TYPE
-                ImAddresses -> ImColumns.CONTENT_ITEM_TYPE
-                Relations -> RelationColumns.CONTENT_ITEM_TYPE
-                SipAddresses -> SipColumns.CONTENT_ITEM_TYPE
-                is LinkedAccountValues ->
-                    error("Tried to map a LinkedAccountColumn as standard column")
-            }
-        }.toTypedArray() + linkedAccountColumns.map { it.accountType }.toTypedArray()
-    }
-
-    @Throws(IllegalArgumentException::class)
-    fun ensureIsContactUri(resolver: ContentResolver, uri: Uri): Uri? {
-        val authority = uri.authority
-
-        // Current Style Uri?
-        if (ContactsContract.AUTHORITY == authority) {
-            val type = resolver.getType(uri)
-            // Contact-Uri? Good, return it
-            if (Contacts.CONTENT_ITEM_TYPE == type) {
-                return uri
-            }
-
-            // RawContact-Uri? Transform it to ContactUri
-            if (RawContacts.CONTENT_ITEM_TYPE == type) {
-                val rawContactId = ContentUris.parseId(uri)
-                return RawContacts.getContactLookupUri(
-                    resolver,
-                    ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId)
-                )
-            }
-            throw IllegalArgumentException("uri format is unknown")
-        }
-
-        // Legacy Style? Convert to RawContact
-        val OBSOLETE_AUTHORITY = android.provider.Contacts.AUTHORITY
-        if (OBSOLETE_AUTHORITY == authority) {
-            // Legacy Format. Convert to RawContact-Uri and then lookup the contact
-            val rawContactId = ContentUris.parseId(uri)
-            return RawContacts.getContactLookupUri(
-                resolver,
-                ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId)
-            )
-        }
-        throw IllegalArgumentException("uri authority is unknown")
-    }
-
-    private fun buildColumnsToFetchSelection(
-        forContactId: Long,
-        columnsToFetch: List<ContactColumn>
-    ): String {
-        val columnsQuery = buildString {
-            val linkedAccountColumns = columnsToFetch.filterIsInstance<LinkedAccountValues>()
-            val standardColumns = columnsToFetch - linkedAccountColumns
-
-            if (standardColumns.isNotEmpty()) {
-                append(
-                    " ${Data.MIMETYPE} IN ${
-                        valueIn(List(standardColumns.size) { "?" })
-                    }"
-                )
-            }
-            if (linkedAccountColumns.isNotEmpty()) {
-                if (isNotBlank()) {
-                    append(" OR ")
-                }
-                append(
-                    " ${RawContacts.ACCOUNT_TYPE} IN ${
-                        valueIn(List(linkedAccountColumns.size) { "?" })
-                    }"
-                )
-            }
-        }
-
-        return "${Data.CONTACT_ID} = $forContactId AND ($columnsQuery)"
     }
 
     private fun postalAddressLabelFrom(contentValues: ContentValues): Label {

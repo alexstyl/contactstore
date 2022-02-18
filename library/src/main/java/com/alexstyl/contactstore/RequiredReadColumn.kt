@@ -22,7 +22,7 @@ internal class RequiredReadColumn<T>(
         return if (contact.containsColumn(column)) {
             value
         } else {
-            error("Tried to get ${property.name}, but the contact did not contain column ${column.javaClass.simpleName}")
+            error("Tried to get ${property.name}, but the contact was missing the [${column.javaClass.simpleName}] column")
         }
     }
 }
@@ -35,8 +35,7 @@ internal class RequiredReadColumnA<T>(
             value
         } else {
             error(
-                "Tried to get ${property.name}, but the contact did not contain any linked" +
-                        " account columns"
+                "Tried to get ${property.name}, but the contact was missing any [LinkedAccountValues] columns"
             )
         }
     }

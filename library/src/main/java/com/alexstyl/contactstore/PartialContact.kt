@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import android.provider.ContactsContract
+import com.alexstyl.contactstore.ContactColumn.CustomDataItems
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
@@ -45,7 +46,7 @@ public class PartialContact constructor(
     phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
     groups: List<GroupMembership> = emptyList(),
     imAddresses: List<LabeledValue<ImAddress>> = emptyList(),
-    linkedAccountValues: List<LinkedAccountValue> = emptyList(),
+    customDataItems: List<CustomDataItem> = emptyList(),
     relations: List<LabeledValue<Relation>> = emptyList()
 ) : Contact {
     override val prefix: String? by requireColumn(Names, prefix)
@@ -82,9 +83,7 @@ public class PartialContact constructor(
     )
     override val organization: String? by requireColumn(Organization, organization)
     override val jobTitle: String? by requireColumn(Organization, jobTitle)
-    override val linkedAccountValues: List<LinkedAccountValue> by requireAnyLinkedAccountColumn(
-        linkedAccountValues
-    )
+    override val customDataItems: List<CustomDataItem> by requireColumn(CustomDataItems,customDataItems)
     override val groups: List<GroupMembership> by requireColumn(GroupMemberships, groups)
     override val relations: List<LabeledValue<Relation>> by requireColumn(Relations, relations)
 

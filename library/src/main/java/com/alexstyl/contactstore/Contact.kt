@@ -9,11 +9,11 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Contacts.Photo
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
+import com.alexstyl.contactstore.ContactColumn.CustomDataItems
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
-import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactColumn.Nickname
@@ -133,9 +133,9 @@ public interface Contact {
     public val webAddresses: List<LabeledValue<WebAddress>>
 
     /**
-     * Requires : [ContactColumn.LinkedAccountValues]
+     * Requires : [ContactColumn.CustomDataItems]
      */
-    public val linkedAccountValues: List<LinkedAccountValue>
+    public val customDataItems: List<CustomDataItem>
 
     /**
      * Requires : [ContactColumn.ImAddresses]
@@ -169,8 +169,12 @@ public fun Contact.containsColumn(column: ContactColumn): Boolean {
     return columns.any { it == column }
 }
 
+@Deprecated(
+    "LinkedAccountValues have been deprecated and replaced with CustomDataItem. This function will go away in 1.0.0",
+    ReplaceWith("false")
+)
 public fun Contact.containsLinkedAccountColumns(): Boolean {
-    return columns.any { it is LinkedAccountValues }
+    return false
 }
 
 /**
@@ -228,8 +232,8 @@ public fun Contact.mutableCopy(): MutableContact {
         groups = if (containsColumn(GroupMemberships)) groups.toMutableList() else mutableListOf(),
         fullNameStyle = if (containsColumn(Names)) fullNameStyle else FullNameStyle.UNDEFINED,
         nickname = if (containsColumn(Nickname)) nickname else null,
-        linkedAccountValues = if (containsLinkedAccountColumns()) {
-            linkedAccountValues
+        customDataItems = if (containsColumn(CustomDataItems)) {
+            customDataItems
         } else {
             emptyList()
         },

@@ -8,7 +8,7 @@ import com.alexstyl.contactstore.GroupMembership
 import com.alexstyl.contactstore.ImAddress
 import com.alexstyl.contactstore.ImageData
 import com.alexstyl.contactstore.LabeledValue
-import com.alexstyl.contactstore.LinkedAccountValue
+import com.alexstyl.contactstore.CustomDataItem
 import com.alexstyl.contactstore.LookupKey
 import com.alexstyl.contactstore.MailAddress
 import com.alexstyl.contactstore.Note
@@ -45,7 +45,7 @@ public data class StoredContact(
     override val displayName: String? = null,
     override val lookupKey: LookupKey? = null,
     override val sipAddresses: List<LabeledValue<SipAddress>> = emptyList(),
-    override val linkedAccountValues: List<LinkedAccountValue> = emptyList(),
+    override val customDataItems: List<CustomDataItem> = emptyList(),
     override val imAddresses: List<LabeledValue<ImAddress>> = emptyList(),
     override val relations: List<LabeledValue<Relation>> = emptyList(),
     override val columns: List<ContactColumn> = emptyList()

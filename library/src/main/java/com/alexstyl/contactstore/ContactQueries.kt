@@ -14,7 +14,6 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumn
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebColumns
-import android.accounts.Account
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
@@ -28,6 +27,7 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Contacts.Entity
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
+import com.alexstyl.contactstore.ContactColumn.CustomDataItems
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
@@ -265,7 +265,7 @@ internal class ContactQueries(
             var jobTitle: String? = null
             var note: Note? = null
             val groupIds = mutableListOf<GroupMembership>()
-            val linkedAccountValues = mutableListOf<LinkedAccountValue>()
+            val customDataItems = mutableListOf<CustomDataItem>()
 
             rawContacts.forEach { rawContact ->
                 val accountType = rawContact
@@ -274,7 +274,7 @@ internal class ContactQueries(
                     .rawContactContentValues.getAsString(Entity.ACCOUNT_NAME)
 
                 val account = accountType?.let {
-                    Account(accountName, accountType)
+                    InternetAccount(accountName, accountType)
                 }
                 rawContact.dataItems.forEach { item ->
                     val mimetype = item[Contacts.Data.MIMETYPE]
@@ -424,12 +424,12 @@ internal class ContactQueries(
                                 relations.add(LabeledValue(Relation(name), label, id, account))
                             }
                         }
-                        else -> {
+                        columnsToFetch.contains(CustomDataItems) -> {
                             val mimeType = linkedAccountMimeTypes[mimetype]
                             if (mimeType != null) {
                                 val id = item.getAsLong(Contacts.Data._ID)
                                 if (id != null) {
-                                    val value = LinkedAccountValue(
+                                    val value = CustomDataItem(
                                         id = id,
                                         accountType = account!!.type,
                                         summary = item.getAsString(mimeType.summaryColumn),
@@ -438,7 +438,7 @@ internal class ContactQueries(
                                         mimeType = mimeType.mimetype,
                                         account = account
                                     )
-                                    linkedAccountValues.add(value)
+                                    customDataItems.add(value)
                                 }
                             }
                         }
@@ -474,7 +474,7 @@ internal class ContactQueries(
                 phoneticNameStyle = phoneticNameStyle,
                 sipAddresses = sipAddresses.toList(),
                 groups = groupIds.toList(),
-                linkedAccountValues = linkedAccountValues.toList(),
+                customDataItems = customDataItems.toList(),
                 imAddresses = imAddresses.toList(),
                 relations = relations.toList()
             )

@@ -63,6 +63,9 @@ public interface ContactStore {
                     context,
                     context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager,
                     context.packageManager
+                ),
+                rawContactQueries = RawContactQueries(
+                    contentResolver = contentResolver
                 )
             )
             val groupQueries = ContactGroupQueries(

@@ -1,10 +1,10 @@
 package com.alexstyl.contactstore
 
+import com.alexstyl.contactstore.ContactColumn.CustomDataItems
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
 import com.alexstyl.contactstore.ContactColumn.Image
-import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactColumn.Mails
 import com.alexstyl.contactstore.ContactColumn.Names
 import com.alexstyl.contactstore.ContactColumn.Nickname
@@ -51,9 +51,7 @@ internal fun Contact.equalContacts(other: Contact?): Boolean {
     if (containsColumn(Organization) && organization != other.organization) return false
     if (containsColumn(Organization) && jobTitle != other.jobTitle) return false
     if (containsColumn(GroupMemberships) && groups != other.groups) return false
-    if (columns.any { it is LinkedAccountValues } && linkedAccountValues != other.linkedAccountValues) {
-        return false
-    }
+    if (containsColumn(CustomDataItems) && customDataItems != other.customDataItems) return false
     if (displayName != other.displayName) return false
     return true
 }
@@ -72,7 +70,7 @@ internal fun Contact.contactHashCode(): Int {
     result = 31 * result + hashIfContains(WebAddresses) { webAddresses.hashCode() }
     result = 31 * result + hashIfContains(ImAddresses) { imAddresses.hashCode() }
     result = 31 * result + hashIfContains(SipAddresses) { sipAddresses.hashCode() }
-    result = 31 * result + hashIfContainsLinked { linkedAccountValues.hashCode() }
+    result = 31 * result + hashIfContains(CustomDataItems) { customDataItems.hashCode() }
     result = 31 * result + hashIfContains(Note) { note?.hashCode() }
     result = 31 * result + hashIfContains(GroupMemberships) { groups.hashCode() }
     result = 31 * result + hashIfContains(Relations) { relations.hashCode() }
@@ -101,13 +99,6 @@ internal fun Contact.hashIfContains(column: ContactColumn, function: () -> Int?)
     return 0
 }
 
-internal fun Contact.hashIfContainsLinked(function: () -> Int?): Int {
-    if (columns.any { it is LinkedAccountValues }) {
-        return function.invoke() ?: 0
-    }
-    return 0
-}
-
 internal fun Contact.toFullString(): String {
     return "${this.javaClass.simpleName}(contactId=$contactId," +
             " displayName='$displayName'" +
@@ -122,7 +113,7 @@ internal fun Contact.toFullString(): String {
             " webAddresses=${withValue(WebAddresses) { webAddresses }}," +
             " imAddresses=${withValue(ImAddresses) { imAddresses }}," +
             " sipAddresses=${withValue(SipAddresses) { sipAddresses }}," +
-            " linkedAccountValues=${withLinkedValue { linkedAccountValues }}," +
+            " linkedAccountValues=${withValue(CustomDataItems) { customDataItems }}," +
             " note=${withValue(Note) { note }}," +
             " groups=${withValue(GroupMemberships) { groups }}," +
             " relations=${withValue(Relations) { relations }}," +
@@ -143,14 +134,6 @@ internal fun Contact.toFullString(): String {
 
 private fun Contact.withValue(requiredColumn: ContactColumn, value: () -> Any?): String {
     return if (containsColumn(requiredColumn)) {
-        value.invoke().toString()
-    } else {
-        "N/A"
-    }
-}
-
-private fun Contact.withLinkedValue(value: () -> Any?): String {
-    return if (columns.any { it is LinkedAccountValues }) {
         value.invoke().toString()
     } else {
         "N/A"

@@ -1,7 +1,5 @@
 package com.alexstyl.contactstore
 
-import android.accounts.Account
-
 public data class LabeledValue<T> internal constructor(
     val value: T,
     val label: Label,
@@ -11,13 +9,13 @@ public data class LabeledValue<T> internal constructor(
      *
      * Absence of an Account means that the value is stored locally on the device.
      */
-    val accountInfo: Account?
+    val account: InternetAccount? = null
 ) where T : Any {
     public constructor(value: T, label: Label) : this(
         value = value,
         label = label,
         id = null,
-        accountInfo = null
+        account = null
     )
 }
 

@@ -183,7 +183,7 @@ private fun ContentProviderOperation.Builder.withCustomLabel(
         ContactColumn.Note,
         ContactColumn.Names,
         ContactColumn.Nickname,
-        is ContactColumn.LinkedAccountValues,
+        ContactColumn.CustomDataItems,
         ContactColumn.Image,
         ContactColumn.GroupMemberships -> error(
             "Tried to get label for a ${column.javaClass.simpleName}"

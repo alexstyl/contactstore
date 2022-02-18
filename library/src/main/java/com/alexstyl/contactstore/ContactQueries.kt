@@ -28,6 +28,19 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Contacts.Entity
 import android.provider.ContactsContract.FullNameStyle
 import android.provider.ContactsContract.PhoneticNameStyle
+import com.alexstyl.contactstore.ContactColumn.Events
+import com.alexstyl.contactstore.ContactColumn.GroupMemberships
+import com.alexstyl.contactstore.ContactColumn.ImAddresses
+import com.alexstyl.contactstore.ContactColumn.Image
+import com.alexstyl.contactstore.ContactColumn.Mails
+import com.alexstyl.contactstore.ContactColumn.Names
+import com.alexstyl.contactstore.ContactColumn.Nickname
+import com.alexstyl.contactstore.ContactColumn.Organization
+import com.alexstyl.contactstore.ContactColumn.Phones
+import com.alexstyl.contactstore.ContactColumn.PostalAddresses
+import com.alexstyl.contactstore.ContactColumn.Relations
+import com.alexstyl.contactstore.ContactColumn.SipAddresses
+import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
 import com.alexstyl.contactstore.ContactPredicate.NameLookup
@@ -264,17 +277,18 @@ internal class ContactQueries(
                     Account(accountName, accountType)
                 }
                 rawContact.dataItems.forEach { item ->
-                    when (val mimetype = item[Contacts.Data.MIMETYPE]) {
-                        NicknameColumns.CONTENT_ITEM_TYPE -> {
+                    val mimetype = item[Contacts.Data.MIMETYPE]
+                    when {
+                        columnsToFetch.contains(Nickname) && mimetype == NicknameColumns.CONTENT_ITEM_TYPE -> {
                             nickname = item.getAsString(NicknameColumns.NAME)
                         }
-                        GroupColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(GroupMemberships) && mimetype == GroupColumns.CONTENT_ITEM_TYPE -> {
                             val groupId = item.getAsLong(GroupColumns.GROUP_ROW_ID)
                             if (groupId != null) {
                                 groupIds.add(GroupMembership(groupId))
                             }
                         }
-                        NameColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(Names) && mimetype == NameColumns.CONTENT_ITEM_TYPE -> {
                             firstName = item.getAsString(NameColumns.GIVEN_NAME)
                             middleName = item.getAsString(NameColumns.MIDDLE_NAME)
                             lastName = item.getAsString(NameColumns.FAMILY_NAME)
@@ -293,10 +307,10 @@ internal class ContactQueries(
                             phoneticNameStyle = item.getAsInteger(NameColumns.PHONETIC_NAME_STYLE)
                                 ?: PhoneticNameStyle.UNDEFINED
                         }
-                        PhotoColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(Image) && mimetype == PhotoColumns.CONTENT_ITEM_TYPE -> {
                             imageData = loadContactPhoto(contactId)
                         }
-                        PhoneColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(Phones) && mimetype == PhoneColumns.CONTENT_ITEM_TYPE -> {
                             val phoneNumberString = item.getAsString(PhoneColumns.NUMBER)
                             val id = item.getAsLong(PhoneColumns._ID)
                             if (phoneNumberString.orEmpty().isNotBlank() && id != null) {
@@ -306,7 +320,7 @@ internal class ContactQueries(
                                 phones.add(phoneEntry)
                             }
                         }
-                        EmailColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(Mails) && mimetype == EmailColumns.CONTENT_ITEM_TYPE -> {
                             val mailAddressString = item.getAsString(EmailColumns.ADDRESS)
                             val id = item.getAsLong(EmailColumns._ID)
                             if (mailAddressString.orEmpty().isNotBlank() && id != null) {
@@ -321,7 +335,7 @@ internal class ContactQueries(
                                 )
                             }
                         }
-                        WebColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(WebAddresses) && mimetype == WebColumns.CONTENT_ITEM_TYPE -> {
                             val webAddressString = item.getAsString(WebColumns.URL)
                             val id = item.getAsLong(WebColumns._ID)
                             if (webAddressString.orEmpty().isNotBlank() && id != null) {
@@ -331,13 +345,13 @@ internal class ContactQueries(
                                 )
                             }
                         }
-                        NoteColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(ContactColumn.Note) && mimetype == NoteColumns.CONTENT_ITEM_TYPE -> {
                             val noteString = item.getAsString(NoteColumns.NOTE)
                             if (noteString.orEmpty().isNotBlank()) {
                                 note = Note(noteString)
                             }
                         }
-                        EventColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(Events) && mimetype == EventColumns.CONTENT_ITEM_TYPE -> {
                             val parsedDate =
                                 dateParser.parse(item.getAsString(EventColumns.START_DATE))
                             val id = item.getAsLong(EventColumns._ID)
@@ -347,7 +361,7 @@ internal class ContactQueries(
                                 events.add(entry)
                             }
                         }
-                        SipColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(SipAddresses) && mimetype == SipColumns.CONTENT_ITEM_TYPE -> {
                             val address = item.getAsString(SipColumns.SIP_ADDRESS)
                             val id = item.getAsLong(SipColumns._ID)
                             if (address.orEmpty().isNotBlank() && id != null) {
@@ -356,7 +370,7 @@ internal class ContactQueries(
                                 sipAddresses.add(value)
                             }
                         }
-                        PostalColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(PostalAddresses) && mimetype == PostalColumns.CONTENT_ITEM_TYPE -> {
                             val formattedAddress = item.getAsString(PostalColumns.FORMATTED_ADDRESS)
                             val id = item.getAsLong(PostalColumns._ID)
                             if (formattedAddress.orEmpty().isNotBlank() && id != null) {
@@ -385,11 +399,11 @@ internal class ContactQueries(
                                 postalAddresses.add(postalAddressEntry)
                             }
                         }
-                        OrganizationColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(Organization) && mimetype == OrganizationColumns.CONTENT_ITEM_TYPE -> {
                             organization = item.getAsString(OrganizationColumns.COMPANY)
                             jobTitle = item.getAsString(OrganizationColumns.TITLE)
                         }
-                        ImColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(ImAddresses) && mimetype == ImColumns.CONTENT_ITEM_TYPE -> {
                             val imAddressString = item.getAsString(ImColumns.DATA)
                             val id = item.getAsLong(ImColumns._ID)
                             if (imAddressString.orEmpty().isNotBlank() && id != null) {
@@ -402,7 +416,7 @@ internal class ContactQueries(
                                 )
                             }
                         }
-                        RelationColumns.CONTENT_ITEM_TYPE -> {
+                        columnsToFetch.contains(Relations) && mimetype == RelationColumns.CONTENT_ITEM_TYPE -> {
                             val name = item.getAsString(RelationColumns.NAME)
                             val id = item.getAsLong(RelationColumns._ID)
                             if (name.orEmpty().isNotBlank() && id != null) {

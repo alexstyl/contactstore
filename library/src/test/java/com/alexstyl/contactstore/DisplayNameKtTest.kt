@@ -189,7 +189,7 @@ internal class DisplayNameKtTest {
             phoneticMiddleName = phoneticMiddleName,
             groups = mutableListOf(),
             nickname = nickname,
-            linkedAccountValues = emptyList()
+            customDataItems = emptyList()
         )
     }
 }

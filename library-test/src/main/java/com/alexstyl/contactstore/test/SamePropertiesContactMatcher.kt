@@ -4,6 +4,7 @@ package com.alexstyl.contactstore.test
 
 import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.ContactColumn
+import com.alexstyl.contactstore.ContactColumn.CustomDataItems
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
@@ -18,10 +19,8 @@ import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
-import com.alexstyl.contactstore.ContactGroup
 import com.alexstyl.contactstore.LabeledValue
 import com.alexstyl.contactstore.containsColumn
-import com.alexstyl.contactstore.containsLinkedAccountColumns
 import com.alexstyl.contactstore.standardColumns
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -203,8 +202,8 @@ private class SamePropertiesContactMatcher(
                     mismatchDescription.appendText("relations were ${actual.relations}")
                     false
                 }
-                linkedAccountsAreDifferent(actual) -> {
-                    mismatchDescription.appendText("linkedAccountValues were ${actual.linkedAccountValues}")
+                customDataItemsAreDifferent(actual) -> {
+                    mismatchDescription.appendText("customDataItems were ${actual.customDataItems}")
                     false
                 }
                 displayName != expected.displayName -> {
@@ -223,12 +222,12 @@ private class SamePropertiesContactMatcher(
         return areLabeledValuesDifferentIgnoringId(actual.relations, expected.relations)
     }
 
-    private fun linkedAccountsAreDifferent(actual: Contact): Boolean {
-        if (expected.containsLinkedAccountColumns().not()) {
+    private fun customDataItemsAreDifferent(actual: Contact): Boolean {
+        if (expected.containsColumn(CustomDataItems).not()) {
             return false
         }
-        val map = actual.linkedAccountValues.map { it.copy(id = 0) }
-        val map1 = expected.linkedAccountValues.map { it.copy(id = 0) }
+        val map = actual.customDataItems.map { it.copy(id = 0) }
+        val map1 = expected.customDataItems.map { it.copy(id = 0) }
         return map != map1
     }
 

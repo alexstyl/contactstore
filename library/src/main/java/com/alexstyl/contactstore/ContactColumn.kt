@@ -61,12 +61,10 @@ public sealed class ContactColumn {
     public object GroupMemberships : ContactColumn()
 
     /**
-     * A column that will populate the [Contact.linkedAccountValues] field of all queried contacts when requested.
+     * A column that will populate the [Contact.customDataItems] field of all queried contacts when requested.
      *
-     * Each 3rd party app specifies a unique account type when syncing web contacts into the device.
-     * See [SyncColumns.ACCOUNT_TYPE][android.provider.ContactsContract.SyncColumns.ACCOUNT_TYPE] for more details.
      */
-    public data class LinkedAccountValues(val accountType: String) : ContactColumn()
+    public object CustomDataItems : ContactColumn()
 
     /**
      * A column that will populate the [Contact.imAddresses] field of all queried contacts when requested.
@@ -84,6 +82,10 @@ public sealed class ContactColumn {
     public object Relations : ContactColumn()
 }
 
+@Deprecated(
+    "The concept of 'standard columns' is going away in 1.0.0.",
+    ReplaceWith("allContactColumns()")
+)
 public fun standardColumns(): List<ContactColumn> {
     return listOf(
         ContactColumn.Phones,
@@ -100,5 +102,25 @@ public fun standardColumns(): List<ContactColumn> {
         ContactColumn.ImAddresses,
         ContactColumn.Relations,
         ContactColumn.SipAddresses,
+    )
+}
+
+public fun allContactColumns(): List<ContactColumn> {
+    return listOf(
+        ContactColumn.Phones,
+        ContactColumn.Mails,
+        ContactColumn.Note,
+        ContactColumn.Events,
+        ContactColumn.PostalAddresses,
+        ContactColumn.Image,
+        ContactColumn.Names,
+        ContactColumn.Nickname,
+        ContactColumn.WebAddresses,
+        ContactColumn.Organization,
+        ContactColumn.GroupMemberships,
+        ContactColumn.ImAddresses,
+        ContactColumn.Relations,
+        ContactColumn.SipAddresses,
+        ContactColumn.CustomDataItems,
     )
 }

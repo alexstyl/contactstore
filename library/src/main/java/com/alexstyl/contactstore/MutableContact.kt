@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore
 
 import android.provider.ContactsContract
+import com.alexstyl.contactstore.ContactColumn.CustomDataItems
 import com.alexstyl.contactstore.ContactColumn.Events
 import com.alexstyl.contactstore.ContactColumn.GroupMemberships
 import com.alexstyl.contactstore.ContactColumn.ImAddresses
@@ -41,7 +42,7 @@ public class MutableContact internal constructor(
     organization: String?,
     jobTitle: String?,
     groups: MutableList<GroupMembership>,
-    linkedAccountValues: List<LinkedAccountValue>,
+    customDataItems: List<CustomDataItem>,
     imAddresses: MutableList<LabeledValue<ImAddress>>,
     sipAddresses: MutableList<LabeledValue<SipAddress>>,
     relations: MutableList<LabeledValue<Relation>>,
@@ -61,8 +62,8 @@ public class MutableContact internal constructor(
     override val sipAddresses: MutableList<LabeledValue<SipAddress>>
             by requireColumn(SipAddresses, sipAddresses)
 
-    override val linkedAccountValues: List<LinkedAccountValue>
-            by requireAnyLinkedAccountColumn(linkedAccountValues)
+    override val customDataItems: List<CustomDataItem>
+            by requireColumn(CustomDataItems, customDataItems)
 
     override var note: com.alexstyl.contactstore.Note? by readWriteField(Note, note)
 
@@ -114,7 +115,7 @@ public class MutableContact internal constructor(
         organization = null,
         jobTitle = null,
         groups = mutableListOf(),
-        linkedAccountValues = emptyList(),
+        customDataItems = emptyList(),
         imAddresses = mutableListOf(),
         columns = standardColumns() // allow editing of all columns for new contacts
     )

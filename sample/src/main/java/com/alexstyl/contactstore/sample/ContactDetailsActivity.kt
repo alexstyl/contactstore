@@ -37,19 +37,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.alexstyl.contactstore.Contact
-import com.alexstyl.contactstore.ContactColumn.LinkedAccountValues
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactStore
+import com.alexstyl.contactstore.allContactColumns
 import com.alexstyl.contactstore.getLocalizedString
-import com.alexstyl.contactstore.imageUri
 import com.alexstyl.contactstore.sample.ui.SetupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
 import com.alexstyl.contactstore.shareVCardIntent
-import com.alexstyl.contactstore.standardColumns
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -70,15 +67,7 @@ class ContactDetailsActivity : ComponentActivity() {
         val contact = runBlocking {
             contactStore.fetchContacts(
                 predicate = ContactLookup(listOf(contactId)),
-                columnsToFetch = standardColumns() + listOf(
-                    LinkedAccountValues("com.whatsapp"),
-                    LinkedAccountValues("org.thoughtcrime.securesms"),
-                    LinkedAccountValues("org.telegram.messenger"),
-                    LinkedAccountValues("com.viber.voip"),
-                    LinkedAccountValues("kik.android"),
-                    LinkedAccountValues("com.google.android.apps.tachyon"),
-                    LinkedAccountValues("ch.threema.app")
-                )
+                columnsToFetch = allContactColumns()
             ).first().firstOrNull()
         }
         if (contact == null) {
@@ -167,7 +156,7 @@ class ContactDetailsActivity : ComponentActivity() {
                             }
                         }
 
-                        contact.linkedAccountValues.forEach { value ->
+                        contact.customDataItems.forEach { value ->
                             item {
                                 Contactable(
                                     icon = value.icon,

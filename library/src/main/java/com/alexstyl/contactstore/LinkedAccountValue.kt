@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore
 
+import android.accounts.Account
 import android.graphics.drawable.Drawable
 
 public data class LinkedAccountValue(
@@ -10,5 +11,5 @@ public data class LinkedAccountValue(
     val summary: String,
     val detail: String,
     val icon: Drawable,
-    val account: AccountInfo
+    val account: Account
 )

@@ -1,8 +1,35 @@
 package com.alexstyl.contactstore
 
 public sealed class ContactPredicate {
-    public data class PhoneLookup(val phoneNumber: PhoneNumber) : ContactPredicate()
-    public data class MailLookup(val mailAddress: MailAddress) : ContactPredicate()
+    public companion object {
+        @Suppress("FunctionName")
+        @Deprecated(
+            "Use a string directly instead. This signature is going away in 1.0.0",
+            ReplaceWith("PhoneLookup(phoneNumber.raw)")
+        )
+        public fun PhoneLookup(phoneNumber: PhoneNumber): ContactPredicate {
+            return PhoneLookup(phoneNumber.raw)
+        }
+
+        @Suppress("FunctionName")
+        @Deprecated(
+            "Use a string directly instead. This signature is going away in 1.0.0",
+            ReplaceWith("MailLookup(mailAddress.raw)")
+        )
+        public fun MailLookup(mailAddress: MailAddress): ContactPredicate {
+            return MailLookup(mailAddress.raw)
+        }
+    }
+
+    /**
+     * Performs a contact lookup by trying to match the given string against each contact's phone numbers.
+     */
+    public data class PhoneLookup(val phoneNumber: String) : ContactPredicate()
+
+    /**
+     * Performs a contact lookup by trying to match the given string against each contact's mail addresses.
+     */
+    public data class MailLookup(val mailAddress: String) : ContactPredicate()
 
     /**
      * Performs a contact lookup by trying to match the given string against various parts of the contact name.

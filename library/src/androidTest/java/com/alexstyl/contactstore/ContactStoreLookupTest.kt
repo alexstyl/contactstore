@@ -1,6 +1,8 @@
 package com.alexstyl.contactstore
 
+import com.alexstyl.contactstore.ContactPredicate.MailLookup
 import com.alexstyl.contactstore.ContactPredicate.NameLookup
+import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -31,9 +33,7 @@ internal class ContactStoreLookupTest : ContactStoreTestBase() {
 
     @Test
     fun lookupByPhoneNumber(): Unit = runBlocking {
-        val actual = store.fetchContacts(
-            ContactPredicate.PhoneLookup(PhoneNumber("555"))
-        ).first()
+        val actual = store.fetchContacts(PhoneLookup("555")).first()
         val expected = listOf(
             paoloMelendez()
         )
@@ -42,9 +42,7 @@ internal class ContactStoreLookupTest : ContactStoreTestBase() {
 
     @Test
     fun lookupByMail(): Unit = runBlocking {
-        val actual = store.fetchContacts(
-            ContactPredicate.MailLookup(MailAddress("hi@mail.com"))
-        ).first()
+        val actual = store.fetchContacts(MailLookup("hi@mail.com")).first()
         val expected = listOf(kimClay())
 
         assertThat(actual, equalTo(expected))

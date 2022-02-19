@@ -116,7 +116,7 @@ internal abstract class ContactStoreTestBase {
         contactBuilder: MutableContactBuilder.() -> Unit
     ): Contact {
         store.execute {
-            insert(contactBuilder)
+            insert(null, contactBuilder)
         }
 
         val contactsBefore = store.fetchContacts(columnsToFetch = withColumns.toList()).first()

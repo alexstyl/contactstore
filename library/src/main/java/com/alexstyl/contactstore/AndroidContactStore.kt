@@ -34,7 +34,7 @@ internal class AndroidContactStore(
         request.requests.map { operation ->
             when (operation) {
                 is Update -> existingContactOperationsFactory.updateOperation(operation.contact)
-                is Insert -> newContactOperationsFactory.addContactsOperation(operation.contact)
+                is Insert -> newContactOperationsFactory.addContactsOperation(operation.account, operation.contact)
                 is Delete -> existingContactOperationsFactory.deleteContactOperation(operation.contactId)
                 is InsertGroup -> contactGroupOperations.addGroupOperation(operation.group)
                 is UpdateGroup -> contactGroupOperations.updateGroupOperation(operation.group)

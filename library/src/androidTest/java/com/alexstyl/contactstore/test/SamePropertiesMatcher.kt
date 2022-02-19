@@ -18,6 +18,7 @@ import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.LabeledValue
+import com.alexstyl.contactstore.allContactColumns
 import com.alexstyl.contactstore.containsColumn
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -194,7 +195,7 @@ private class SamePropertiesMatcher(
                     mismatchDescription.appendText("relations were ${actual.relations}")
                     false
                 }
-                linkedAccountsAreDifferent(actual) -> {
+                customDataItemsAreDifferent(actual) -> {
                     mismatchDescription.appendText("customDataItems were ${actual.customDataItems}")
                     false
                 }
@@ -218,7 +219,7 @@ private class SamePropertiesMatcher(
         return areLabeledValuesDifferentIgnoringId(actual.relations, expected.relations)
     }
 
-    private fun linkedAccountsAreDifferent(actual: Contact): Boolean {
+    private fun customDataItemsAreDifferent(actual: Contact): Boolean {
         if (expected.containsColumn(CustomDataItems).not()) {
             return false
         }
@@ -277,7 +278,7 @@ private class SamePropertiesMatcher(
     }
 
     private fun columns(contact: Contact): List<ContactColumn> {
-        return standardColumns()
+        return allContactColumns()
             .filter { contact.containsColumn(it) }
     }
 

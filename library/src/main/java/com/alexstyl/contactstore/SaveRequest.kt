@@ -31,8 +31,11 @@ public class SaveRequest {
         _requests.add(Update(mutableContact))
     }
 
-    public fun insert(mutableContact: MutableContact) {
-        _requests.add(Insert(mutableContact))
+    /**
+     * Insert the contact into the specified [InternetAccount].
+     */
+    public fun insert(mutableContact: MutableContact, intoAccount: InternetAccount? = null) {
+        _requests.add(Insert(intoAccount, mutableContact))
     }
 
     public fun insertGroup(mutableContactGroup: MutableContactGroup) {

@@ -2,6 +2,7 @@ package com.alexstyl.contactstore
 
 import android.provider.ContactsContract.CommonDataKinds.Email as EmailColumns
 import android.provider.ContactsContract.CommonDataKinds.Event as EventColumns
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupColumns
 import android.provider.ContactsContract.CommonDataKinds.Im as ImColumns
 import android.provider.ContactsContract.CommonDataKinds.Note as NoteColumns
 import android.provider.ContactsContract.CommonDataKinds.Organization as OrganizationColumns
@@ -12,7 +13,6 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress as SipColumn
 import android.provider.ContactsContract.CommonDataKinds.StructuredName as NameColumns
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal as PostalColumns
 import android.provider.ContactsContract.CommonDataKinds.Website as WebsiteColumns
-import android.provider.ContactsContract.CommonDataKinds.GroupMembership as GroupColumns
 import android.content.ContentProviderOperation
 import android.content.ContentProviderOperation.newInsert
 import android.content.res.Resources
@@ -26,10 +26,12 @@ import android.provider.ContactsContract.RawContacts
 internal class NewContactOperationsFactory(
     private val resources: Resources
 ) {
-    fun addContactsOperation(contact: MutableContact): List<ContentProviderOperation> {
+    fun addContactsOperation(
+        account: InternetAccount?, contact: MutableContact
+    ): List<ContentProviderOperation> {
         return mutableListOf<ContentProviderOperation?>().apply {
             with(contact) {
-                add(insertLocalRawAccountOperation(contact))
+                add(insertNewRawAccountOperation(account, contact))
                 add(insertNamesOperation(contact))
                 imageData?.run { add(insertPhotoOperation(this)) }
 
@@ -54,8 +56,7 @@ internal class NewContactOperationsFactory(
     }
 
     private fun hasOrganizationDetails(contact: MutableContact): Boolean {
-        return (contact.organization.isNullOrBlank().not()
-                || contact.jobTitle.isNullOrBlank().not())
+        return (contact.organization.isNotBlank() || contact.jobTitle.isNotBlank())
     }
 
     private fun insertOrganization(contact: Contact): ContentProviderOperation {
@@ -170,10 +171,12 @@ internal class NewContactOperationsFactory(
             .build()
     }
 
-    private fun insertLocalRawAccountOperation(contact: MutableContact): ContentProviderOperation {
+    private fun insertNewRawAccountOperation(
+        account: InternetAccount?, contact: MutableContact
+    ): ContentProviderOperation {
         return newInsert(RawContacts.CONTENT_URI)
-            .withValue(RawContacts.ACCOUNT_TYPE, null)
-            .withValue(RawContacts.ACCOUNT_NAME, null)
+            .withValue(RawContacts.ACCOUNT_TYPE, account?.type)
+            .withValue(RawContacts.ACCOUNT_NAME, account?.name)
             .withValue(Data.STARRED, boolToString(contact.isStarred))
             .build()
     }

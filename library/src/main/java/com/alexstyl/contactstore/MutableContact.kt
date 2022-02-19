@@ -117,7 +117,7 @@ public class MutableContact internal constructor(
         groups = mutableListOf(),
         customDataItems = emptyList(),
         imAddresses = mutableListOf(),
-        columns = standardColumns() // allow editing of all columns for new contacts
+        columns = allContactColumns() // allow editing of all columns for new contacts
     )
 
     override val displayName: String

@@ -2,8 +2,8 @@ package com.alexstyl.contactstore.test
 
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.PartialContact
+import com.alexstyl.contactstore.allContactColumns
 import com.alexstyl.contactstore.mutableCopy
-import com.alexstyl.contactstore.standardColumns
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -23,9 +23,7 @@ internal class ExecuteTestContactStoreTest {
         store.execute {
             insert(ContactFixtures.PAOLO_MELENDEZ.mutableCopy())
         }
-        val actual = store.fetchContacts(
-            columnsToFetch = standardColumns()
-        ).first()
+        val actual = store.fetchContacts(columnsToFetch = allContactColumns()).first()
         assertThat(actual).containsOnly(
             ContactFixtures.PAOLO_MELENDEZ
         )
@@ -56,7 +54,7 @@ internal class ExecuteTestContactStoreTest {
             )
         )
 
-        val updated = store.fetchContacts(columnsToFetch = standardColumns()).first()
+        val updated = store.fetchContacts(columnsToFetch = allContactColumns()).first()
             .first { it.contactId == SNAPSHOT_PAOLO.contactId }
 
         store.execute {

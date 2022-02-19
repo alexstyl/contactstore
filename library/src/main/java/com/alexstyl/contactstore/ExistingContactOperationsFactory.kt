@@ -18,8 +18,9 @@ import android.content.ContentProviderOperation.newDelete
 import android.content.ContentProviderOperation.newInsert
 import android.content.ContentProviderOperation.newUpdate
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.res.Resources
-import android.provider.ContactsContract
+import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.RawContacts
 import com.alexstyl.contactstore.ContactColumn.Events
@@ -142,10 +143,10 @@ internal class ExistingContactOperationsFactory(
 
     private fun replaceStar(contact: MutableContact): List<ContentProviderOperation> {
         return listOf(
-            newUpdate(ContactsContract.Contacts.CONTENT_URI)
-                .withSelection("${ContactsContract.Contacts._ID} = ${contact.contactId}", null)
+            newUpdate(Contacts.CONTENT_URI)
+                .withSelection("${Contacts._ID} = ${contact.contactId}", null)
                 .withValue(
-                    ContactsContract.Contacts.STARRED, if (contact.isStarred) {
+                    Contacts.STARRED, if (contact.isStarred) {
                         "1"
                     } else {
                         "0"
@@ -410,14 +411,12 @@ internal class ExistingContactOperationsFactory(
         } ?: -1L
     }
 
-    fun deleteContactOperation(contactWithContactId: Long): List<ContentProviderOperation> {
-        return listOf(deleteContact(contactWithContactId))
+    fun deleteContactOperation(contactId: Long): List<ContentProviderOperation> {
+        return listOf(deleteContact(contactId))
     }
 
     private fun deleteContact(contactId: Long): ContentProviderOperation {
-        val rawContactId = findRawContactId(contactId)
-        return newDelete(RawContacts.CONTENT_URI)
-            .withSelection("${RawContacts._ID} = $rawContactId", null)
+        return newDelete(ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId))
             .build()
     }
 }

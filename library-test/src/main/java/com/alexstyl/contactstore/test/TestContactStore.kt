@@ -121,19 +121,19 @@ public class TestContactStore(
                         StoredContact(
                             contactId = current.size.toLong(),
                             isStarred = contact.isStarred,
-                            prefix = contact.takeIfContains(ContactColumn.Names) { contact.prefix },
-                            firstName = contact.takeIfContains(ContactColumn.Names) { contact.firstName },
-                            middleName = contact.takeIfContains(ContactColumn.Names) { contact.middleName },
-                            lastName = contact.takeIfContains(ContactColumn.Names) { contact.lastName },
-                            suffix = contact.takeIfContains(ContactColumn.Names) { contact.suffix },
-                            phoneticMiddleName = contact.takeIfContains(ContactColumn.Names) { contact.phoneticMiddleName },
-                            phoneticFirstName = contact.takeIfContains(ContactColumn.Names) { contact.phoneticFirstName },
-                            phoneticLastName = contact.takeIfContains(ContactColumn.Names) { contact.phoneticLastName },
+                            prefix = contact.takeIfContains(ContactColumn.Names) { contact.prefix }.orEmpty(),
+                            firstName = contact.takeIfContains(ContactColumn.Names) { contact.firstName }.orEmpty(),
+                            middleName = contact.takeIfContains(ContactColumn.Names) { contact.middleName }.orEmpty(),
+                            lastName = contact.takeIfContains(ContactColumn.Names) { contact.lastName }.orEmpty(),
+                            suffix = contact.takeIfContains(ContactColumn.Names) { contact.suffix }.orEmpty(),
+                            phoneticMiddleName = contact.takeIfContains(ContactColumn.Names) { contact.phoneticMiddleName }.orEmpty(),
+                            phoneticFirstName = contact.takeIfContains(ContactColumn.Names) { contact.phoneticFirstName }.orEmpty(),
+                            phoneticLastName = contact.takeIfContains(ContactColumn.Names) { contact.phoneticLastName }.orEmpty(),
                             phoneticNameStyle = contact.takeIfContains(ContactColumn.Names) { contact.phoneticNameStyle }
                                 ?: ContactsContract.PhoneticNameStyle.UNDEFINED,
                             imageData = contact.takeIfContains(ContactColumn.Image) { contact.imageData },
-                            organization = contact.takeIfContains(ContactColumn.Organization) { contact.organization },
-                            jobTitle = contact.takeIfContains(ContactColumn.Organization) { contact.jobTitle },
+                            organization = contact.takeIfContains(ContactColumn.Organization) { contact.organization }.orEmpty(),
+                            jobTitle = contact.takeIfContains(ContactColumn.Organization) { contact.jobTitle }.orEmpty(),
                             webAddresses = contact.takeIfContains(ContactColumn.WebAddresses) { contact.webAddresses }
                                 .orEmpty(),
                             phones = contact.takeIfContains(ContactColumn.Phones) { contact.phones }
@@ -145,7 +145,7 @@ public class TestContactStore(
                             postalAddresses = contact.takeIfContains(ContactColumn.PostalAddresses) { contact.postalAddresses }
                                 .orEmpty(),
                             note = contact.takeIfContains(ContactColumn.Note) { contact.note },
-                            nickname = contact.takeIfContains(ContactColumn.Nickname) { contact.nickname },
+                            nickname = contact.takeIfContains(ContactColumn.Nickname) { contact.nickname }.orEmpty(),
                             groups = contact
                                 .takeIfContains(ContactColumn.GroupMemberships) { contact.groups }
                                 .orEmpty(),
@@ -320,12 +320,12 @@ public class TestContactStore(
         contact: StoredContact
     ): Boolean {
         val query = predicate.partOfName
-        val matchesName = contact.prefix.orEmpty().startsWith(query, ignoreCase = true)
-                || contact.firstName.orEmpty().startsWith(query, ignoreCase = true)
-                || contact.middleName.orEmpty().startsWith(query, ignoreCase = true)
-                || contact.lastName.orEmpty().startsWith(query, ignoreCase = true)
-                || contact.suffix.orEmpty().startsWith(query, ignoreCase = true)
-        val matchesNick = contact.nickname.orEmpty().startsWith(query, ignoreCase = true)
+        val matchesName = contact.prefix.startsWith(query, ignoreCase = true)
+                || contact.firstName.startsWith(query, ignoreCase = true)
+                || contact.middleName.startsWith(query, ignoreCase = true)
+                || contact.lastName.startsWith(query, ignoreCase = true)
+                || contact.suffix.startsWith(query, ignoreCase = true)
+        val matchesNick = contact.nickname.startsWith(query, ignoreCase = true)
         return matchesName || matchesNick
     }
 
@@ -338,23 +338,23 @@ public class TestContactStore(
                 columns = columnsToFetch,
                 isStarred = it.isStarred,
 
-                firstName = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.firstName },
-                lastName = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.lastName },
-                prefix = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.prefix },
-                middleName = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.middleName },
-                suffix = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.suffix },
+                firstName = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.firstName }.orEmpty(),
+                lastName = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.lastName }.orEmpty(),
+                prefix = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.prefix }.orEmpty(),
+                middleName = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.middleName }.orEmpty(),
+                suffix = valueIfPresent(columnsToFetch, ContactColumn.Names) { it.suffix }.orEmpty(),
                 phoneticFirstName = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.Names
-                ) { it.phoneticFirstName },
+                ) { it.phoneticFirstName }.orEmpty(),
                 phoneticMiddleName = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.Names
-                ) { it.phoneticMiddleName },
+                ) { it.phoneticMiddleName }.orEmpty(),
                 phoneticLastName = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.Names
-                ) { it.phoneticLastName },
+                ) { it.phoneticLastName }.orEmpty(),
                 fullNameStyle = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.Names
@@ -369,11 +369,11 @@ public class TestContactStore(
                 organization = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.Organization
-                ) { it.organization },
+                ) { it.organization }.orEmpty(),
                 jobTitle = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.Organization
-                ) { it.jobTitle },
+                ) { it.jobTitle }.orEmpty(),
                 webAddresses = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.WebAddresses
@@ -392,7 +392,7 @@ public class TestContactStore(
                     ContactColumn.PostalAddresses
                 ) { it.postalAddresses }.orEmpty(),
                 note = valueIfPresent(columnsToFetch, ContactColumn.Note) { it.note },
-                nickname = valueIfPresent(columnsToFetch, ContactColumn.Nickname) { it.nickname },
+                nickname = valueIfPresent(columnsToFetch, ContactColumn.Nickname) { it.nickname }.orEmpty(),
                 groups = valueIfPresent(
                     columnsToFetch,
                     ContactColumn.GroupMemberships
@@ -404,25 +404,23 @@ public class TestContactStore(
     private fun displayName(it: StoredContact): String {
         return with(it) {
             buildString {
-                prefix?.let { append(it) }
+                append(prefix)
 
                 if (fullNameStyle == ContactsContract.FullNameStyle.UNDEFINED || fullNameStyle == ContactsContract.FullNameStyle.WESTERN) {
-                    firstName?.let { appendWord(it) }
-                    middleName?.let { appendWord(it) }
-                    lastName?.let { appendWord(it) }
+                    appendWord(firstName)
+                    appendWord(middleName)
+                    appendWord(lastName)
                 } else if (fullNameStyle == ContactsContract.FullNameStyle.CHINESE) {
-                    lastName?.let { appendWord(it) }
-                    middleName?.let { appendWord(it, separator = "") }
-                    firstName?.let { appendWord(it, separator = "") }
+                    appendWord(lastName)
+                    appendWord(middleName, separator = "")
+                    appendWord(firstName, separator = "")
                 } else {
-                    lastName?.let { appendWord(it) }
-                    middleName?.let { appendWord(it) }
-                    firstName?.let { appendWord(it) }
+                    appendWord(lastName)
+                    appendWord(middleName)
+                    appendWord(firstName)
                 }
 
-                suffix?.let {
-                    appendWord(it, separator = ", ")
-                }
+                appendWord(suffix, separator = ", ")
             }
         }
     }

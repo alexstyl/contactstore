@@ -27,54 +27,54 @@ import com.alexstyl.contactstore.ContactColumn.WebAddresses
 
 public interface Contact {
     public val contactId: Long
-    public val displayName: String?
+    public val displayName: String
 
     public val lookupKey: LookupKey?
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val prefix: String?
+    public val prefix: String
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val firstName: String?
+    public val firstName: String
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val middleName: String?
+    public val middleName: String
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val lastName: String?
+    public val lastName: String
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val suffix: String?
+    public val suffix: String
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val phoneticFirstName: String?
+    public val phoneticFirstName: String
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val phoneticMiddleName: String?
+    public val phoneticMiddleName: String
 
     /**
      * Requires: [ContactColumn.Names]
      */
-    public val phoneticLastName: String?
+    public val phoneticLastName: String
 
     /**
      * Requires: [ContactColumn.Nickname]
      */
-    public val nickname: String?
+    public val nickname: String
 
     /**
      * Requires: [ContactColumn.GroupMemberships]
@@ -150,7 +150,7 @@ public interface Contact {
     /**
      * Requires: [ContactColumn.Organization]
      */
-    public val organization: String?
+    public val organization: String
 
     /**
      * Requires: [ContactColumn.Relations]
@@ -160,7 +160,7 @@ public interface Contact {
     /**
      * Requires: [ContactColumn.Organization]
      */
-    public val jobTitle: String?
+    public val jobTitle: String
     public val isStarred: Boolean
     public val columns: List<ContactColumn>
 }
@@ -173,6 +173,7 @@ public fun Contact.containsColumn(column: ContactColumn): Boolean {
     "LinkedAccountValues have been deprecated and replaced with CustomDataItem. This function will go away in 1.0.0",
     ReplaceWith("false")
 )
+@Suppress("unused") // part of the API
 public fun Contact.containsLinkedAccountColumns(): Boolean {
     return false
 }
@@ -197,10 +198,10 @@ public fun Contact.mutableCopy(): MutableContact {
     return MutableContact(
         contactId = contactId,
         lookupKey = lookupKey,
-        firstName = if (containsColumn(Names)) firstName else null,
-        organization = if (containsColumn(Organization)) organization else null,
-        jobTitle = if (containsColumn(Organization)) jobTitle else null,
-        lastName = if (containsColumn(Names)) lastName else null,
+        firstName = if (containsColumn(Names)) firstName else "",
+        organization = if (containsColumn(Organization)) organization else "",
+        jobTitle = if (containsColumn(Organization)) jobTitle else "",
+        lastName = if (containsColumn(Names)) lastName else "",
         isStarred = isStarred,
         imageData = if (containsColumn(Image)) imageData else null,
         phones = if (containsColumn(Phones)) phones.toMutableList() else mutableListOf(),
@@ -222,16 +223,16 @@ public fun Contact.mutableCopy(): MutableContact {
         relations = if (containsColumn(Relations)) relations.toMutableList() else mutableListOf(),
         note = if (containsColumn(Note)) note else null,
         columns = columns,
-        middleName = if (containsColumn(Names)) middleName else null,
-        prefix = if (containsColumn(Names)) prefix else null,
-        suffix = if (containsColumn(Names)) suffix else null,
+        middleName = if (containsColumn(Names)) middleName else "",
+        prefix = if (containsColumn(Names)) prefix else "",
+        suffix = if (containsColumn(Names)) suffix else "",
         phoneticNameStyle = if (containsColumn(Names)) phoneticNameStyle else PhoneticNameStyle.UNDEFINED,
-        phoneticFirstName = if (containsColumn(Names)) phoneticFirstName else null,
-        phoneticLastName = if (containsColumn(Names)) phoneticLastName else null,
-        phoneticMiddleName = if (containsColumn(Names)) phoneticMiddleName else null,
+        phoneticFirstName = if (containsColumn(Names)) phoneticFirstName else "",
+        phoneticLastName = if (containsColumn(Names)) phoneticLastName else "",
+        phoneticMiddleName = if (containsColumn(Names)) phoneticMiddleName else "",
         groups = if (containsColumn(GroupMemberships)) groups.toMutableList() else mutableListOf(),
         fullNameStyle = if (containsColumn(Names)) fullNameStyle else FullNameStyle.UNDEFINED,
-        nickname = if (containsColumn(Nickname)) nickname else null,
+        nickname = if (containsColumn(Nickname)) nickname else "",
         customDataItems = if (containsColumn(CustomDataItems)) {
             customDataItems
         } else {

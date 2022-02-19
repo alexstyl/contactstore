@@ -109,7 +109,7 @@ internal class ContactQueries(
                 PartialContact(
                     contactId = ContactsQuery.getContactId(it),
                     lookupKey = ContactsQuery.getLookupKey(it),
-                    displayName = ContactsQuery.getDisplayName(it),
+                    displayName = ContactsQuery.getDisplayName(it).orEmpty(),
                     isStarred = ContactsQuery.getIsStarred(it),
                     columns = emptyList()
                 )
@@ -131,7 +131,7 @@ internal class ContactQueries(
                 PartialContact(
                     contactId = ContactsQuery.getContactId(it),
                     lookupKey = ContactsQuery.getLookupKey(it),
-                    displayName = ContactsQuery.getDisplayName(it),
+                    displayName = ContactsQuery.getDisplayName(it).orEmpty(),
                     isStarred = ContactsQuery.getIsStarred(it),
                     columns = emptyList()
                 )
@@ -153,7 +153,7 @@ internal class ContactQueries(
             cursor.mapEachRow {
                 PartialContact(
                     contactId = FilterQuery.getContactId(it),
-                    displayName = FilterQuery.getDisplayName(it),
+                    displayName = FilterQuery.getDisplayName(it).orEmpty(),
                     isStarred = FilterQuery.getIsStarred(it),
                     lookupKey = FilterQuery.getLookupKey(it),
                     columns = emptyList()
@@ -225,7 +225,7 @@ internal class ContactQueries(
                 PartialContact(
                     contactId = ContactsQuery.getContactId(it),
                     lookupKey = ContactsQuery.getLookupKey(it),
-                    displayName = ContactsQuery.getDisplayName(it),
+                    displayName = ContactsQuery.getDisplayName(it).orEmpty(),
                     isStarred = ContactsQuery.getIsStarred(it),
                     columns = emptyList()
                 )
@@ -241,16 +241,16 @@ internal class ContactQueries(
             val rawContacts = rawContactQueries.fetchRawContacts(contact)
 
             val contactId = contact.contactId
-            var firstName: String? = null
-            var middleName: String? = null
-            var lastName: String? = null
-            var prefix: String? = null
-            var suffix: String? = null
+            var firstName= ""
+            var middleName= ""
+            var lastName= ""
+            var prefix= ""
+            var suffix= ""
             var fullNameStyle: Int = FullNameStyle.UNDEFINED
-            var nickname: String? = null
-            var phoneticFirstName: String? = null
-            var phoneticMiddleName: String? = null
-            var phoneticLastName: String? = null
+            var nickname= ""
+            var phoneticFirstName = ""
+            var phoneticMiddleName= ""
+            var phoneticLastName= ""
             var phoneticNameStyle: Int = PhoneticNameStyle.UNDEFINED
             var imageData: ImageData? = null
             val phones = mutableSetOf<LabeledValue<PhoneNumber>>()
@@ -261,8 +261,8 @@ internal class ContactQueries(
             val imAddresses = mutableSetOf<LabeledValue<ImAddress>>()
             val relations = mutableSetOf<LabeledValue<Relation>>()
             val postalAddresses = mutableSetOf<LabeledValue<PostalAddress>>()
-            var organization: String? = null
-            var jobTitle: String? = null
+            var organization= ""
+            var jobTitle= ""
             var note: Note? = null
             val groupIds = mutableListOf<GroupMembership>()
             val customDataItems = mutableListOf<CustomDataItem>()

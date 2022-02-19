@@ -28,19 +28,19 @@ public class MutableContact internal constructor(
     webAddresses: MutableList<LabeledValue<WebAddress>>,
     note: com.alexstyl.contactstore.Note?,
     override var isStarred: Boolean,
-    firstName: String?,
-    lastName: String?,
-    middleName: String?,
-    prefix: String?,
-    suffix: String?,
-    phoneticFirstName: String?,
-    phoneticMiddleName: String?,
-    phoneticLastName: String?,
+    firstName: String,
+    lastName: String,
+    middleName: String,
+    prefix: String,
+    suffix: String,
+    phoneticFirstName: String,
+    phoneticMiddleName: String,
+    phoneticLastName: String,
     fullNameStyle: Int,
     phoneticNameStyle: Int,
-    nickname: String?,
-    organization: String?,
-    jobTitle: String?,
+    nickname: String,
+    organization: String,
+    jobTitle: String,
     groups: MutableList<GroupMembership>,
     customDataItems: List<CustomDataItem>,
     imAddresses: MutableList<LabeledValue<ImAddress>>,
@@ -74,19 +74,19 @@ public class MutableContact internal constructor(
         relations
     )
 
-    override var organization: String? by readWriteField(Organization, organization)
-    override var jobTitle: String? by readWriteField(Organization, jobTitle)
-    override var firstName: String? by readWriteField(Names, firstName)
-    override var lastName: String? by readWriteField(Names, lastName)
-    override var middleName: String? by readWriteField(Names, middleName)
-    override var prefix: String? by readWriteField(Names, prefix)
-    override var suffix: String? by readWriteField(Names, suffix)
-    override var phoneticLastName: String? by readWriteField(Names, phoneticLastName)
-    override var phoneticFirstName: String? by readWriteField(Names, phoneticFirstName)
-    override var phoneticMiddleName: String? by readWriteField(Names, phoneticMiddleName)
+    override var organization: String by readWriteField(Organization, organization)
+    override var jobTitle: String by readWriteField(Organization, jobTitle)
+    override var firstName: String by readWriteField(Names, firstName)
+    override var lastName: String by readWriteField(Names, lastName)
+    override var middleName: String by readWriteField(Names, middleName)
+    override var prefix: String by readWriteField(Names, prefix)
+    override var suffix: String by readWriteField(Names, suffix)
+    override var phoneticLastName: String by readWriteField(Names, phoneticLastName)
+    override var phoneticFirstName: String by readWriteField(Names, phoneticFirstName)
+    override var phoneticMiddleName: String by readWriteField(Names, phoneticMiddleName)
     override var fullNameStyle: Int by readWriteField(Names, fullNameStyle)
     override var phoneticNameStyle: Int by readWriteField(Names, phoneticNameStyle)
-    override var nickname: String? by readWriteField(Nickname, nickname)
+    override var nickname: String by readWriteField(Nickname, nickname)
 
     public constructor() : this(
         contactId = -1L,
@@ -101,19 +101,19 @@ public class MutableContact internal constructor(
         relations = mutableListOf(),
         note = null,
         isStarred = false,
-        firstName = null,
-        lastName = null,
-        middleName = null,
-        prefix = null,
-        suffix = null,
-        phoneticFirstName = null,
-        phoneticMiddleName = null,
-        phoneticLastName = null,
+        firstName = "",
+        lastName = "",
+        middleName = "",
+        prefix = "",
+        suffix = "",
+        phoneticFirstName = "",
+        phoneticMiddleName = "",
+        phoneticLastName = "",
         fullNameStyle = ContactsContract.FullNameStyle.UNDEFINED,
         phoneticNameStyle = ContactsContract.PhoneticNameStyle.UNDEFINED,
-        nickname = null,
-        organization = null,
-        jobTitle = null,
+        nickname = "",
+        organization = "",
+        jobTitle = "",
         groups = mutableListOf(),
         customDataItems = emptyList(),
         imAddresses = mutableListOf(),

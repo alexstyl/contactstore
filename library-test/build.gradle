@@ -45,6 +45,14 @@ android {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs += ["../library/src/androidTest/java/com/alexstyl/contactstore/test"]
+        }
+    }
+}
+
 dependencies {
     implementation project(':library')
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"

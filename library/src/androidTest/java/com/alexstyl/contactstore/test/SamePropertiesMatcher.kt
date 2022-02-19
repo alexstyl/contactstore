@@ -19,13 +19,11 @@ import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.LabeledValue
 import com.alexstyl.contactstore.containsColumn
-import com.alexstyl.contactstore.standardColumns
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeDiagnosingMatcher
 
-// copy of library-test's SamePropertiesMatcher in order to not have to extract to a 3rd module
-internal fun samePropertiesAs(expected: Contact): Matcher<in Contact> {
+public fun samePropertiesAs(expected: Contact): Matcher<in Contact> {
     return SamePropertiesMatcher(expected)
 }
 
@@ -114,7 +112,8 @@ private class SamePropertiesMatcher(
 
     private fun labeledValues(list: List<LabeledValue<*>>): String {
         return list.joinToString(", ", prefix = "[", postfix = "]") { labeledValue ->
-            "label = ${labeledValue.label}, value = ${labeledValue.value}"
+            "label = ${labeledValue.label.javaClass.simpleName}, value = ${labeledValue.value}," +
+                    " account = ${labeledValue.account?.let { it.toString() }}"
         }
     }
 

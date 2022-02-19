@@ -12,13 +12,13 @@ import com.alexstyl.contactstore.PartialContact
 import com.alexstyl.contactstore.PhoneNumber
 import com.alexstyl.contactstore.PostalAddress
 import com.alexstyl.contactstore.WebAddress
-import com.alexstyl.contactstore.standardColumns
+import com.alexstyl.contactstore.allContactColumns
 
 internal object ContactFixtures {
     val PAOLO_MELENDEZ = PartialContact(
         contactId = 0L,
         displayName = "Prefix Paolo Mid Melendez, Suffix",
-        columns = standardColumns(),
+        columns = allContactColumns(),
         isStarred = false,
         firstName = "Paolo",
         lastName = "Melendez",

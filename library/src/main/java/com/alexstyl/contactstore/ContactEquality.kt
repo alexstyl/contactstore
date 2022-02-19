@@ -113,7 +113,7 @@ internal fun Contact.toFullString(): String {
             " webAddresses=${withValue(WebAddresses) { webAddresses }}," +
             " imAddresses=${withValue(ImAddresses) { imAddresses }}," +
             " sipAddresses=${withValue(SipAddresses) { sipAddresses }}," +
-            " linkedAccountValues=${withValue(CustomDataItems) { customDataItems }}," +
+            " customDataItems=${withValue(CustomDataItems) { customDataItems }}," +
             " note=${withValue(Note) { note }}," +
             " groups=${withValue(GroupMemberships) { groups }}," +
             " relations=${withValue(Relations) { relations }}," +

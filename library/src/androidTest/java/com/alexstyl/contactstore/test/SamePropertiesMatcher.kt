@@ -139,19 +139,19 @@ private class SamePropertiesMatcher(
                 }
                 namesAreDifferent(actual) -> {
                     mismatchDescription.appendText(
-                        "prefix was '${actual.prefix}'" +
-                                ", firstName was '${actual.firstName}'" +
-                                ", middleName was '${actual.middleName}'" +
-                                ", lastName was '${actual.lastName}'" +
-                                ", suffix was '${actual.suffix}'"
+                        "prefix was '${stringValue(actual.prefix)}" +
+                                ", firstName was ${stringValue(actual.firstName)}" +
+                                ", middleName was ${stringValue(actual.middleName)}" +
+                                ", lastName was ${stringValue(actual.lastName)}" +
+                                ", suffix was ${stringValue(actual.suffix)}"
                     )
                     false
                 }
                 phoneticNamesAreDifferent(actual) -> {
                     mismatchDescription.appendText(
-                        "phoneticFirstName was '${actual.phoneticFirstName}'" +
-                                ", phoneticMiddleName was '${actual.phoneticMiddleName}'" +
-                                ", phoneticLastName was '${actual.phoneticLastName}'"
+                        "phoneticFirstName was ${stringValue(actual.phoneticFirstName)}" +
+                                ", phoneticMiddleName was ${stringValue(actual.phoneticMiddleName)}" +
+                                ", phoneticLastName was ${stringValue(actual.phoneticLastName)}"
                     )
                     false
                 }
@@ -206,6 +206,10 @@ private class SamePropertiesMatcher(
                 else -> true
             }
         }
+    }
+
+    private fun stringValue(value: String?): String {
+        return value?.let { "$'$it'" } ?: "null"
     }
 
     private fun relationsAreDifferent(actual: Contact): Boolean {

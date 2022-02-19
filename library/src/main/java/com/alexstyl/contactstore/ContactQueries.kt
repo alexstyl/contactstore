@@ -138,12 +138,12 @@ internal class ContactQueries(
     }
 
     private fun lookupFromMail(
-        mailAddress: MailAddress,
+        mailAddress: String,
         displayNameStyle: DisplayNameStyle
     ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = EmailColumns.CONTENT_FILTER_URI.buildUpon()
-                .appendEncodedPath(mailAddress.raw)
+                .appendEncodedPath(mailAddress)
                 .build(),
             projection = FilterQuery.projection(displayNameStyle),
             sortOrder = FilterQuery.sortOrder(displayNameStyle)
@@ -161,12 +161,12 @@ internal class ContactQueries(
     }
 
     private fun lookupFromPhone(
-        phoneNumber: PhoneNumber,
+        phoneNumber: String,
         displayNameStyle: DisplayNameStyle
     ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = ContactsContract.PhoneLookup.CONTENT_FILTER_URI.buildUpon()
-                .appendEncodedPath(phoneNumber.raw)
+                .appendEncodedPath(phoneNumber)
                 .build(),
             projection = arrayOf(
                 PHONE_LOOKUP_CONTACT_ID,
@@ -722,13 +722,5 @@ internal class ContactQueries(
         } else {
             ContactsContract.PhoneLookup._ID
         }
-    }
-}
-
-internal fun Boolean.toBoolInt(): String {
-    return if (this) {
-        "1"
-    } else {
-        "0"
     }
 }

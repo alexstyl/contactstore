@@ -5,6 +5,12 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeDiagnosingMatcher
 
+/**
+ * Creates a matcher that matches when the examining object is logically equal to the passing ContactGroup, minus its id.
+ *
+ * As an example, two groups with the same title, contactCount and note will match, even if their groupId is not the same.
+ *
+ */
 public fun samePropertiesAs(expected: ContactGroup): Matcher<in ContactGroup> {
     return SamePropertiesContactGroupMatcher(expected)
 }

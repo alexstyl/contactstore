@@ -24,8 +24,7 @@ import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeDiagnosingMatcher
 
-// copy of library-test's SamePropertiesMatcher in order to not have to extract to a 3rd module
-internal fun samePropertiesAs(expected: Contact): Matcher<in Contact> {
+public fun samePropertiesAs(expected: Contact): Matcher<in Contact> {
     return SamePropertiesMatcher(expected)
 }
 

@@ -5,19 +5,28 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
 import android.provider.ContactsContract.RawContacts
 
+/*
+ * Code converted from Java and slightly modified from the contacts AOSP app.
+ *
+ * See AOSP's ContactLoader.ContactQuery
+ */
 internal object ContactQuery {
-    val COLUMNS_INTERNAL = arrayOf(
-        ContactsContract.Contacts.NAME_RAW_CONTACT_ID,//0
+    private val COLUMNS_INTERNAL = arrayOf(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ContactsContract.Contacts.NAME_RAW_CONTACT_ID
+        } else {
+            ContactsContract.Contacts._ID
+        },
         ContactsContract.Contacts.DISPLAY_NAME_SOURCE,
         ContactsContract.Contacts.LOOKUP_KEY,
         ContactsContract.Contacts.DISPLAY_NAME,
         ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE,
-        ContactsContract.Contacts.PHONETIC_NAME,//5
+        ContactsContract.Contacts.PHONETIC_NAME,
         ContactsContract.Contacts.PHOTO_ID,
         ContactsContract.Contacts.STARRED,
         ContactsContract.Contacts.CONTACT_PRESENCE,
         ContactsContract.Contacts.CONTACT_STATUS,
-        ContactsContract.Contacts.CONTACT_STATUS_TIMESTAMP,//10
+        ContactsContract.Contacts.CONTACT_STATUS_TIMESTAMP,
         ContactsContract.Contacts.CONTACT_STATUS_RES_PACKAGE,
         ContactsContract.Contacts.CONTACT_STATUS_LABEL,
         ContactsContract.Contacts.Entity.CONTACT_ID,
@@ -71,7 +80,7 @@ internal object ContactQuery {
         ContactsContract.Contacts.IS_USER_PROFILE
     )
     val COLUMNS: Array<String>
-    const val NAME_RAW_CONTACT_ID = 0
+    const val NAME_RAW_CONTACT_ID_IF_AVAILABLE = 0
     const val DISPLAY_NAME_SOURCE = 1
     const val LOOKUP_KEY = 2
     const val DISPLAY_NAME = 3

@@ -22,12 +22,12 @@ public class PartialContact constructor(
     override val lookupKey: LookupKey?,
     override val columns: List<ContactColumn>,
     override val isStarred: Boolean,
-    override val displayName: String?,
-    firstName: String? = null,
-    lastName: String? = null,
+    override val displayName: String,
+    firstName: String = "",
+    lastName: String = "",
     imageData: ImageData? = null,
-    organization: String? = null,
-    jobTitle: String? = null,
+    organization: String = "",
+    jobTitle: String = "",
     webAddresses: List<LabeledValue<WebAddress>> = emptyList(),
     sipAddresses: List<LabeledValue<SipAddress>> = emptyList(),
     phones: List<LabeledValue<PhoneNumber>> = emptyList(),
@@ -35,13 +35,13 @@ public class PartialContact constructor(
     events: List<LabeledValue<EventDate>> = emptyList(),
     postalAddresses: List<LabeledValue<PostalAddress>> = emptyList(),
     note: com.alexstyl.contactstore.Note? = null,
-    prefix: String? = null,
-    middleName: String? = null,
-    suffix: String? = null,
-    phoneticFirstName: String? = null,
-    phoneticMiddleName: String? = null,
-    phoneticLastName: String? = null,
-    nickname: String? = null,
+    prefix: String = "",
+    middleName: String = "",
+    suffix: String = "",
+    phoneticFirstName: String = "",
+    phoneticMiddleName: String = "",
+    phoneticLastName: String = "",
+    nickname: String = "",
     fullNameStyle: Int = ContactsContract.FullNameStyle.UNDEFINED,
     phoneticNameStyle: Int = ContactsContract.PhoneticNameStyle.UNDEFINED,
     groups: List<GroupMembership> = emptyList(),
@@ -49,19 +49,19 @@ public class PartialContact constructor(
     customDataItems: List<CustomDataItem> = emptyList(),
     relations: List<LabeledValue<Relation>> = emptyList()
 ) : Contact {
-    override val prefix: String? by requireColumn(Names, prefix)
-    override val firstName: String? by requireColumn(Names, firstName)
-    override val middleName: String? by requireColumn(Names, middleName)
-    override val lastName: String? by requireColumn(Names, lastName)
+    override val prefix: String by requireColumn(Names, prefix)
+    override val firstName: String by requireColumn(Names, firstName)
+    override val middleName: String by requireColumn(Names, middleName)
+    override val lastName: String by requireColumn(Names, lastName)
     override val imAddresses: List<LabeledValue<ImAddress>> by requireColumn(
         ImAddresses,
         imAddresses
     )
-    override val suffix: String? by requireColumn(Names, suffix)
-    override val phoneticFirstName: String? by requireColumn(Names, phoneticFirstName)
-    override val phoneticMiddleName: String? by requireColumn(Names, phoneticMiddleName)
-    override val phoneticLastName: String? by requireColumn(Names, phoneticLastName)
-    override val nickname: String? by requireColumn(Nickname, nickname)
+    override val suffix: String by requireColumn(Names, suffix)
+    override val phoneticFirstName: String by requireColumn(Names, phoneticFirstName)
+    override val phoneticMiddleName: String by requireColumn(Names, phoneticMiddleName)
+    override val phoneticLastName: String by requireColumn(Names, phoneticLastName)
+    override val nickname: String by requireColumn(Nickname, nickname)
     override val fullNameStyle: Int by requireColumn(Names, fullNameStyle)
     override val phoneticNameStyle: Int by requireColumn(Names, phoneticNameStyle)
     override val imageData: ImageData? by requireColumn(Image, imageData)
@@ -81,9 +81,12 @@ public class PartialContact constructor(
         SipAddresses,
         sipAddresses
     )
-    override val organization: String? by requireColumn(Organization, organization)
-    override val jobTitle: String? by requireColumn(Organization, jobTitle)
-    override val customDataItems: List<CustomDataItem> by requireColumn(CustomDataItems,customDataItems)
+    override val organization: String by requireColumn(Organization, organization)
+    override val jobTitle: String by requireColumn(Organization, jobTitle)
+    override val customDataItems: List<CustomDataItem> by requireColumn(
+        CustomDataItems,
+        customDataItems
+    )
     override val groups: List<GroupMembership> by requireColumn(GroupMemberships, groups)
     override val relations: List<LabeledValue<Relation>> by requireColumn(Relations, relations)
 

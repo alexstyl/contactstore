@@ -22,11 +22,11 @@ internal fun MutableContact.displayName(): String {
             appendWord(buildStringFromPhoneticNames())
         }
         if (isEmpty() && containsColumn(Nickname)) {
-            append(nickname.orEmpty())
+            append(nickname)
         }
         if (isEmpty() && containsColumn(Organization)) {
-            append(organization.orEmpty())
-            if (isEmpty()) append(jobTitle.orEmpty())
+            append(organization)
+            if (isEmpty()) append(jobTitle)
         }
         if (isEmpty() && containsColumn(Phones)) {
             phones.firstOrNull()?.let { append(it.value.raw) }
@@ -38,49 +38,47 @@ internal fun MutableContact.displayName(): String {
 }
 
 internal fun Contact.buildStringFromNames(): String = buildString {
-    prefix?.let { append(it) }
+    append(prefix)
 
     when (fullNameStyle) {
         FullNameStyle.CJK -> {
-            lastName?.let { appendWord(it) }
-            middleName?.let { appendWord(it) }
-            firstName?.let { appendWord(it) }
+            appendWord(lastName)
+            appendWord(middleName)
+            appendWord(firstName)
         }
         FullNameStyle.JAPANESE -> {
-            lastName?.let { appendWord(it) }
-            middleName?.let { appendWord(it) }
-            firstName?.let { appendWord(it) }
+            appendWord(lastName)
+            appendWord(middleName)
+            appendWord(firstName)
         }
         FullNameStyle.CHINESE -> {
-            lastName?.let { appendWord(it) }
-            middleName?.let { appendWord(it, prefix = None) }
-            firstName?.let { appendWord(it, prefix = None) }
+            appendWord(lastName)
+            appendWord(middleName, prefix = None)
+            appendWord(firstName, prefix = None)
         }
         else -> {
-            firstName?.let { appendWord(it) }
-            middleName?.let { appendWord(it) }
-            lastName?.let { appendWord(it) }
+            appendWord(firstName)
+            appendWord(middleName)
+            appendWord(lastName)
         }
     }
 
-    suffix?.let {
-        appendWord(it, prefix = ", ")
-    }
+    appendWord(suffix, prefix = ", ")
 }
 
-private val None = ""
+private const val None = ""
 
 internal fun Contact.buildStringFromPhoneticNames(): String = buildString {
     when (phoneticNameStyle) {
         PhoneticNameStyle.UNDEFINED -> {
-            phoneticFirstName?.let { appendWord(it) }
-            phoneticMiddleName?.let { appendWord(it) }
-            phoneticLastName?.let { appendWord(it) }
+            appendWord(phoneticFirstName)
+            appendWord(phoneticMiddleName)
+            appendWord(phoneticLastName)
         }
         else -> {
-            phoneticFirstName?.let { appendWord(it) }
-            phoneticMiddleName?.let { appendWord(it) }
-            phoneticLastName?.let { appendWord(it) }
+            appendWord(phoneticFirstName)
+            appendWord(phoneticMiddleName)
+            appendWord(phoneticLastName)
         }
     }
 }

@@ -66,7 +66,7 @@ class ContactDetailsActivity : ComponentActivity() {
 
         val contact = runBlocking {
             contactStore.fetchContacts(
-                predicate = ContactLookup(listOf(contactId)),
+                predicate = ContactLookup(contactId),
                 columnsToFetch = allContactColumns()
             ).first().firstOrNull()
         }

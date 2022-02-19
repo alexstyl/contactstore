@@ -48,7 +48,6 @@ import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
 import com.alexstyl.contactstore.utils.DateParser
 import com.alexstyl.contactstore.utils.mapEachRow
 import com.alexstyl.contactstore.utils.runQueryFlow
-import com.alexstyl.contactstore.utils.valueIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.io.InputStream
@@ -87,7 +86,7 @@ internal class ContactQueries(
     ): Flow<List<PartialContact>> {
         return when (predicate) {
             null -> queryAllContacts(displayNameStyle)
-            is ContactLookup -> lookupFromPredicate(predicate, displayNameStyle)
+            is ContactLookup -> lookupContact(predicate.contactId, displayNameStyle)
             is MailLookup -> lookupFromMail(predicate.mailAddress, displayNameStyle)
             is PhoneLookup -> lookupFromPhone(predicate.phoneNumber, displayNameStyle)
             is NameLookup -> lookupFromName(predicate.partOfName, displayNameStyle)
@@ -117,14 +116,13 @@ internal class ContactQueries(
         }
     }
 
-    private fun lookupFromPredicate(
-        predicate: ContactLookup,
+    private fun lookupContact(
+        contactId: Long,
         displayNameStyle: DisplayNameStyle
     ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
-            contentUri = Contacts.CONTENT_URI,
+            contentUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId),
             projection = ContactsQuery.projection(displayNameStyle),
-            selection = buildColumnsToFetchSelection(predicate),
             sortOrder = ContactsQuery.sortOrder(displayNameStyle)
         ).map { cursor ->
             cursor.mapEachRow {
@@ -158,20 +156,6 @@ internal class ContactQueries(
                     lookupKey = FilterQuery.getLookupKey(it),
                     columns = emptyList()
                 )
-            }
-        }
-    }
-
-    private fun buildColumnsToFetchSelection(predicate: ContactLookup): String {
-        return buildString {
-            predicate.inContactIds?.let { contactIds ->
-                append("${Contacts._ID} IN ${valueIn(contactIds)}")
-            }
-            predicate.isFavorite?.let { isTrue ->
-                if (isNotEmpty()) {
-                    append(" AND")
-                }
-                append(" ${Contacts.STARRED} = ${isTrue.toBoolInt()}")
             }
         }
     }
@@ -241,16 +225,16 @@ internal class ContactQueries(
             val rawContacts = rawContactQueries.fetchRawContacts(contact)
 
             val contactId = contact.contactId
-            var firstName= ""
-            var middleName= ""
-            var lastName= ""
-            var prefix= ""
-            var suffix= ""
+            var firstName = ""
+            var middleName = ""
+            var lastName = ""
+            var prefix = ""
+            var suffix = ""
             var fullNameStyle: Int = FullNameStyle.UNDEFINED
-            var nickname= ""
+            var nickname = ""
             var phoneticFirstName = ""
-            var phoneticMiddleName= ""
-            var phoneticLastName= ""
+            var phoneticMiddleName = ""
+            var phoneticLastName = ""
             var phoneticNameStyle: Int = PhoneticNameStyle.UNDEFINED
             var imageData: ImageData? = null
             val phones = mutableSetOf<LabeledValue<PhoneNumber>>()
@@ -261,8 +245,8 @@ internal class ContactQueries(
             val imAddresses = mutableSetOf<LabeledValue<ImAddress>>()
             val relations = mutableSetOf<LabeledValue<Relation>>()
             val postalAddresses = mutableSetOf<LabeledValue<PostalAddress>>()
-            var organization= ""
-            var jobTitle= ""
+            var organization = ""
+            var jobTitle = ""
             var note: Note? = null
             val groupIds = mutableListOf<GroupMembership>()
             val customDataItems = mutableListOf<CustomDataItem>()

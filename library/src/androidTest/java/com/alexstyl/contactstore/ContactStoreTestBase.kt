@@ -5,6 +5,7 @@ import android.provider.ContactsContract
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
+import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.test.samePropertiesAs
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers.equalTo
@@ -24,7 +25,7 @@ internal abstract class ContactStoreTestBase {
     suspend fun assertContactUpdated(editedContact: MutableContact) {
         store.execute { update(editedContact) }
         val actual = store.fetchContacts(
-            predicate = ContactPredicate.ContactLookup(inContactIds = listOf(editedContact.contactId)),
+            predicate = ContactLookup(editedContact.contactId),
             columnsToFetch = editedContact.columns
         ).first().first()
 
@@ -34,7 +35,7 @@ internal abstract class ContactStoreTestBase {
     suspend fun assertContactUpdatedNoId(expected: MutableContact) {
         store.execute { update(expected) }
         val actual = store.fetchContacts(
-            predicate = ContactPredicate.ContactLookup(inContactIds = listOf(expected.contactId)),
+            predicate = ContactLookup(expected.contactId),
             columnsToFetch = expected.columns
         ).first().first()
 

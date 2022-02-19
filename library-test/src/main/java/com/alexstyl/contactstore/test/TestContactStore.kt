@@ -298,13 +298,18 @@ public class TestContactStore(
     }
 
 
+    @Suppress("DEPRECATION") // using deprecated to warn any consumers of the library. To be removed in 1.0.0
     private fun matchesContact(
         predicate: ContactPredicate.ContactLookup,
         contact: StoredContact
     ): Boolean {
-        val isInIds = predicate.inContactIds.orEmpty().contains(contact.contactId)
-        val isFavorite = predicate.isFavorite?.let { contact.isStarred == it } ?: true
-        return isInIds && isFavorite
+        if (predicate.inContactIds.orEmpty().isNotEmpty()) {
+            System.err.println("ContactLookup.inContactIds does nothing. Use ContactLookup.contactId instead")
+        }
+        if (predicate.isFavorite != null) {
+            System.err.println("ContactLookup.isFavorite does nothing")
+        }
+        return predicate.contactId == contact.contactId
     }
 
     private fun matchesPhone(

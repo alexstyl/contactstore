@@ -74,19 +74,19 @@ internal fun Contact.contactHashCode(): Int {
     result = 31 * result + hashIfContains(Note) { note?.hashCode() }
     result = 31 * result + hashIfContains(GroupMemberships) { groups.hashCode() }
     result = 31 * result + hashIfContains(Relations) { relations.hashCode() }
-    result = 31 * result + hashIfContains(Organization) { organization?.hashCode() }
-    result = 31 * result + hashIfContains(Organization) { jobTitle?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { firstName?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { lastName?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { middleName?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { prefix?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { suffix?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { phoneticLastName?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { phoneticFirstName?.hashCode() }
-    result = 31 * result + hashIfContains(Names) { phoneticMiddleName?.hashCode() }
+    result = 31 * result + hashIfContains(Organization) { organization.hashCode() }
+    result = 31 * result + hashIfContains(Organization) { jobTitle.hashCode() }
+    result = 31 * result + hashIfContains(Names) { firstName.hashCode() }
+    result = 31 * result + hashIfContains(Names) { lastName.hashCode() }
+    result = 31 * result + hashIfContains(Names) { middleName.hashCode() }
+    result = 31 * result + hashIfContains(Names) { prefix.hashCode() }
+    result = 31 * result + hashIfContains(Names) { suffix.hashCode() }
+    result = 31 * result + hashIfContains(Names) { phoneticLastName.hashCode() }
+    result = 31 * result + hashIfContains(Names) { phoneticFirstName.hashCode() }
+    result = 31 * result + hashIfContains(Names) { phoneticMiddleName.hashCode() }
     result = 31 * result + hashIfContains(Names) { fullNameStyle.hashCode() }
     result = 31 * result + hashIfContains(Names) { phoneticNameStyle.hashCode() }
-    result = 31 * result + hashIfContains(Names) { nickname?.hashCode() }
+    result = 31 * result + hashIfContains(Names) { nickname.hashCode() }
     result = 31 * result + displayName.hashCode()
 
     return result

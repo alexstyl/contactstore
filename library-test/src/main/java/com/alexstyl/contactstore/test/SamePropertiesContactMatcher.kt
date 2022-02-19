@@ -33,10 +33,10 @@ import org.hamcrest.TypeSafeDiagnosingMatcher
  *
  */
 public fun samePropertiesAs(expected: Contact): Matcher<in Contact> {
-    return SamePropertiesContactMatcher(expected)
+    return SamePropertiesMatcher(expected)
 }
 
-private class SamePropertiesContactMatcher(
+private class SamePropertiesMatcher(
     private val expected: Contact
 ) : TypeSafeDiagnosingMatcher<Contact>() {
     override fun describeTo(description: Description) {
@@ -146,19 +146,19 @@ private class SamePropertiesContactMatcher(
                 }
                 namesAreDifferent(actual) -> {
                     mismatchDescription.appendText(
-                        "prefix was '${actual.prefix}'" +
-                                ", firstName was '${actual.firstName}'" +
-                                ", middleName was '${actual.middleName}'" +
-                                ", lastName was '${actual.lastName}'" +
-                                ", suffix was '${actual.suffix}'"
+                        "prefix was '${stringValue(actual.prefix)}" +
+                                ", firstName was ${stringValue(actual.firstName)}" +
+                                ", middleName was ${stringValue(actual.middleName)}" +
+                                ", lastName was ${stringValue(actual.lastName)}" +
+                                ", suffix was ${stringValue(actual.suffix)}"
                     )
                     false
                 }
                 phoneticNamesAreDifferent(actual) -> {
                     mismatchDescription.appendText(
-                        "phoneticFirstName was '${actual.phoneticFirstName}'" +
-                                ", phoneticMiddleName was '${actual.phoneticMiddleName}'" +
-                                ", phoneticLastName was '${actual.phoneticLastName}'"
+                        "phoneticFirstName was ${stringValue(actual.phoneticFirstName)}" +
+                                ", phoneticMiddleName was ${stringValue(actual.phoneticMiddleName)}" +
+                                ", phoneticLastName was ${stringValue(actual.phoneticLastName)}"
                     )
                     false
                 }
@@ -202,7 +202,7 @@ private class SamePropertiesContactMatcher(
                     mismatchDescription.appendText("relations were ${actual.relations}")
                     false
                 }
-                customDataItemsAreDifferent(actual) -> {
+                linkedAccountsAreDifferent(actual) -> {
                     mismatchDescription.appendText("customDataItems were ${actual.customDataItems}")
                     false
                 }
@@ -215,6 +215,10 @@ private class SamePropertiesContactMatcher(
         }
     }
 
+    private fun stringValue(value: String?): String {
+        return value?.let { "$'$it'" } ?: "null"
+    }
+
     private fun relationsAreDifferent(actual: Contact): Boolean {
         if (expected.containsColumn(Relations).not()) {
             return false
@@ -222,7 +226,7 @@ private class SamePropertiesContactMatcher(
         return areLabeledValuesDifferentIgnoringId(actual.relations, expected.relations)
     }
 
-    private fun customDataItemsAreDifferent(actual: Contact): Boolean {
+    private fun linkedAccountsAreDifferent(actual: Contact): Boolean {
         if (expected.containsColumn(CustomDataItems).not()) {
             return false
         }

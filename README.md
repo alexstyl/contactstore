@@ -158,7 +158,7 @@ if (foundContacts.isEmpty()) return // the contact was not found
 val contact = foundContacts.first()
 
 store.execute {
-    update(contact.mutableCopy().apply {
+    update(contact.mutableCopy {
         note = Note("To infinity and beyond!")
     })
 }

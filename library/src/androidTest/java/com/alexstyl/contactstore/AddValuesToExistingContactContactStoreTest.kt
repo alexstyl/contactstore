@@ -163,7 +163,7 @@ internal class AddValuesToExistingContactContactStoreTest : ContactStoreTestBase
             lastName = "Melendez"
         }
 
-        val expected = contact.mutableCopy().apply {
+        val expected = contact.mutableCopy {
             organization = "Acme"
             jobTitle = "Member"
         }

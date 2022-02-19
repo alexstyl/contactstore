@@ -130,6 +130,11 @@ contact's names, phones numbers and emails.
 You can use Contact Store to fetch information about a contact's linked accounts. This can be used
 to allow your app to start a call on WhatsApp, open someone's conversation on Telegram and more.
 
+!!! attention "Outdated documentation"
+
+    `LinkedAccountValues` have been replaced with `CustomDataItems` 
+    and this part of the documentation will be updated soon.
+
 ### Fetching a contact's linked accounts
 
 Similar to fetching a contact's details, you need to provide the `ContactColumn#LinkedAccountValues`
@@ -194,7 +199,8 @@ if (linkedAccountValue != null) {
 
 You can specify the style of the display name you prefer when fetching contacts:
 
-The `Primary` (default) style will return display names in a "given name first" fashion for Western names.
+The `Primary` (default) style will return display names in a "given name first" fashion for Western
+names.
 
 The `Alternative` style will return them in a "family name first" fashion instead.
 

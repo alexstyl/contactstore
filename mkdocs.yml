@@ -36,7 +36,10 @@ nav:
 
 plugins:
   - search
+
 markdown_extensions:
+  - admonition
+  - pymdownx.details
   - pymdownx.betterem
   - pymdownx.superfences
   - pymdownx.tabbed

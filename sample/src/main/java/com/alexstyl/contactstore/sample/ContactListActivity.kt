@@ -30,6 +30,7 @@ import com.alexstyl.contactstore.sample.ContactDetailsActivity.Companion.EXTRA_C
 import com.alexstyl.contactstore.sample.ContactListState.*
 import com.alexstyl.contactstore.sample.ui.SetupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
+import com.alexstyl.contactstore.thumbnailUri
 import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalCoilApi
@@ -163,7 +164,7 @@ fun ContactRow(contact: Contact, onClick: (Contact) -> Unit) {
         ) {
             Image(
                 painter = rememberImagePainter(
-                    data = contact.imageUri,
+                    data = contact.thumbnailUri,
                     builder = {
                         transformations(CircleCropTransformation())
                             .placeholder(R.drawable.ic_avatar_placeholder)

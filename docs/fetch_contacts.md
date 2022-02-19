@@ -66,7 +66,7 @@ accessed which was not queried, an `Exception` is thrown.
 You can use Contact Store to retrieve any information that is linked to any contact of the device.
 Such information could be phone numbers, e-mails, postal addresses and others.
 
-> 💡 You can use the `standardColumns()` function to request all available Columns.
+> 💡 You can use the `allContactColumns()` function to request all available Columns.
 
 ### Available columns
 
@@ -107,7 +107,7 @@ store.fetchContacts(
     predicate = ContactLookup(
         inContactIds = listOf(contactId)
     ),
-    columnsToFetch = standardColumns()
+    columnsToFetch = allContactColumns()
 )
     .collect { contacts ->
         val contact = contacts.firstOrNull()

@@ -26,11 +26,12 @@ nav:
   - 'Introduction': index.md
   - 'Reading contacts' : read_contacts.md
   - 'Writing contacts' : write_contacts.md
+  - 'Contact lookup' : lookup.md
+  - 'Testing': testing.md
   - 'How-tos':
       - '🖼 Contact photos': contact_photos.md
       - '🏎 Best practices': best_practices.md
   - 'Contributing' : contributing.md
-  - 'Testing (experimental)': testing.md
 
 plugins:
   - search

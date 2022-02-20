@@ -8,7 +8,7 @@ Contact Store is a modern API that makes access to contacts on Android devices s
 is based off ContentProviders. Despite powerful, it can be error-prone and frustrating to use.
 
 Contact Store is a refreshed take on the Contacts API. It provides solutions to contacts' most
-frequent use cases and utilises modern developer practices for an enjoyable developer experience.
+frequent use cases and uses modern developer practices for an enjoyable developer experience.
 
 ## Quick Start
 

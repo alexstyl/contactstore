@@ -60,8 +60,7 @@ store.fetchContacts(
         } else {
             println("Contact found: $contact")
 
-            // Use contact.phones, contact.mails, contact.customDataItems and
-            // 
+            // Use contact.phones, contact.mails, contact.customDataItems etc
         }
     }
 ```

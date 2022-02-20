@@ -25,7 +25,6 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.alexstyl.contactstore.Contact
-import com.alexstyl.contactstore.imageUri
 import com.alexstyl.contactstore.sample.ContactDetailsActivity.Companion.EXTRA_CONTACT_ID
 import com.alexstyl.contactstore.sample.ContactListState.*
 import com.alexstyl.contactstore.sample.ui.SetupSystemUi
@@ -176,7 +175,7 @@ fun ContactRow(contact: Contact, onClick: (Contact) -> Unit) {
             )
             Spacer(modifier = Modifier.width(24.dp))
             Text(
-                text = contact.displayName.orEmpty().ifEmpty { stringResource(R.string.anonymous) }
+                text = contact.displayName.ifEmpty { stringResource(R.string.anonymous) }
             )
         }
     }

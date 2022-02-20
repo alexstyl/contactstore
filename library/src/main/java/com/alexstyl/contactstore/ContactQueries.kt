@@ -410,12 +410,11 @@ internal class ContactQueries(
                         }
                         columnsToFetch.contains(CustomDataItems) -> {
                             val mimeType = linkedAccountMimeTypes[mimetype]
-                            if (mimeType != null) {
+                            if (mimeType != null && account != null) {
                                 val id = item.getAsLong(Contacts.Data._ID)
                                 if (id != null) {
                                     val value = CustomDataItem(
                                         id = id,
-                                        accountType = account!!.type,
                                         summary = item.getAsString(mimeType.summaryColumn),
                                         detail = item.getAsString(mimeType.detailColumn),
                                         icon = mimeType.icon,

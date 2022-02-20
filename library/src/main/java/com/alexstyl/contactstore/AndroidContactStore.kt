@@ -11,7 +11,6 @@ import com.alexstyl.contactstore.ContactOperation.UpdateGroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 
 internal class AndroidContactStore(
     private val contentResolver: ContentResolver,
@@ -23,19 +22,14 @@ internal class AndroidContactStore(
 ) : ContactStore {
 
     override suspend fun execute(request: SaveRequest.() -> Unit) {
-        executeInternal(SaveRequest().apply(request))
-    }
-
-    override suspend fun execute(request: SaveRequest) {
-        executeInternal(request)
-    }
-
-    private suspend fun executeInternal(request: SaveRequest) = withContext(Dispatchers.IO) {
-        request.requests.map { operation ->
+        val apply = SaveRequest().apply(request)
+        apply.requests.map { operation ->
             when (operation) {
                 is Update -> existingContactOperationsFactory.updateOperation(operation.contact)
-                is Insert -> newContactOperationsFactory.addContactsOperation(operation.account, operation.contact)
-                is Delete -> existingContactOperationsFactory.deleteContactOperation(operation.contactId)
+                is Insert -> newContactOperationsFactory
+                    .addContactsOperation(operation.account, operation.contact)
+                is Delete -> existingContactOperationsFactory
+                    .deleteContactOperation(operation.contactId)
                 is InsertGroup -> contactGroupOperations.addGroupOperation(operation.group)
                 is UpdateGroup -> contactGroupOperations.updateGroupOperation(operation.group)
                 is DeleteGroup -> contactGroupOperations.deleteGroupOperation(operation.groupId)

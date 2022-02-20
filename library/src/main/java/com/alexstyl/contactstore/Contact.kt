@@ -169,15 +169,6 @@ public fun Contact.containsColumn(column: ContactColumn): Boolean {
     return columns.any { it == column }
 }
 
-@Deprecated(
-    "LinkedAccountValues have been deprecated and replaced with CustomDataItem. This function will go away in 1.0.0",
-    ReplaceWith("false")
-)
-@Suppress("unused") // part of the API
-public fun Contact.containsLinkedAccountColumns(): Boolean {
-    return false
-}
-
 /**
  * Creates a copy of the Contact that can have its properties modified.
  *
@@ -248,13 +239,4 @@ public val Contact.thumbnailUri: Uri
     get() {
         val contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId)
         return Uri.withAppendedPath(contactUri, Photo.CONTENT_DIRECTORY)
-    }
-
-@Deprecated(
-    "This function has been renamed and will be removed in 1.0.0",
-    ReplaceWith("thumbnailUri")
-)
-public val Contact.imageUri: Uri
-    get() {
-        return thumbnailUri
     }

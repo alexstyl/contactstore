@@ -50,14 +50,6 @@ public class TestContactStore(
 
     override suspend fun execute(request: SaveRequest.() -> Unit) {
         val saveRequest = SaveRequest().apply(request)
-        executeInternal(saveRequest)
-    }
-
-    override suspend fun execute(request: SaveRequest) {
-        executeInternal(request)
-    }
-
-    private suspend fun executeInternal(saveRequest: SaveRequest) {
         saveRequest.requests.forEach { operation ->
             when (operation) {
                 is Delete -> deleteContact(withId = operation.contactId)
@@ -308,18 +300,10 @@ public class TestContactStore(
         }
     }
 
-
-    @Suppress("DEPRECATION") // using deprecated to warn any consumers of the library. To be removed in 1.0.0
     private fun matchesContact(
         predicate: ContactPredicate.ContactLookup,
         contact: StoredContact
     ): Boolean {
-        if (predicate.inContactIds.orEmpty().isNotEmpty()) {
-            System.err.println("ContactLookup.inContactIds does nothing. Use ContactLookup.contactId instead")
-        }
-        if (predicate.isFavorite != null) {
-            System.err.println("ContactLookup.isFavorite does nothing")
-        }
         return predicate.contactId == contact.contactId
     }
 

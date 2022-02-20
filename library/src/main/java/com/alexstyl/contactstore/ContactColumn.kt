@@ -82,29 +82,6 @@ public sealed class ContactColumn {
     public object Relations : ContactColumn()
 }
 
-@Deprecated(
-    "The concept of 'standard columns' is going away in 1.0.0.",
-    ReplaceWith("allContactColumns()")
-)
-public fun standardColumns(): List<ContactColumn> {
-    return listOf(
-        ContactColumn.Phones,
-        ContactColumn.Mails,
-        ContactColumn.Note,
-        ContactColumn.Events,
-        ContactColumn.PostalAddresses,
-        ContactColumn.Image,
-        ContactColumn.Names,
-        ContactColumn.Nickname,
-        ContactColumn.WebAddresses,
-        ContactColumn.Organization,
-        ContactColumn.GroupMemberships,
-        ContactColumn.ImAddresses,
-        ContactColumn.Relations,
-        ContactColumn.SipAddresses,
-    )
-}
-
 public fun allContactColumns(): List<ContactColumn> {
     return listOf(
         ContactColumn.Phones,

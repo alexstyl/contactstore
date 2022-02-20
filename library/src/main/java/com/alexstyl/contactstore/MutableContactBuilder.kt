@@ -111,11 +111,6 @@ public class MutableContactBuilder(
         )
     }
 
-    @Deprecated("Use the Uri version instead. This function will be removed in version 1.0.0")
-    public fun webAddress(address: String, label: Label) {
-        _webAddresses.add(LabeledValue(WebAddress(Uri.parse(address)), label))
-    }
-
     public fun webAddress(address: Uri, label: Label) {
         _webAddresses.add(LabeledValue(WebAddress(address), label))
     }

@@ -122,10 +122,6 @@ internal class ContactStoreDSLKtTest {
 
         var request: SaveRequest? = null
 
-        override suspend fun execute(request: SaveRequest) {
-            this.request = request
-        }
-
         override suspend fun execute(request: SaveRequest.() -> Unit) {
             this.request = SaveRequest().apply(request)
         }

@@ -24,12 +24,10 @@ theme:
 
 nav:
   - 'Introduction': index.md
-  - 'Fetch contacts' : fetch_contacts.md
-  - 'Modify contacts' : modify_contacts.md
+  - 'Reading contacts' : fetching_contacts.md
+  - 'Writing contacts' : modify_contacts.md
   - 'How-tos':
       - '🖼 Contact photos': contact_photos.md
-#      - '📞 Number recognition': number_recognition.md
-#      - '✉️ Email recognition': mail_recognition.md
       - '🏎 Best practices': best_practices.md
   - 'Contributing' : contributing.md
   - 'Testing (experimental)': testing.md
@@ -43,5 +41,6 @@ markdown_extensions:
   - pymdownx.betterem
   - pymdownx.superfences
   - pymdownx.tabbed
+  - attr_list
   - codehilite:
       guess_lang: false

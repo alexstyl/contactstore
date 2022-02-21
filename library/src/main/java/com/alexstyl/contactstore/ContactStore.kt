@@ -2,9 +2,9 @@ package com.alexstyl.contactstore
 
 import android.accounts.AccountManager
 import android.content.Context
+import androidx.annotation.WorkerThread
 import com.alexstyl.contactstore.ContactStore.Companion.newInstance
 import com.alexstyl.contactstore.utils.DateTimeFormatParser
-import kotlinx.coroutines.flow.Flow
 
 /**
  * A store that can be used to retrieve information about the contacts of the device (via [fetchContacts]) or edit them (via [execute]).
@@ -14,12 +14,17 @@ import kotlinx.coroutines.flow.Flow
  */
 public interface ContactStore {
 
-    public suspend fun execute(request: SaveRequest.() -> Unit)
+    /**
+     * Executes all the operations in the given [SaveRequest].
+     *
+     * This function is blocking. It will complete as soon as all operations are processed.
+     *
+     */
+    @WorkerThread
+    public fun execute(builder: SaveRequest.() -> Unit)
 
     /**
-     * Returns a [Flow] that emits all contacts matching the given [predicate].
-     *
-     * The Flow will continue emitting once a change is detected (i.e. an other app adds a new contact or a Content Provider syncs a new account) and never completes.
+     * Returns a [FetchRequest] that emits all contacts matching the given [predicate] when collected.
      *
      * @param predicate The conditions that a contact need to meet in order to be fetched
      * @param columnsToFetch The columns of the contact you need to be fetched
@@ -29,18 +34,16 @@ public interface ContactStore {
         predicate: ContactPredicate? = null,
         columnsToFetch: List<ContactColumn> = emptyList(),
         displayNameStyle: DisplayNameStyle = DisplayNameStyle.Primary
-    ): Flow<List<Contact>>
+    ): FetchRequest<List<Contact>>
 
     /**
-     * Returns a [Flow] that emits all contact groups matching the given [predicate].
-     *
-     * The Flow will continue emitting once a change is detected (i.e. an other app adds a new contact or a Content Provider syncs a new account) and never completes.
+     * Returns a [FetchRequest] that emits all contact groups matching the given [predicate] when collected.
      *
      * @param predicate The conditions that a contact group need to meet in order to be fetched
      */
     public fun fetchContactGroups(
         predicate: GroupsPredicate? = null
-    ): Flow<List<ContactGroup>>
+    ): FetchRequest<List<ContactGroup>>
 
     public companion object {
         /**
@@ -75,9 +78,11 @@ public interface ContactStore {
                     resources,
                     contactsQueries
                 ),
-                contactQueries = contactsQueries,
-                groupQueries = groupQueries,
-                contactGroupOperations = GroupOperationsFactory()
+                contactGroupOperations = GroupOperationsFactory(),
+                fetchRequestFactory = FetchRequestFactory(
+                    contactQueries = contactsQueries,
+                    groupQueries = groupQueries,
+                )
             )
         }
     }

@@ -1,22 +1,10 @@
 package com.alexstyl.contactstore
 
 import android.net.Uri
-import com.alexstyl.contactstore.ContactColumn.Events
-import com.alexstyl.contactstore.ContactColumn.ImAddresses
-import com.alexstyl.contactstore.ContactColumn.Mails
-import com.alexstyl.contactstore.ContactColumn.Names
-import com.alexstyl.contactstore.ContactColumn.Note
-import com.alexstyl.contactstore.ContactColumn.Organization
-import com.alexstyl.contactstore.ContactColumn.Phones
-import com.alexstyl.contactstore.ContactColumn.PostalAddresses
-import com.alexstyl.contactstore.ContactColumn.Relations
-import com.alexstyl.contactstore.ContactColumn.SipAddresses
-import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.Label.DateBirthday
 import com.alexstyl.contactstore.Label.LocationHome
 import com.alexstyl.contactstore.Label.PhoneNumberMobile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -52,7 +40,7 @@ internal class InsertContactToAccountTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = allContactColumns()).first()
+        val actual = store.fetchContacts(columnsToFetch = allContactColumns()).blockingGet()
         val expected = contact(
             displayName = "555",
             columns = allContactColumns(),

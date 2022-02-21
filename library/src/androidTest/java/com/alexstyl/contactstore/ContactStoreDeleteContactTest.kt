@@ -1,7 +1,6 @@
 package com.alexstyl.contactstore
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -27,14 +26,14 @@ internal class ContactStoreDeleteContactTest : ContactStoreTestBase() {
             }
         }
 
-        val contactsBefore = store.fetchContacts().first()
+        val contactsBefore = store.fetchContacts().blockingGet()
         val contactToDelete = contactsBefore.first()
 
         store.execute {
             delete(contactId = contactToDelete.contactId)
         }
 
-        val actual = store.fetchContacts().first()
+        val actual = store.fetchContacts().blockingGet()
         val expected = contactsBefore - contactToDelete
 
         assertThat(actual, equalTo(expected))

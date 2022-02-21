@@ -8,24 +8,23 @@ import com.alexstyl.contactstore.ContactOperation.Insert
 import com.alexstyl.contactstore.ContactOperation.InsertGroup
 import com.alexstyl.contactstore.ContactOperation.Update
 import com.alexstyl.contactstore.ContactOperation.UpdateGroup
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.runBlocking
 
 internal class AndroidContactStore(
+    private val fetchRequestFactory: FetchRequestFactory,
     private val contentResolver: ContentResolver,
     private val newContactOperationsFactory: NewContactOperationsFactory,
     private val contactGroupOperations: GroupOperationsFactory,
     private val existingContactOperationsFactory: ExistingContactOperationsFactory,
-    private val contactQueries: ContactQueries,
-    private val groupQueries: ContactGroupQueries
 ) : ContactStore {
 
-    override suspend fun execute(request: SaveRequest.() -> Unit) {
-        val apply = SaveRequest().apply(request)
+    override fun execute(builder: SaveRequest.() -> Unit) {
+        val apply = SaveRequest().apply(builder)
         apply.requests.map { operation ->
             when (operation) {
-                is Update -> existingContactOperationsFactory.updateOperation(operation.contact)
+                is Update -> runBlocking {
+                    existingContactOperationsFactory.updateOperation(operation.contact)
+                }
                 is Insert -> newContactOperationsFactory
                     .addContactsOperation(operation.account, operation.contact)
                 is Delete -> existingContactOperationsFactory
@@ -43,15 +42,11 @@ internal class AndroidContactStore(
         predicate: ContactPredicate?,
         columnsToFetch: List<ContactColumn>,
         displayNameStyle: DisplayNameStyle
-    ): Flow<List<Contact>> {
-        return contactQueries.queryContacts(predicate, columnsToFetch, displayNameStyle)
-            .flowOn(Dispatchers.IO)
+    ): FetchRequest<List<Contact>> {
+        return fetchRequestFactory.fetchContactsRequest(predicate, columnsToFetch, displayNameStyle)
     }
 
-    override fun fetchContactGroups(
-        predicate: GroupsPredicate?
-    ): Flow<List<ContactGroup>> {
-        return groupQueries.queryGroups(predicate)
-            .flowOn(Dispatchers.IO)
+    override fun fetchContactGroups(predicate: GroupsPredicate?): FetchRequest<List<ContactGroup>> {
+        return fetchRequestFactory.fetchGroupsRequest(predicate)
     }
 }

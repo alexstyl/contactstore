@@ -9,6 +9,8 @@ ext {
     PUBLISH_ARTIFACT_ID = 'contactstore-coroutines'
 }
 
+apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
+
 android {
     kotlinOptions {
         jvmTarget = javaVersion

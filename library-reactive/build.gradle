@@ -3,6 +3,12 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+ext {
+    PUBLISH_GROUP_ID = 'com.alexstyl'
+    PUBLISH_VERSION = libraryVersionName
+    PUBLISH_ARTIFACT_ID = 'contactstore-reactive'
+}
+
 android {
     kotlinOptions {
         jvmTarget = javaVersion

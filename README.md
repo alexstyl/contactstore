@@ -23,6 +23,12 @@ repositories {
 dependencies {
     implementation 'com.alexstyl:contactstore:1.1.0'
     
+    // extension functions for kotlin coroutines
+    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    
+    // extension functions for rx3
+    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    
     // optional dependency for tests
     testImplementation 'com.alexstyl:contactstore-test:1.1.0'
 }
@@ -35,12 +41,7 @@ val store = ContactStore.newInstance(application)
 
 store.fetchContacts()
     .collect { contacts ->
-        val contactString = contacts.joinToString(", ") {
-            "displayName = ${it.displayName}," +
-                    " isStarred = ${it.isStarred}," +
-                    " id = ${it.contactId}"
-        }
-        println("Contacts emitted: $contactString")
+        println("Contacts emitted: $contacts")
     }
 ```
 
@@ -107,7 +108,7 @@ store.execute {
 val foundContacts = store.fetchContacts(
     predicate = ContactLookup(contactId = 5L),
     columnsToFetch = listOf(ContactColumn.Note)
-).first()
+).blockingGet()
 
 if (foundContacts.isEmpty()) return // the contact was not found
 
@@ -121,11 +122,13 @@ store.execute {
 ```
 
 ### Delete a contact
+
 ```kotlin
 store.execute {
     delete(contactId = 5L)
 }
 ```
+
 ## Does Contact Store support all features the default Contacts API does?
 
 Probably not and this is not the aim of the project. The existing Contacts API has been out there
@@ -141,9 +144,17 @@ API to be driven by dev requirements.
 
 If you believe you are missing a specific feature, [open a new feature request on Github][1].
 
+## Can I use this API from Java?
+
+You should be able to use Contact Store through Java as you can call Kotlin code from Java, but it
+won't be ideal. [Check this Github issue](https://github.com/alexstyl/contactstore/issues/58) and
+write your experience.
+
 ## Getting Help
 
-Checkout [the project documentation](https://alexstyl.github.io/contactstore) to learn about about Contact Store features in detail. To report a specific problem or feature request, [open a new issue on Github][1].
+Checkout [the project documentation](https://alexstyl.github.io/contactstore) to learn about about
+Contact Store features in detail. To report a specific problem or feature
+request, [open a new issue on Github][1].
 
 ## License
 

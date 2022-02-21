@@ -23,6 +23,12 @@ repositories {
 dependencies {
     implementation 'com.alexstyl:contactstore:1.1.0'
     
+    // extension functions for kotlin coroutines
+    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    
+    // extension functions for rx3
+    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    
     // optional dependency for tests
     testImplementation 'com.alexstyl:contactstore-test:1.1.0'
 }
@@ -146,6 +152,12 @@ never make it to Contact Store. Instead, I would rather have the features and ca
 API to be driven by dev requirements.
 
 If you believe you are missing a specific feature, [open a new feature request on Github][1].
+
+## Can I use this API from Java?
+
+You should be able to use Contact Store through Java as you can call Kotlin code from Java, but it
+won't be ideal. [Check this Github issue](https://github.com/alexstyl/contactstore/issues/58) and
+write your experience.
 
 ## Getting Help
 

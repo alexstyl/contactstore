@@ -1,7 +1,6 @@
 package com.alexstyl.contactstore
 
 import android.net.Uri
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -122,20 +121,20 @@ internal class ContactStoreDSLKtTest {
 
         var request: SaveRequest? = null
 
-        override suspend fun execute(request: SaveRequest.() -> Unit) {
-            this.request = SaveRequest().apply(request)
+        override fun execute(builder: SaveRequest.() -> Unit) {
+            this.request = SaveRequest().apply(builder)
         }
 
         override fun fetchContacts(
             predicate: ContactPredicate?,
             columnsToFetch: List<ContactColumn>,
             displayNameStyle: DisplayNameStyle
-        ): Flow<List<Contact>> {
-            return emptyFlow()
+        ): FetchRequest<List<Contact>> {
+            return FetchRequest(emptyFlow())
         }
 
-        override fun fetchContactGroups(predicate: GroupsPredicate?): Flow<List<ContactGroup>> {
-            return emptyFlow()
+        override fun fetchContactGroups(predicate: GroupsPredicate?): FetchRequest<List<ContactGroup>> {
+            return FetchRequest(emptyFlow())
         }
     }
 }

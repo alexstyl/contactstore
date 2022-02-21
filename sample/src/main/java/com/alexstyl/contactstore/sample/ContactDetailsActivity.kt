@@ -48,8 +48,6 @@ import com.alexstyl.contactstore.sample.ui.SetupSystemUi
 import com.alexstyl.contactstore.sample.ui.theme.SampleAppTheme
 import com.alexstyl.contactstore.shareVCardIntent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -64,12 +62,10 @@ class ContactDetailsActivity : ComponentActivity() {
         val contactId = requireNotNull(intent.extras)
             .getLong(EXTRA_CONTACT_ID)
 
-        val contact = runBlocking {
-            contactStore.fetchContacts(
-                predicate = ContactLookup(contactId),
-                columnsToFetch = allContactColumns()
-            ).first().firstOrNull()
-        }
+        val contact = contactStore.fetchContacts(
+            predicate = ContactLookup(contactId),
+            columnsToFetch = allContactColumns()
+        ).blockingGet().firstOrNull()
         if (contact == null) {
             Toast.makeText(this, "Contact not found", Toast.LENGTH_SHORT).show()
             finish()

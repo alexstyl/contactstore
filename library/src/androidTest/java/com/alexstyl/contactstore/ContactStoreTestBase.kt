@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.rule.GrantPermissionRule
 import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.test.samePropertiesAs
-import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -27,7 +26,7 @@ internal abstract class ContactStoreTestBase {
         val actual = store.fetchContacts(
             predicate = ContactLookup(editedContact.contactId),
             columnsToFetch = editedContact.columns
-        ).first().first()
+        ).blockingGet().first()
 
         assertThat(actual, samePropertiesAs(editedContact))
     }
@@ -37,7 +36,7 @@ internal abstract class ContactStoreTestBase {
         val actual = store.fetchContacts(
             predicate = ContactLookup(expected.contactId),
             columnsToFetch = expected.columns
-        ).first().first()
+        ).blockingGet().first()
 
         assertThat(actual, samePropertiesAs(expected))
     }
@@ -119,7 +118,7 @@ internal abstract class ContactStoreTestBase {
             insert(null, contactBuilder)
         }
 
-        val contactsBefore = store.fetchContacts(columnsToFetch = withColumns.toList()).first()
+        val contactsBefore = store.fetchContacts(columnsToFetch = withColumns.toList()).blockingGet()
         return contactsBefore.last()
     }
 
@@ -130,7 +129,7 @@ internal abstract class ContactStoreTestBase {
             insertGroup(MutableContactGroup().apply(contactBuilder))
         }
 
-        val contactsBefore = store.fetchContactGroups().first()
+        val contactsBefore = store.fetchContactGroups().blockingGet()
         return contactsBefore.last()
     }
 

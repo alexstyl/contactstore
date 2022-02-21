@@ -4,16 +4,12 @@ import android.provider.ContactsContract
 import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.ContactColumn
 import com.alexstyl.contactstore.ContactGroup
-import com.alexstyl.contactstore.ContactOperation.Delete
-import com.alexstyl.contactstore.ContactOperation.DeleteGroup
-import com.alexstyl.contactstore.ContactOperation.Insert
-import com.alexstyl.contactstore.ContactOperation.InsertGroup
-import com.alexstyl.contactstore.ContactOperation.Update
-import com.alexstyl.contactstore.ContactOperation.UpdateGroup
+import com.alexstyl.contactstore.ContactOperation.*
 import com.alexstyl.contactstore.ContactPredicate
 import com.alexstyl.contactstore.ContactStore
 import com.alexstyl.contactstore.DisplayNameStyle
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
+import com.alexstyl.contactstore.FetchRequest
 import com.alexstyl.contactstore.GroupsPredicate
 import com.alexstyl.contactstore.ImmutableContactGroup
 import com.alexstyl.contactstore.MutableContact
@@ -21,10 +17,10 @@ import com.alexstyl.contactstore.MutableContactGroup
 import com.alexstyl.contactstore.PartialContact
 import com.alexstyl.contactstore.SaveRequest
 import com.alexstyl.contactstore.containsColumn
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 /**
  * An implementation of [ContactStore] usable for testing. The store holds a snapshot of contacts
@@ -48,16 +44,18 @@ public class TestContactStore(
     private val contactGroups: MutableStateFlow<List<StoredContactGroup>> =
         MutableStateFlow(contactGroupsSnapshot)
 
-    override suspend fun execute(request: SaveRequest.() -> Unit) {
-        val saveRequest = SaveRequest().apply(request)
-        saveRequest.requests.forEach { operation ->
-            when (operation) {
-                is Delete -> deleteContact(withId = operation.contactId)
-                is Insert -> insertContact(operation.contact)
-                is Update -> updateContact(operation.contact)
-                is DeleteGroup -> deleteContactGroup(operation.groupId)
-                is InsertGroup -> insertGroup(operation.group)
-                is UpdateGroup -> updateGroup(operation.group)
+    override fun execute(builder: SaveRequest.() -> Unit) {
+        val saveRequest = SaveRequest().apply(builder)
+        runBlocking {
+            saveRequest.requests.forEach { operation ->
+                when (operation) {
+                    is Delete -> deleteContact(withId = operation.contactId)
+                    is Insert -> insertContact(operation.contact)
+                    is Update -> updateContact(operation.contact)
+                    is DeleteGroup -> deleteContactGroup(operation.groupId)
+                    is InsertGroup -> insertGroup(operation.group)
+                    is UpdateGroup -> updateGroup(operation.group)
+                }
             }
         }
     }
@@ -236,17 +234,19 @@ public class TestContactStore(
         predicate: ContactPredicate?,
         columnsToFetch: List<ContactColumn>,
         displayNameStyle: DisplayNameStyle
-    ): Flow<List<Contact>> {
-        return contacts
-            .map { contacts ->
-                contacts.filter { current ->
-                    matchesPredicate(contact = current, predicate)
-                }.keepColumns(columnsToFetch)
-            }
+    ): FetchRequest<List<Contact>> {
+        return FetchRequest(
+            contacts
+                .map { contacts ->
+                    contacts.filter { current ->
+                        matchesPredicate(contact = current, predicate)
+                    }.keepColumns(columnsToFetch)
+                }
+        )
     }
 
-    override fun fetchContactGroups(predicate: GroupsPredicate?): Flow<List<ContactGroup>> {
-        return combine(contactGroups.map { groups ->
+    override fun fetchContactGroups(predicate: GroupsPredicate?): FetchRequest<List<ContactGroup>> {
+        val flow = combine(contactGroups.map { groups ->
             groups.filter { group ->
                 matchesPredicate(group, predicate)
             }
@@ -263,6 +263,7 @@ public class TestContactStore(
                     )
                 }
         }
+        return FetchRequest(flow)
     }
 
     private fun matchesPredicate(

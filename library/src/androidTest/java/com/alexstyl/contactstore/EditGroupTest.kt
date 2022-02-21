@@ -1,7 +1,6 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.test.samePropertiesAs
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -16,7 +15,7 @@ internal class EditGroupTest : ContactStoreTestBase() {
                 title = "GroupTitle"
             }
         }
-        val actual = store.fetchContactGroups().first().first()
+        val actual = store.fetchContactGroups().blockingGet().first()
 
         val expected = ImmutableContactGroup(
             groupId = 12312,
@@ -41,7 +40,7 @@ internal class EditGroupTest : ContactStoreTestBase() {
         store.execute {
             updateGroup(updatedCopy)
         }
-        val actual = store.fetchContactGroups().first().first()
+        val actual = store.fetchContactGroups().blockingGet().first()
 
         val expected = ImmutableContactGroup(
             groupId = -1,
@@ -59,7 +58,7 @@ internal class EditGroupTest : ContactStoreTestBase() {
         store.execute {
             deleteGroup(group.groupId)
         }
-        val actual = store.fetchContactGroups().first()
+        val actual = store.fetchContactGroups().blockingGet()
 
         assertThat(actual.isEmpty(), equalTo(true))
     }

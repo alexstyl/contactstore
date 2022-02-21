@@ -16,7 +16,6 @@ import com.alexstyl.contactstore.Label.DateBirthday
 import com.alexstyl.contactstore.Label.LocationHome
 import com.alexstyl.contactstore.Label.PhoneNumberMobile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -35,7 +34,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(Names)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(Names)).blockingGet()
         val expected = contact(
             displayName = "A. Paolo M. Melendez, Z.",
             prefix = "A.",
@@ -57,7 +56,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(Phones)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(Phones)).blockingGet()
         val expected = contact(
             displayName = "555",
             columns = listOf(Phones),
@@ -80,7 +79,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(Mails)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(Mails)).blockingGet()
         val expected = contact(
             displayName = "555@mail.com",
             columns = listOf(Mails),
@@ -104,7 +103,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(Events)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(Events)).blockingGet()
         val expected = contact(
             columns = listOf(Events),
             events = listOf(
@@ -132,7 +131,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(PostalAddresses)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(PostalAddresses)).blockingGet()
         val expected = contact(
             columns = listOf(PostalAddresses),
             postalAddresses = listOf(
@@ -162,7 +161,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(Note)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(Note)).blockingGet()
         val expected = contact(
             columns = listOf(Note),
             note = Note("Cool guy")
@@ -179,7 +178,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(WebAddresses)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(WebAddresses)).blockingGet()
         val expected = contact(
             columns = listOf(WebAddresses),
             webAddresses = listOf(
@@ -203,7 +202,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(Organization)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(Organization)).blockingGet()
         val expected = contact(
             displayName = "Acme",
             organization = "Acme",
@@ -226,7 +225,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(ImAddresses)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(ImAddresses)).blockingGet()
         val expected = contact(
             imAddresses = listOf(
                 LabeledValue(
@@ -249,7 +248,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(Relations)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(Relations)).blockingGet()
         val expected = contact(
             relations = listOf(
                 LabeledValue(Relation(name = "Person"), Label.PhoneNumberAssistant)
@@ -268,7 +267,7 @@ internal class ContactStoreInsertContactTest : ContactStoreTestBase() {
             }
         }
 
-        val actual = store.fetchContacts(columnsToFetch = listOf(SipAddresses)).first()
+        val actual = store.fetchContacts(columnsToFetch = listOf(SipAddresses)).blockingGet()
         val expected = contact(
             sipAddresses = listOf(
                 LabeledValue(SipAddress(raw = "123"), LocationHome)

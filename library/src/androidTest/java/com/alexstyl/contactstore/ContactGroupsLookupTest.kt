@@ -1,7 +1,6 @@
 package com.alexstyl.contactstore
 
 import com.alexstyl.contactstore.GroupsPredicate.GroupLookup
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -28,7 +27,7 @@ internal class ContactGroupsLookupTest : ContactStoreTestBase() {
 
     @Test
     fun fetchContactGroup(): Unit = runBlocking {
-        val actual = store.fetchContactGroups().first()
+        val actual = store.fetchContactGroups().blockingGet()
 
         val expected = listOf(
             ImmutableContactGroup(
@@ -54,7 +53,7 @@ internal class ContactGroupsLookupTest : ContactStoreTestBase() {
             predicate = GroupLookup(
                 listOf(groupA.groupId)
             )
-        ).first()
+        ).blockingGet()
 
         val expected = listOf(
             ImmutableContactGroup(

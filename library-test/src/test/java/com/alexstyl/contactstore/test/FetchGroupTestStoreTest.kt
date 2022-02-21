@@ -27,7 +27,7 @@ internal class FetchGroupTestStoreTest {
                 )
             )
         )
-        val actual = store.fetchContactGroups().first()
+        val actual = store.fetchContactGroups().blockingGet()
         assertThat(actual).containsExactly(
             ImmutableContactGroup(
                 groupId = 0,
@@ -60,7 +60,7 @@ internal class FetchGroupTestStoreTest {
                 )
             )
         )
-        val actual = store.fetchContactGroups().first()
+        val actual = store.fetchContactGroups().blockingGet()
         assertThat(actual).containsExactly(
             ImmutableContactGroup(
                 groupId = 0,
@@ -92,7 +92,7 @@ internal class FetchGroupTestStoreTest {
                 )
             )
         )
-        val actual = store.fetchContactGroups().first()
+        val actual = store.fetchContactGroups().blockingGet()
         assertThat(actual).containsExactly(
             ImmutableContactGroup(
                 groupId = 0,
@@ -122,7 +122,7 @@ internal class FetchGroupTestStoreTest {
             predicate = GroupsPredicate.GroupLookup(
                 inGroupIds = listOf(0)
             )
-        ).first()
+        ).blockingGet()
         assertThat(actual).containsExactly(
             ImmutableContactGroup(
                 groupId = 0,
@@ -153,7 +153,7 @@ internal class FetchGroupTestStoreTest {
             predicate = GroupsPredicate.GroupLookup(
                 includeDeleted = true
             )
-        ).first()
+        ).blockingGet()
         assertThat(actual).containsExactly(
             ImmutableContactGroup(
                 groupId = 0,

@@ -31,7 +31,7 @@ internal class ColumnTestContactStoreTest {
             )
         )
 
-        val actual = store.fetchContacts().first()
+        val actual = store.fetchContacts().blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -54,7 +54,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.Names)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -82,7 +82,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.Phones)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -106,7 +106,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.Mails)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -132,7 +132,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.Organization)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -157,7 +157,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.Image)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -181,7 +181,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.Note)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -205,7 +205,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.PostalAddresses)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -231,7 +231,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.Nickname)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -255,7 +255,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.WebAddresses)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(
@@ -281,7 +281,7 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts(
             columnsToFetch = listOf(ContactColumn.GroupMemberships)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(
             PartialContact(

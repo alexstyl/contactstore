@@ -28,7 +28,7 @@ internal class PredicateTestContactStoreTest {
 
         val actual = store.fetchContacts(
             predicate = PhoneLookup("55")
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(CONTACT)
     }
@@ -43,7 +43,7 @@ internal class PredicateTestContactStoreTest {
 
         val actual = store.fetchContacts(
             predicate = NameLookup("Pao")
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(CONTACT)
     }
@@ -58,7 +58,7 @@ internal class PredicateTestContactStoreTest {
 
         val actual = store.fetchContacts(
             predicate = ContactLookup(contactId = 0L)
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(CONTACT)
     }
@@ -73,7 +73,7 @@ internal class PredicateTestContactStoreTest {
 
         val actual = store.fetchContacts(
             predicate = MailLookup("hi")
-        ).first()
+        ).blockingGet()
 
         assertThat(actual).containsOnly(CONTACT)
     }

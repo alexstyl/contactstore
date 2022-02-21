@@ -37,10 +37,15 @@ public class FetchRequest<T>(
     }
 }
 
-
+/**
+ * Represents an ongoing fetching request.
+ */
 public class FetchJob(
     private val coroutineJob: Job,
 ) {
+    public val isCancelled: Boolean
+        get() = coroutineJob.isCancelled
+
     public fun cancel() {
         coroutineJob.cancel()
     }

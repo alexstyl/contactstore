@@ -9,3 +9,4 @@ rootProject.name = "Contact Store"
 include ':sample'
 include ':library'
 include ':library-test'
+include ':library-coroutines'

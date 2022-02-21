@@ -1,5 +1,6 @@
 package com.alexstyl.contactstore
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -9,9 +10,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 public class FetchRequest<T>(
-    private val flow: Flow<T>
+    private val flow: Flow<T>,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-    private val scope = CoroutineScope(Dispatchers.IO + Job())
+    private val scope = CoroutineScope(dispatcher + Job())
 
     /**
      * Returns the values of the given request in a blocking manner.

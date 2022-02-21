@@ -23,16 +23,16 @@ Install the API using Gradle:
     }
     
     dependencies {
-        implementation 'com.alexstyl:contactstore:1.2.0'
+        implementation 'com.alexstyl:contactstore:1.2.1'
         
         // extension functions for kotlin coroutines
-        implementation 'com.alexstyl:contactstore-reactive:1.2.0'
+        implementation 'com.alexstyl:contactstore-reactive:1.2.1'
         
         // extension functions for rxJava 3
-        implementation 'com.alexstyl:contactstore-reactive:1.2.0'
+        implementation 'com.alexstyl:contactstore-reactive:1.2.1'
         
         // optional dependency for tests
-        testImplementation 'com.alexstyl:contactstore-test:1.2.0'
+        testImplementation 'com.alexstyl:contactstore-test:1.2.1'
     }
     ```
 

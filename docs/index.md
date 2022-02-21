@@ -8,7 +8,7 @@ Contact Store is a modern API that makes access to contacts on Android devices s
 is based off ContentProviders. Despite powerful, it can be error-prone and frustrating to use.
 
 Contact Store is a refreshed take on the Contacts API. It provides solutions to contacts' most
-frequent use cases and utilises modern developer practices for an enjoyable developer experience.
+frequent use cases and uses modern developer practices for an enjoyable developer experience.
 
 ## Quick Start
 
@@ -21,16 +21,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alexstyl:contactstore:1.1.0'
+    implementation 'com.alexstyl:contactstore:1.2.0'
     
     // extension functions for kotlin coroutines
-    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    implementation 'com.alexstyl:contactstore-reactive:1.2.0'
     
     // extension functions for rx3
-    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    implementation 'com.alexstyl:contactstore-reactive:1.2.0'
     
     // optional dependency for tests
-    testImplementation 'com.alexstyl:contactstore-test:1.1.0'
+    testImplementation 'com.alexstyl:contactstore-test:1.2.0'
 }
 ```
 
@@ -45,12 +45,7 @@ val store = ContactStore.newInstance(application)
 
 store.fetchContacts()
     .collect { contacts ->
-        val contactString = contacts.joinToString(", ") {
-            "displayName = ${it.displayName}," +
-                    " isStarred = ${it.isStarred}," +
-                    " id = ${it.contactId}"
-        }
-        println("Contacts emitted: $contactString")
+        println("Contacts emitted: $contacts")
     }
 ```
 
@@ -71,7 +66,6 @@ store.fetchContacts(
             println("Contact found: $contact")
 
             // Use contact.phones, contact.mails, contact.customDataItems and
-            // 
         }
     }
 ```

@@ -138,7 +138,7 @@ developers were coding against the ContactProvider interface instead of supporti
 developers would eventually end up using.
 
 Keeping the API lean allows for faster iterations/releases too as there is less things to maintain.
-I am not saying that eventually all features in the default API are not important or that they will
+I am not saying that the features of the default API are not important or that they will
 never make it to Contact Store. Instead, I would rather have the features and capabilities of the
 API to be driven by dev requirements.
 

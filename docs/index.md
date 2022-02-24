@@ -12,9 +12,9 @@ frequent use cases and uses modern developer practices for an enjoyable develope
 
 ## Quick Start
 
-Install the API using Gradle:
+Install the API using Gradle. In your `app/build.gradle` include the following dependencies:
 
-=== "build.gradle"
+=== "Groovy"
 
     ```gradle
     repositories {
@@ -36,7 +36,7 @@ Install the API using Gradle:
     }
     ```
 
-=== "build.gradle.kts"
+=== "Kotlin"
 
     ```kotlin
     repositories {

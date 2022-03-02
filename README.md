@@ -21,16 +21,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alexstyl:contactstore:1.2.1'
+    implementation 'com.alexstyl:contactstore:1.2.2'
     
     // extension functions for kotlin coroutines
-    implementation 'com.alexstyl:contactstore-coroutines:1.2.1'
+    implementation 'com.alexstyl:contactstore-coroutines:1.2.2'
     
     // extension functions for rxJava 3
-    implementation 'com.alexstyl:contactstore-reactive:1.2.1'
+    implementation 'com.alexstyl:contactstore-reactive:1.2.2'
     
     // optional dependency for tests
-    testImplementation 'com.alexstyl:contactstore-test:1.2.1'
+    testImplementation 'com.alexstyl:contactstore-test:1.2.2'
 }
 ```
 

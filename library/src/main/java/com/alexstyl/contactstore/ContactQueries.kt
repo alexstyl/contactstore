@@ -264,7 +264,7 @@ internal class ContactQueries(
                     val mimetype = item[Contacts.Data.MIMETYPE]
                     when {
                         columnsToFetch.contains(Nickname) && mimetype == NicknameColumns.CONTENT_ITEM_TYPE -> {
-                            nickname = item.getAsString(NicknameColumns.NAME)
+                            nickname = item.getAsStringOrEmpty(NicknameColumns.NAME)
                         }
                         columnsToFetch.contains(GroupMemberships) && mimetype == GroupColumns.CONTENT_ITEM_TYPE -> {
                             val groupId = item.getAsLong(GroupColumns.GROUP_ROW_ID)
@@ -273,11 +273,11 @@ internal class ContactQueries(
                             }
                         }
                         columnsToFetch.contains(Names) && mimetype == NameColumns.CONTENT_ITEM_TYPE -> {
-                            firstName = item.getAsString(NameColumns.GIVEN_NAME)
-                            middleName = item.getAsString(NameColumns.MIDDLE_NAME)
-                            lastName = item.getAsString(NameColumns.FAMILY_NAME)
-                            prefix = item.getAsString(NameColumns.PREFIX)
-                            suffix = item.getAsString(NameColumns.SUFFIX)
+                            firstName = item.getAsStringOrEmpty(NameColumns.GIVEN_NAME)
+                            middleName = item.getAsStringOrEmpty(NameColumns.MIDDLE_NAME)
+                            lastName = item.getAsStringOrEmpty(NameColumns.FAMILY_NAME)
+                            prefix = item.getAsStringOrEmpty(NameColumns.PREFIX)
+                            suffix = item.getAsStringOrEmpty(NameColumns.SUFFIX)
                             fullNameStyle =
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     item.getAsInteger(NameColumns.FULL_NAME_STYLE)
@@ -285,9 +285,9 @@ internal class ContactQueries(
                                 } else {
                                     FullNameStyle.UNDEFINED
                                 }
-                            phoneticFirstName = item.getAsString(NameColumns.PHONETIC_GIVEN_NAME)
-                            phoneticMiddleName = item.getAsString(NameColumns.PHONETIC_MIDDLE_NAME)
-                            phoneticLastName = item.getAsString(NameColumns.PHONETIC_FAMILY_NAME)
+                            phoneticFirstName = item.getAsStringOrEmpty(NameColumns.PHONETIC_GIVEN_NAME)
+                            phoneticMiddleName = item.getAsStringOrEmpty(NameColumns.PHONETIC_MIDDLE_NAME)
+                            phoneticLastName = item.getAsStringOrEmpty(NameColumns.PHONETIC_FAMILY_NAME)
                             phoneticNameStyle = item.getAsInteger(NameColumns.PHONETIC_NAME_STYLE)
                                 ?: PhoneticNameStyle.UNDEFINED
                         }
@@ -295,9 +295,9 @@ internal class ContactQueries(
                             imageData = loadContactPhoto(contactId)
                         }
                         columnsToFetch.contains(Phones) && mimetype == PhoneColumns.CONTENT_ITEM_TYPE -> {
-                            val phoneNumberString = item.getAsString(PhoneColumns.NUMBER)
+                            val phoneNumberString = item.getAsStringOrEmpty(PhoneColumns.NUMBER)
                             val id = item.getAsLong(PhoneColumns._ID)
-                            if (phoneNumberString.orEmpty().isNotBlank() && id != null) {
+                            if (phoneNumberString.isNotBlank() && id != null) {
                                 val value = PhoneNumber(phoneNumberString)
                                 val phoneEntry =
                                     LabeledValue(value, phoneLabelFrom(item), id, account)
@@ -305,9 +305,9 @@ internal class ContactQueries(
                             }
                         }
                         columnsToFetch.contains(Mails) && mimetype == EmailColumns.CONTENT_ITEM_TYPE -> {
-                            val mailAddressString = item.getAsString(EmailColumns.ADDRESS)
+                            val mailAddressString = item.getAsStringOrEmpty(EmailColumns.ADDRESS)
                             val id = item.getAsLong(EmailColumns._ID)
-                            if (mailAddressString.orEmpty().isNotBlank() && id != null) {
+                            if (mailAddressString.isNotBlank() && id != null) {
                                 val mailAddress = MailAddress(mailAddressString)
                                 mails.add(
                                     LabeledValue(
@@ -320,9 +320,9 @@ internal class ContactQueries(
                             }
                         }
                         columnsToFetch.contains(WebAddresses) && mimetype == WebColumns.CONTENT_ITEM_TYPE -> {
-                            val webAddressString = item.getAsString(WebColumns.URL)
+                            val webAddressString = item.getAsStringOrEmpty(WebColumns.URL)
                             val id = item.getAsLong(WebColumns._ID)
-                            if (webAddressString.orEmpty().isNotBlank() && id != null) {
+                            if (webAddressString.isNotBlank() && id != null) {
                                 val mailAddress = WebAddress(Uri.parse(webAddressString))
                                 webAddresses.add(
                                     LabeledValue(mailAddress, webLabelFrom(item), id, account)
@@ -330,14 +330,14 @@ internal class ContactQueries(
                             }
                         }
                         columnsToFetch.contains(ContactColumn.Note) && mimetype == NoteColumns.CONTENT_ITEM_TYPE -> {
-                            val noteString = item.getAsString(NoteColumns.NOTE)
-                            if (noteString.orEmpty().isNotBlank()) {
+                            val noteString = item.getAsStringOrEmpty(NoteColumns.NOTE)
+                            if (noteString.isNotBlank()) {
                                 note = Note(noteString)
                             }
                         }
                         columnsToFetch.contains(Events) && mimetype == EventColumns.CONTENT_ITEM_TYPE -> {
                             val parsedDate =
-                                dateParser.parse(item.getAsString(EventColumns.START_DATE))
+                                dateParser.parse(item.getAsStringOrEmpty(EventColumns.START_DATE))
                             val id = item.getAsLong(EventColumns._ID)
                             if (parsedDate != null && id != null) {
                                 val entry =
@@ -346,28 +346,25 @@ internal class ContactQueries(
                             }
                         }
                         columnsToFetch.contains(SipAddresses) && mimetype == SipColumns.CONTENT_ITEM_TYPE -> {
-                            val address = item.getAsString(SipColumns.SIP_ADDRESS)
+                            val address = item.getAsStringOrEmpty(SipColumns.SIP_ADDRESS)
                             val id = item.getAsLong(SipColumns._ID)
-                            if (address.orEmpty().isNotBlank() && id != null) {
+                            if (address.isNotBlank() && id != null) {
                                 val value =
                                     LabeledValue(SipAddress(address), sipLabel(item), id, account)
                                 sipAddresses.add(value)
                             }
                         }
                         columnsToFetch.contains(PostalAddresses) && mimetype == PostalColumns.CONTENT_ITEM_TYPE -> {
-                            val formattedAddress = item.getAsString(PostalColumns.FORMATTED_ADDRESS)
+                            val formattedAddress = item.getAsStringOrEmpty(PostalColumns.FORMATTED_ADDRESS)
                             val id = item.getAsLong(PostalColumns._ID)
-                            if (formattedAddress.orEmpty().isNotBlank() && id != null) {
-                                val street = item.getAsString(PostalColumns.STREET).orEmpty().trim()
-                                val poBox = item.getAsString(PostalColumns.POBOX).orEmpty().trim()
-                                val neighborhood =
-                                    item.getAsString(PostalColumns.NEIGHBORHOOD).orEmpty().trim()
-                                val city = item.getAsString(PostalColumns.CITY).orEmpty().trim()
-                                val region = item.getAsString(PostalColumns.REGION).orEmpty().trim()
-                                val postCode =
-                                    item.getAsString(PostalColumns.POSTCODE).orEmpty().trim()
-                                val country =
-                                    item.getAsString(PostalColumns.COUNTRY).orEmpty().trim()
+                            if (formattedAddress.isNotBlank() && id != null) {
+                                val street = item.getAsStringOrEmpty(PostalColumns.STREET).trim()
+                                val poBox = item.getAsStringOrEmpty(PostalColumns.POBOX).trim()
+                                val neighborhood = item.getAsStringOrEmpty(PostalColumns.NEIGHBORHOOD).trim()
+                                val city = item.getAsStringOrEmpty(PostalColumns.CITY).trim()
+                                val region = item.getAsStringOrEmpty(PostalColumns.REGION).trim()
+                                val postCode = item.getAsStringOrEmpty(PostalColumns.POSTCODE).trim()
+                                val country = item.getAsStringOrEmpty(PostalColumns.COUNTRY).trim()
                                 val value = PostalAddress(
                                     street = street,
                                     poBox = poBox,
@@ -384,13 +381,13 @@ internal class ContactQueries(
                             }
                         }
                         columnsToFetch.contains(Organization) && mimetype == OrganizationColumns.CONTENT_ITEM_TYPE -> {
-                            organization = item.getAsString(OrganizationColumns.COMPANY)
-                            jobTitle = item.getAsString(OrganizationColumns.TITLE)
+                            organization = item.getAsStringOrEmpty(OrganizationColumns.COMPANY)
+                            jobTitle = item.getAsStringOrEmpty(OrganizationColumns.TITLE)
                         }
                         columnsToFetch.contains(ImAddresses) && mimetype == ImColumns.CONTENT_ITEM_TYPE -> {
-                            val imAddressString = item.getAsString(ImColumns.DATA)
+                            val imAddressString = item.getAsStringOrEmpty(ImColumns.DATA)
                             val id = item.getAsLong(ImColumns._ID)
-                            if (imAddressString.orEmpty().isNotBlank() && id != null) {
+                            if (imAddressString.isNotBlank() && id != null) {
                                 val protocol = getImProtocol(item)
                                 val imAddress =
                                     ImAddress(raw = imAddressString, protocol = protocol)
@@ -401,9 +398,9 @@ internal class ContactQueries(
                             }
                         }
                         columnsToFetch.contains(Relations) && mimetype == RelationColumns.CONTENT_ITEM_TYPE -> {
-                            val name = item.getAsString(RelationColumns.NAME)
+                            val name = item.getAsStringOrEmpty(RelationColumns.NAME)
                             val id = item.getAsLong(RelationColumns._ID)
-                            if (name.orEmpty().isNotBlank() && id != null) {
+                            if (name.isNotBlank() && id != null) {
                                 val label = relationLabel(item)
                                 relations.add(LabeledValue(Relation(name), label, id, account))
                             }
@@ -415,8 +412,8 @@ internal class ContactQueries(
                                 if (id != null) {
                                     val value = CustomDataItem(
                                         id = id,
-                                        summary = item.getAsString(mimeType.summaryColumn),
-                                        detail = item.getAsString(mimeType.detailColumn),
+                                        summary = item.getAsStringOrEmpty(mimeType.summaryColumn),
+                                        detail = item.getAsStringOrEmpty(mimeType.detailColumn),
                                         icon = mimeType.icon,
                                         mimeType = mimeType.mimetype,
                                         account = account
@@ -469,7 +466,7 @@ internal class ContactQueries(
             SipColumns.TYPE_HOME -> Label.LocationHome
             SipColumns.TYPE_OTHER -> Label.Other
             SipColumns.TYPE_WORK -> Label.LocationWork
-            SipColumns.TYPE_CUSTOM -> Label.Custom(values.getAsString(SipColumns.LABEL))
+            SipColumns.TYPE_CUSTOM -> Label.Custom(values.getAsStringOrEmpty(SipColumns.LABEL))
             else -> Label.Other
         }
     }
@@ -491,7 +488,7 @@ internal class ContactQueries(
             RelationColumns.TYPE_SISTER -> Label.RelationSister
             RelationColumns.TYPE_SPOUSE -> Label.RelationSpouse
             RelationColumns.TYPE_CUSTOM -> Label.Custom(
-                contentValues.getAsString(RelationColumns.LABEL)
+                contentValues.getAsStringOrEmpty(RelationColumns.LABEL)
             )
             else -> Label.Other
         }
@@ -501,7 +498,7 @@ internal class ContactQueries(
         // starting from Android 31, type will always be PROTOCOL_CUSTOM according to docs
         // the else covers legacy versions
         return when (val type = contentValues.getAsInteger(ImColumns.PROTOCOL)) {
-            null, ImColumns.PROTOCOL_CUSTOM -> contentValues.getAsString(ImColumns.CUSTOM_PROTOCOL)
+            null, ImColumns.PROTOCOL_CUSTOM -> contentValues.getAsStringOrEmpty(ImColumns.CUSTOM_PROTOCOL)
             else -> resources.getString(ImColumns.getProtocolLabelResource(type))
         }
     }
@@ -522,7 +519,7 @@ internal class ContactQueries(
     private fun postalAddressLabelFrom(contentValues: ContentValues): Label {
         return when (
             contentValues.getAsInteger(PostalColumns.TYPE) ?: PostalColumns.TYPE_CUSTOM) {
-            BaseTypes.TYPE_CUSTOM -> Label.Custom(contentValues.getAsString(PostalColumns.LABEL))
+            BaseTypes.TYPE_CUSTOM -> Label.Custom(contentValues.getAsStringOrEmpty(PostalColumns.LABEL))
             PostalColumns.TYPE_HOME -> Label.LocationHome
             PostalColumns.TYPE_WORK -> Label.LocationWork
             PostalColumns.TYPE_OTHER -> Label.Other
@@ -532,7 +529,7 @@ internal class ContactQueries(
 
     private fun eventLabelFrom(values: ContentValues): Label {
         return when (values.getAsInteger(EventColumns.TYPE) ?: EventColumns.TYPE_CUSTOM) {
-            BaseTypes.TYPE_CUSTOM -> Label.Custom(values.getAsString(EventColumns.LABEL))
+            BaseTypes.TYPE_CUSTOM -> Label.Custom(values.getAsStringOrEmpty(EventColumns.LABEL))
             EventColumns.TYPE_ANNIVERSARY -> Label.DateAnniversary
             EventColumns.TYPE_BIRTHDAY -> Label.DateBirthday
             EventColumns.TYPE_OTHER -> Label.Other
@@ -541,9 +538,9 @@ internal class ContactQueries(
     }
 
     private fun mailLabelFrom(values: ContentValues): Label {
-        return when (values.getAsString(EmailColumns.TYPE).ifBlank { "${EmailColumns.TYPE_OTHER}" }
+        return when (values.getAsStringOrEmpty(EmailColumns.TYPE).ifBlank { "${EmailColumns.TYPE_OTHER}" }
             .toIntOrNull()) {
-            BaseTypes.TYPE_CUSTOM -> Label.Custom(values.getAsString(EmailColumns.LABEL))
+            BaseTypes.TYPE_CUSTOM -> Label.Custom(values.getAsStringOrEmpty(EmailColumns.LABEL))
             EmailColumns.TYPE_HOME -> Label.LocationHome
             EmailColumns.TYPE_WORK -> Label.LocationWork
             EmailColumns.TYPE_OTHER -> Label.Other
@@ -553,7 +550,7 @@ internal class ContactQueries(
 
     private fun webLabelFrom(values: ContentValues): Label {
         return when (values.getAsInteger(WebColumns.TYPE) ?: WebColumns.TYPE_OTHER) {
-            BaseTypes.TYPE_CUSTOM -> Label.Custom(values.getAsString(WebColumns.LABEL))
+            BaseTypes.TYPE_CUSTOM -> Label.Custom(values.getAsStringOrEmpty(WebColumns.LABEL))
             WebColumns.TYPE_HOME -> Label.LocationHome
             WebColumns.TYPE_HOMEPAGE -> Label.WebsiteHomePage
             WebColumns.TYPE_BLOG -> Label.WebsiteBlog
@@ -566,7 +563,7 @@ internal class ContactQueries(
 
     private fun imLabelFrom(cursor: ContentValues): Label {
         return when (cursor.getAsInteger(ImColumns.TYPE) ?: ImColumns.TYPE_OTHER) {
-            BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor.getAsString(ImColumns.LABEL))
+            BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor.getAsStringOrEmpty(ImColumns.LABEL))
             ImColumns.TYPE_HOME -> Label.LocationHome
             ImColumns.TYPE_WORK -> Label.LocationWork
             else -> Label.Other
@@ -574,9 +571,9 @@ internal class ContactQueries(
     }
 
     private fun phoneLabelFrom(cursor: ContentValues): Label {
-        return when (cursor.getAsString(PhoneColumns.TYPE).ifBlank { "${PhoneColumns.TYPE_OTHER}" }
+        return when (cursor.getAsStringOrEmpty(PhoneColumns.TYPE).ifBlank { "${PhoneColumns.TYPE_OTHER}" }
             .toIntOrNull()) {
-            BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor.getAsString(PhoneColumns.LABEL))
+            BaseTypes.TYPE_CUSTOM -> Label.Custom(cursor.getAsStringOrEmpty(PhoneColumns.LABEL))
             PhoneColumns.TYPE_HOME -> Label.LocationHome
             PhoneColumns.TYPE_MOBILE -> Label.PhoneNumberMobile
             PhoneColumns.TYPE_WORK -> Label.LocationWork
@@ -722,4 +719,8 @@ internal class ContactQueries(
             ContactsContract.PhoneLookup._ID
         }
     }
+}
+
+private fun ContentValues.getAsStringOrEmpty(name: String): String {
+    return getAsString(name).orEmpty()
 }

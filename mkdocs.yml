@@ -41,7 +41,8 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.betterem
   - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
   - attr_list
   - codehilite:
       guess_lang: false

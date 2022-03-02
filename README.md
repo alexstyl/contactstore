@@ -5,7 +5,7 @@
 Contact Store is a modern API that makes access to contacts on Android devices simple to use.
 
 [The default way of accessing contacts on Android](https://developer.android.com/guide/topics/providers/contacts-provider)
-is based off ContentProviders. Despite powerful, it can be error-prone and frustrating to use.
+is based off ContentProviders. Despite powerful, ContentProviders can be error-prone and frustrating to use.
 
 Contact Store is a refreshed take on the Contacts API. It provides solutions to contacts' most
 frequent use cases and uses modern developer practices for an enjoyable developer experience.
@@ -21,16 +21,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alexstyl:contactstore:1.1.0'
+    implementation 'com.alexstyl:contactstore:1.2.1'
     
     // extension functions for kotlin coroutines
-    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    implementation 'com.alexstyl:contactstore-coroutines:1.2.1'
     
-    // extension functions for rx3
-    implementation 'com.alexstyl:contactstore-reactive:1.1.0'
+    // extension functions for rxJava 3
+    implementation 'com.alexstyl:contactstore-reactive:1.2.1'
     
     // optional dependency for tests
-    testImplementation 'com.alexstyl:contactstore-test:1.1.0'
+    testImplementation 'com.alexstyl:contactstore-test:1.2.1'
 }
 ```
 
@@ -138,7 +138,7 @@ developers were coding against the ContactProvider interface instead of supporti
 developers would eventually end up using.
 
 Keeping the API lean allows for faster iterations/releases too as there is less things to maintain.
-I am not saying that eventually all features in the default API are not important or that they will
+I am not saying that the features of the default API are not important or that they will
 never make it to Contact Store. Instead, I would rather have the features and capabilities of the
 API to be driven by dev requirements.
 
@@ -158,7 +158,7 @@ request, [open a new issue on Github][1].
 
 ## License
 
-Apache 2.0. See the [LICENSE](/LICENSE) file for details.
+Apache 2.0. See the [LICENSE](https://github.com/alexstyl/contactstore/blob/main/LICENSE) file for details.
 
 ## Author
 

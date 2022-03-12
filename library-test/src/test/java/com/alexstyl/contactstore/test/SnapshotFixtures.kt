@@ -1,16 +1,7 @@
 package com.alexstyl.contactstore.test
 
 import android.net.Uri
-import com.alexstyl.contactstore.EventDate
-import com.alexstyl.contactstore.GroupMembership
-import com.alexstyl.contactstore.ImageData
-import com.alexstyl.contactstore.Label
-import com.alexstyl.contactstore.LabeledValue
-import com.alexstyl.contactstore.MailAddress
-import com.alexstyl.contactstore.Note
-import com.alexstyl.contactstore.PhoneNumber
-import com.alexstyl.contactstore.PostalAddress
-import com.alexstyl.contactstore.WebAddress
+import com.alexstyl.contactstore.*
 
 internal object SnapshotFixtures {
     val KIM_CLAY = StoredContact(
@@ -21,9 +12,10 @@ internal object SnapshotFixtures {
     )
     val PAOLO_MELENDEZ = StoredContact(
         contactId = 0L,
+        lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
         isStarred = false,
-        firstName = "Paolo",
-        lastName = "Melendez",
+        firstName = ContactFixtures.PAOLO_MELENDEZ.firstName,
+        lastName = ContactFixtures.PAOLO_MELENDEZ.lastName,
         phones = listOf(
             LabeledValue(PhoneNumber("555-15"), Label.PhoneNumberMobile)
         ),

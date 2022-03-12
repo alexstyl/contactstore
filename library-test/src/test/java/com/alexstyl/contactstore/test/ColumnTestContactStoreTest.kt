@@ -12,9 +12,7 @@ import com.alexstyl.contactstore.Note
 import com.alexstyl.contactstore.PartialContact
 import com.alexstyl.contactstore.PostalAddress
 import com.alexstyl.contactstore.WebAddress
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,7 +37,7 @@ internal class ColumnTestContactStoreTest {
                 displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = emptyList(),
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -67,7 +65,7 @@ internal class ColumnTestContactStoreTest {
                 middleName = "Mid",
                 lastName = "Melendez",
                 suffix = "Suffix",
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -91,7 +89,7 @@ internal class ColumnTestContactStoreTest {
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Phones),
                 phones = ContactFixtures.PAOLO_MELENDEZ.phones,
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -117,7 +115,7 @@ internal class ColumnTestContactStoreTest {
                 mails = listOf(
                     LabeledValue(MailAddress("hi@mail.com"), Label.LocationHome)
                 ),
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -142,7 +140,7 @@ internal class ColumnTestContactStoreTest {
                 columns = listOf(ContactColumn.Organization),
                 organization = "Organization",
                 jobTitle = "Job Title",
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -166,7 +164,7 @@ internal class ColumnTestContactStoreTest {
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Image),
                 imageData = ImageData("imagedata".toByteArray()),
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -190,7 +188,7 @@ internal class ColumnTestContactStoreTest {
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Note),
                 note = Note("note"),
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -216,7 +214,7 @@ internal class ColumnTestContactStoreTest {
                 postalAddresses = listOf(
                     LabeledValue(PostalAddress("SomeStreet 55"), Label.LocationHome)
                 ),
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -240,7 +238,7 @@ internal class ColumnTestContactStoreTest {
                 isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
                 columns = listOf(ContactColumn.Nickname),
                 nickname = "Nickname",
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -266,7 +264,7 @@ internal class ColumnTestContactStoreTest {
                 webAddresses = listOf(
                     LabeledValue(WebAddress(Uri.parse("www.web.com")), Label.WebsiteHomePage)
                 ),
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -292,7 +290,7 @@ internal class ColumnTestContactStoreTest {
                 groups = listOf(
                     GroupMembership(groupId = 10)
                 ),
-                lookupKey = null,
+                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }

@@ -1,6 +1,7 @@
 package com.alexstyl.contactstore.test
 
 import android.net.Uri
+import com.alexstyl.contactstore.Contact
 import com.alexstyl.contactstore.ContactColumn
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.GroupMembership
@@ -10,6 +11,7 @@ import com.alexstyl.contactstore.LabeledValue
 import com.alexstyl.contactstore.MailAddress
 import com.alexstyl.contactstore.Note
 import com.alexstyl.contactstore.PartialContact
+import com.alexstyl.contactstore.PhoneNumber
 import com.alexstyl.contactstore.PostalAddress
 import com.alexstyl.contactstore.WebAddress
 import kotlinx.coroutines.runBlocking
@@ -31,23 +33,13 @@ internal class ColumnTestContactStoreTest {
 
         val actual = store.fetchContacts().blockingGet()
 
-        assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
-                columns = emptyList(),
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
-            )
-        )
+        assertThat(actual).containsOnly(paoloMelendez())
     }
 
     @Test
     fun `fetches names from snapshot`(): Unit = runBlocking {
         val store = TestContactStore(
-            contactsSnapshot = listOf(
-                SnapshotFixtures.PAOLO_MELENDEZ
-            )
+            contactsSnapshot = listOf(SnapshotFixtures.PAOLO_MELENDEZ)
         )
 
         val actual = store.fetchContacts(
@@ -55,17 +47,13 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.Names),
                 prefix = "Prefix",
-                firstName = "Paolo",
-                middleName = "Mid",
-                lastName = "Melendez",
                 suffix = "Suffix",
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
+                lastName = "Melendez",
+                middleName = "Mid",
+                firstName = "Paolo",
             )
         )
     }
@@ -83,13 +71,9 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.Phones),
                 phones = ContactFixtures.PAOLO_MELENDEZ.phones,
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -107,15 +91,11 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.Mails),
                 mails = listOf(
                     LabeledValue(MailAddress("hi@mail.com"), Label.LocationHome)
                 ),
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -133,14 +113,10 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.Organization),
                 organization = "Organization",
                 jobTitle = "Job Title",
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -158,13 +134,9 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.Image),
                 imageData = ImageData("imagedata".toByteArray()),
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -182,13 +154,9 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.Note),
                 note = Note("note"),
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -206,15 +174,11 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.PostalAddresses),
                 postalAddresses = listOf(
                     LabeledValue(PostalAddress("SomeStreet 55"), Label.LocationHome)
                 ),
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -232,13 +196,9 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.Nickname),
                 nickname = "Nickname",
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -256,15 +216,11 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.WebAddresses),
                 webAddresses = listOf(
                     LabeledValue(WebAddress(Uri.parse("www.web.com")), Label.WebsiteHomePage)
                 ),
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
         )
     }
@@ -282,16 +238,54 @@ internal class ColumnTestContactStoreTest {
         ).blockingGet()
 
         assertThat(actual).containsOnly(
-            PartialContact(
-                contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
-                displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
-                isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            paoloMelendez(
                 columns = listOf(ContactColumn.GroupMemberships),
                 groups = listOf(
                     GroupMembership(groupId = 10)
                 ),
-                lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
             )
+        )
+    }
+
+    private fun paoloMelendez(
+        columns: List<ContactColumn> = emptyList(),
+        prefix: String = "",
+        suffix: String = "",
+        groups: List<GroupMembership> = emptyList(),
+        webAddresses: List<LabeledValue<WebAddress>> = emptyList(),
+        nickname: String = "",
+        postalAddresses: List<LabeledValue<PostalAddress>> = emptyList(),
+        lastName: String = "",
+        middleName: String = "",
+        firstName: String = "",
+        note: Note? = null,
+        organization: String = "",
+        jobTitle: String = "",
+        imageData: ImageData? = null,
+        phones: List<LabeledValue<PhoneNumber>> = emptyList(),
+        mails: List<LabeledValue<MailAddress>> = emptyList(),
+    ): Contact {
+        return PartialContact(
+            imageData = imageData,
+            nickname = nickname,
+            groups = groups,
+            postalAddresses = postalAddresses,
+            webAddresses = webAddresses,
+            note = note,
+            columns = columns,
+            organization = organization,
+            jobTitle = jobTitle,
+            mails = mails,
+            phones = phones,
+            contactId = ContactFixtures.PAOLO_MELENDEZ.contactId,
+            displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
+            isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
+            prefix = prefix,
+            suffix = suffix,
+            middleName = middleName,
+            firstName = firstName,
+            lastName = lastName,
+            lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
         )
     }
 }

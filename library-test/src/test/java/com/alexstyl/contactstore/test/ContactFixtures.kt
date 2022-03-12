@@ -6,6 +6,7 @@ import com.alexstyl.contactstore.GroupMembership
 import com.alexstyl.contactstore.ImageData
 import com.alexstyl.contactstore.Label
 import com.alexstyl.contactstore.LabeledValue
+import com.alexstyl.contactstore.LookupKey
 import com.alexstyl.contactstore.MailAddress
 import com.alexstyl.contactstore.Note
 import com.alexstyl.contactstore.PartialContact
@@ -17,6 +18,7 @@ import com.alexstyl.contactstore.allContactColumns
 internal object ContactFixtures {
     val PAOLO_MELENDEZ = PartialContact(
         contactId = 0L,
+        lookupKey = LookupKey("test-lookup-paolo"),
         displayName = "Prefix Paolo Mid Melendez, Suffix",
         columns = allContactColumns(),
         isStarred = false,
@@ -46,6 +48,5 @@ internal object ContactFixtures {
         suffix = "Suffix",
         nickname = "Nickname",
         groups = listOf(GroupMembership(groupId = 10)),
-        lookupKey = null,
     )
 }

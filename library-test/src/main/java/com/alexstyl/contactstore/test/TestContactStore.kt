@@ -111,6 +111,7 @@ public class TestContactStore(
                         StoredContact(
                             contactId = current.size.toLong(),
                             isStarred = contact.isStarred,
+                            lookupKey = contact.lookupKey,
                             prefix = contact.takeIfContains(ContactColumn.Names) { contact.prefix }
                                 .orEmpty(),
                             firstName = contact.takeIfContains(ContactColumn.Names) { contact.firstName }
@@ -335,7 +336,7 @@ public class TestContactStore(
             PartialContact(
                 displayName = displayName(it),
                 contactId = it.contactId,
-                lookupKey = null,
+                lookupKey = it.lookupKey,
                 columns = columnsToFetch,
                 isStarred = it.isStarred,
 

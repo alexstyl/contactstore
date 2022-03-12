@@ -69,7 +69,7 @@ internal class ExecuteTestContactStoreTest {
                 displayName = "Prefix Peter Mid Melendez, Suffix",
                 isStarred = false,
                 columns = emptyList(),
-                lookupKey = null,
+                lookupKey = SNAPSHOT_PAOLO.lookupKey,
             ),
             kimClay()
         )

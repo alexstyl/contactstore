@@ -85,7 +85,7 @@ internal class PredicateTestContactStoreTest {
             displayName = ContactFixtures.PAOLO_MELENDEZ.displayName,
             isStarred = ContactFixtures.PAOLO_MELENDEZ.isStarred,
             columns = emptyList(),
-            lookupKey = null,
+            lookupKey = ContactFixtures.PAOLO_MELENDEZ.lookupKey,
         )
     }
 }

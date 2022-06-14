@@ -3,14 +3,14 @@ contact by using a phone number and e-mail suggestion. Contact Store provides wa
 contacts stored on the device by providing a `ContactPredicate`
 when [reading contacts](./read_contacts.md)
 
-The following example uses the `ContactLookup` predicate to retrieve a contact with a given contact
+The following example uses the `ContactIdLookup` predicate to retrieve a contact with a given contact
 id:
 
 ```kotlin
 val store = ContactStore.newInstance(application)
 
 store.fetchContacts(
-    predicate = ContactLookup(contactId),
+    predicate = ContactIdLookup(contactId),
     columnsToFetch = allContactColumns()
 )
     .collect { contacts ->
@@ -26,7 +26,7 @@ store.fetchContacts(
 
 There are different kind of Predicates you can use:
 
-### ContactLookup
+### ContactIdLookup
 
 This predicate will return the contact with the passing contact id.
 
@@ -38,6 +38,6 @@ This predicate will return any contacts that contain part of the phone number pr
 
 This predicate will return any contacts that contain part of the mail address provided.
 
-### NameLookup
+### ContactLookup
 
-This predicate will return any contacts that contain part of the name.
+This predicate will return any contacts that contain the given string to any part of the contact. This is can be used to implement free-text search.

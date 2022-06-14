@@ -278,7 +278,7 @@ public class TestContactStore(
                 val query = predicate.mailAddress
                 return contact.mails.any { it.value.raw.startsWith(query, ignoreCase = true) }
             }
-            is ContactPredicate.NameLookup -> matchesName(predicate, contact)
+            is ContactPredicate.ContactLookup -> matchesName(predicate, contact)
             is ContactPredicate.PhoneLookup -> matchesPhone(predicate, contact)
         }
     }
@@ -318,10 +318,10 @@ public class TestContactStore(
     }
 
     private fun matchesName(
-        predicate: ContactPredicate.NameLookup,
+        predicate: ContactPredicate.ContactLookup,
         contact: StoredContact
     ): Boolean {
-        val query = predicate.partOfName
+        val query = predicate.query
         val matchesName = contact.prefix.startsWith(query, ignoreCase = true)
                 || contact.firstName.startsWith(query, ignoreCase = true)
                 || contact.middleName.startsWith(query, ignoreCase = true)

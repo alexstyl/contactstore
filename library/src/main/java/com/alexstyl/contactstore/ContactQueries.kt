@@ -43,7 +43,7 @@ import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
 import com.alexstyl.contactstore.ContactPredicate.ContactIdLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
-import com.alexstyl.contactstore.ContactPredicate.NameLookup
+import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
 import com.alexstyl.contactstore.utils.DateParser
 import com.alexstyl.contactstore.utils.mapEachRow
@@ -89,7 +89,7 @@ internal class ContactQueries(
             is ContactIdLookup -> lookupContact(predicate.contactId, displayNameStyle)
             is MailLookup -> lookupFromMail(predicate.mailAddress, displayNameStyle)
             is PhoneLookup -> lookupFromPhone(predicate.phoneNumber, displayNameStyle)
-            is NameLookup -> lookupFromName(predicate.partOfName, displayNameStyle)
+            is ContactLookup -> lookupFromName(predicate.query, displayNameStyle)
         }
     }
 

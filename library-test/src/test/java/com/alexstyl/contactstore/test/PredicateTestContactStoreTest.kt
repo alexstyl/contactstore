@@ -2,7 +2,7 @@ package com.alexstyl.contactstore.test
 
 import com.alexstyl.contactstore.ContactPredicate.ContactIdLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
-import com.alexstyl.contactstore.ContactPredicate.NameLookup
+import com.alexstyl.contactstore.ContactPredicate.ContactLookup
 import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.PartialContact
@@ -39,7 +39,7 @@ internal class PredicateTestContactStoreTest {
         )
 
         val actual = store.fetchContacts(
-            predicate = NameLookup("Pao")
+            predicate = ContactLookup("Pao")
         ).blockingGet()
 
         assertThat(actual).containsOnly(CONTACT)

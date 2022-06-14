@@ -40,7 +40,7 @@ import androidx.core.content.ContextCompat
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.alexstyl.contactstore.Contact
-import com.alexstyl.contactstore.ContactPredicate.ContactLookup
+import com.alexstyl.contactstore.ContactPredicate.ContactIdLookup
 import com.alexstyl.contactstore.ContactStore
 import com.alexstyl.contactstore.allContactColumns
 import com.alexstyl.contactstore.getLocalizedString
@@ -63,7 +63,7 @@ class ContactDetailsActivity : ComponentActivity() {
             .getLong(EXTRA_CONTACT_ID)
 
         val contact = contactStore.fetchContacts(
-            predicate = ContactLookup(contactId),
+            predicate = ContactIdLookup(contactId),
             columnsToFetch = allContactColumns()
         ).blockingGet().firstOrNull()
         if (contact == null) {

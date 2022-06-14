@@ -19,5 +19,15 @@ public sealed class ContactPredicate {
     /**
      * Performs a contact lookup by trying to find a contact with the given contact id.
      */
-    public data class ContactLookup(val contactId: Long) : ContactPredicate()
+    public data class ContactIdLookup(val contactId: Long) : ContactPredicate()
+
+    public companion object {
+        @Deprecated(
+            "ContactLookup was renamed to ContactIdLookup",
+            ReplaceWith("ContactIdLookup(contactId)")
+        )
+        public fun ContactLookup(contactId: Long): ContactPredicate {
+            return ContactIdLookup(contactId)
+        }
+    }
 }

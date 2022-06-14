@@ -1,14 +1,11 @@
 package com.alexstyl.contactstore.test
 
-import com.alexstyl.contactstore.ContactPredicate.ContactLookup
+import com.alexstyl.contactstore.ContactPredicate.ContactIdLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
 import com.alexstyl.contactstore.ContactPredicate.NameLookup
 import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
 import com.alexstyl.contactstore.ExperimentalContactStoreApi
-import com.alexstyl.contactstore.MailAddress
 import com.alexstyl.contactstore.PartialContact
-import com.alexstyl.contactstore.PhoneNumber
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -57,7 +54,7 @@ internal class PredicateTestContactStoreTest {
         )
 
         val actual = store.fetchContacts(
-            predicate = ContactLookup(contactId = 0L)
+            predicate = ContactIdLookup(contactId = 0L)
         ).blockingGet()
 
         assertThat(actual).containsOnly(CONTACT)

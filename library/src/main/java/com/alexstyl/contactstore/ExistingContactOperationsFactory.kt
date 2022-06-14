@@ -47,7 +47,7 @@ internal class ExistingContactOperationsFactory(
 ) {
     suspend fun updateOperation(contact: MutableContact): List<ContentProviderOperation> {
         val existingContact = contactQueries.queryContacts(
-            predicate = ContactPredicate.ContactLookup(contact.contactId),
+            predicate = ContactPredicate.ContactIdLookup(contact.contactId),
             columnsToFetch = contact.columns,
             displayNameStyle = DisplayNameStyle.Primary
         ).first().firstOrNull() ?: return emptyList()

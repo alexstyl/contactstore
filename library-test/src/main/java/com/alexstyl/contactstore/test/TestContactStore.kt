@@ -273,7 +273,7 @@ public class TestContactStore(
     ): Boolean {
         if (predicate == null) return true
         return when (predicate) {
-            is ContactPredicate.ContactLookup -> matchesContact(predicate, contact)
+            is ContactPredicate.ContactIdLookup -> matchesContact(predicate, contact)
             is ContactPredicate.MailLookup -> {
                 val query = predicate.mailAddress
                 return contact.mails.any { it.value.raw.startsWith(query, ignoreCase = true) }
@@ -303,7 +303,7 @@ public class TestContactStore(
     }
 
     private fun matchesContact(
-        predicate: ContactPredicate.ContactLookup,
+        predicate: ContactPredicate.ContactIdLookup,
         contact: StoredContact
     ): Boolean {
         return predicate.contactId == contact.contactId

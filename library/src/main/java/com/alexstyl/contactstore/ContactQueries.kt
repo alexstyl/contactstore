@@ -41,7 +41,7 @@ import com.alexstyl.contactstore.ContactColumn.PostalAddresses
 import com.alexstyl.contactstore.ContactColumn.Relations
 import com.alexstyl.contactstore.ContactColumn.SipAddresses
 import com.alexstyl.contactstore.ContactColumn.WebAddresses
-import com.alexstyl.contactstore.ContactPredicate.ContactLookup
+import com.alexstyl.contactstore.ContactPredicate.ContactIdLookup
 import com.alexstyl.contactstore.ContactPredicate.MailLookup
 import com.alexstyl.contactstore.ContactPredicate.NameLookup
 import com.alexstyl.contactstore.ContactPredicate.PhoneLookup
@@ -86,7 +86,7 @@ internal class ContactQueries(
     ): Flow<List<PartialContact>> {
         return when (predicate) {
             null -> queryAllContacts(displayNameStyle)
-            is ContactLookup -> lookupContact(predicate.contactId, displayNameStyle)
+            is ContactIdLookup -> lookupContact(predicate.contactId, displayNameStyle)
             is MailLookup -> lookupFromMail(predicate.mailAddress, displayNameStyle)
             is PhoneLookup -> lookupFromPhone(predicate.phoneNumber, displayNameStyle)
             is NameLookup -> lookupFromName(predicate.partOfName, displayNameStyle)

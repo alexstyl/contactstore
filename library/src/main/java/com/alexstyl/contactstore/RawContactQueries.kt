@@ -18,8 +18,10 @@ internal class RawContactQueries(
         var currentRawContactId: Long = -1
         val rawContacts = mutableListOf<RawContact>()
 
+        val contentUri = entityUri(contact) ?: return emptyList()
+
         contentResolver.runQuery(
-            contentUri = entityUri(contact),
+            contentUri = contentUri,
             projection = ContactQuery.COLUMNS,
             sortOrder = ContactsContract.Contacts.Entity.RAW_CONTACT_ID
         ).iterate { cursor ->
@@ -37,11 +39,13 @@ internal class RawContactQueries(
         return rawContacts.toList()
     }
 
-    private fun entityUri(forContact: Contact): Uri {
+    private fun entityUri(forContact: Contact): Uri? {
         val contactId = forContact.contactId
+        val lookupKey = forContact.lookupKey ?: return null
+
         val contactUri = ensureIsContactUri(
-            contentResolver,
-            uri = ContactsContract.Contacts.getLookupUri(contactId, forContact.lookupKey?.value)
+            resolver = contentResolver,
+            uri = ContactsContract.Contacts.getLookupUri(contactId, lookupKey.value)
         )
         return Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Entity.CONTENT_DIRECTORY)
     }
@@ -117,8 +121,7 @@ internal class RawContactQueries(
         }
     }
 
-    @Throws(IllegalArgumentException::class)
-    fun ensureIsContactUri(resolver: ContentResolver, uri: Uri): Uri? {
+    private fun ensureIsContactUri(resolver: ContentResolver, uri: Uri): Uri {
         val authority = uri.authority
 
         // Current Style Uri?

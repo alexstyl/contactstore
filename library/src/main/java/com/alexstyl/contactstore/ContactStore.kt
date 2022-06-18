@@ -27,7 +27,7 @@ public interface ContactStore {
      * Returns a [FetchRequest] that emits all contacts matching the given [predicate] when collected.
      *
      * @param predicate The conditions that a contact need to meet in order to be fetched
-     * @param columnsToFetch The columns of the contact you need to be fetched
+     * @param columnsToFetch The columns of the contact you need to be fetched.
      * @param displayNameStyle The preferred style for the [Contact.displayName] to be returned. The fetched contacts' sorting order will match this option.
      */
     public fun fetchContacts(

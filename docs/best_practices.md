@@ -2,6 +2,17 @@ This page contains best practices when using the API to ensure the best UX possi
 
 ## Performance considerations
 
+### Only request the ContactColumns you need
+
+Each [ContactColumn]() requested via the `ContactStore#fetchContacts()` function is going to cause
+additional database queries to take place. This can cause increase loading times. It is advices to only request the ContactColumns
+you need at any given point.
+
+Keep in mind that you might have access to the information you need without requesting for any columns.
+
+If you are building a list of contacts and you need to display their names,
+use [Contact#displayName]() instead of requesting for the [ContactColumn.Names]() column. For the same scenario, use the [Contact.thumbnailUri]() instead of querying for the [ContactColumn.Image] column, if you do no need a high-res version of the contact image.
+
 ### Use a Predicate to quickly resolve phone numbers
 
 Instead of fetching all contacts' phone numbers and try to find the contact containing a phone

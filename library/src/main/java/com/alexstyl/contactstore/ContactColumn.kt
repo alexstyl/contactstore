@@ -31,7 +31,8 @@ public sealed class ContactColumn {
     /**
      * A column that will populate the [Contact.imageData] field of all queried contacts when requested.
      *
-     * @see Contact.imageData
+     *
+     * *NOTE*: You do not need this column if you do not need a high-res image of contacts. Use [Contact.thumbnailUri] instead.
      */
     public object Image : ContactColumn()
 
@@ -46,7 +47,7 @@ public sealed class ContactColumn {
      * * [Contact.phoneticMiddleName]
      * * [Contact.phoneticLastName]
      *
-     *
+     * *NOTE*: You do not need this column if you only need access to the display name of contacts (for use in a contact list for example). Use [Contact.displayName] instead.
      */
     public object Names : ContactColumn()
 

@@ -9,7 +9,7 @@ For every [ContactColumn]() requested via the `ContactStore#fetchContacts()` fun
 Keep in mind that some information about a contact is provided without a need for a `ContactColumn`.
 
 If you are building a list of contacts and you need to display their names,
-use [Contact#displayName]() instead of requesting for the [ContactColumn.Names]() column. For the same scenario, use the [Contact.thumbnailUri]() instead of querying for the [ContactColumn.Image] column, if you do no need a high-res version of the contact image.
+use [Contact#displayName]() instead of requesting for the [ContactColumn.Names]() column. For the same scenario, use the [Contact.thumbnailUri]() instead of querying for the [ContactColumn.Image]() column, if you do no need a high-res version of the contact image.
 
 ### Use a Predicate to quickly resolve phone numbers
 

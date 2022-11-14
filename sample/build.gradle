@@ -5,7 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
-def composeVersion = '1.0.5'
+def composeVersion = '1.3.1'
 android {
     compileSdk androidCompileSdkVersion
 
@@ -34,7 +34,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = javaVersion
-        useIR = true
         freeCompilerArgs += "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi"
         freeCompilerArgs += "-Xopt-in=coil.annotation.ExperimentalCoilApi"
     }

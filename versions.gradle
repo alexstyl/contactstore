@@ -5,16 +5,16 @@ ext {
     libraryVersionName = "${majorVersion}.${minVersion}.${patchVersion}"
     libraryVersionCode = majorVersion * 1000 + minVersion * 100 + patchVersion
 
-    javaVersion = JavaVersion.VERSION_11
+    javaVersion = JavaVersion.VERSION_1_8
 
     androidCompileSdkVersion = 33
     androidMinSdkVersion = 14
 
-    r8Version = '3.0.73'
-    gradlePluginVersion = '7.1.1'
-    kotlinVersion = '1.5.31'
-    coroutinesVersion = '1.6.0'
-    hiltVersion = '2.40.5'
+    r8Version = '3.3.75'
+    gradlePluginVersion = '7.3.1'
+    kotlinVersion = '1.7.10'
+    coroutinesVersion = '1.6.4'
+    hiltVersion = '2.42'
     junitVersion = '4.13.2'
     testRunnerVersion = '1.4.0'
     testRulesVersion = '1.4.0'

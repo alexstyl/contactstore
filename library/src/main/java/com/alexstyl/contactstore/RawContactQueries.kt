@@ -11,7 +11,7 @@ import com.alexstyl.contactstore.utils.iterate
 import com.alexstyl.contactstore.utils.runQuery
 
 internal class RawContactQueries(
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
 ) {
     fun fetchRawContacts(contact: Contact): List<RawContact> {
         var rawContact: RawContact? = null
@@ -46,7 +46,8 @@ internal class RawContactQueries(
         val contactUri = ensureIsContactUri(
             resolver = contentResolver,
             uri = ContactsContract.Contacts.getLookupUri(contactId, lookupKey.value)
-        )
+        ) ?: return null
+
         return Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Entity.CONTENT_DIRECTORY)
     }
 
@@ -104,7 +105,7 @@ internal class RawContactQueries(
     }
 
     private fun cursorColumnToContentValues(
-        cursor: Cursor, values: ContentValues, index: Int
+        cursor: Cursor, values: ContentValues, index: Int,
     ) {
         when (cursor.getType(index)) {
             Cursor.FIELD_TYPE_NULL -> {}
@@ -121,7 +122,7 @@ internal class RawContactQueries(
         }
     }
 
-    private fun ensureIsContactUri(resolver: ContentResolver, uri: Uri): Uri {
+    private fun ensureIsContactUri(resolver: ContentResolver, uri: Uri): Uri? {
         val authority = uri.authority
 
         // Current Style Uri?
@@ -143,7 +144,8 @@ internal class RawContactQueries(
                     )
                 )
             }
-            throw IllegalArgumentException("uri format is unknown")
+            // uri format is unknown
+            return null
         }
 
         // Legacy Style? Convert to RawContact
@@ -156,6 +158,7 @@ internal class RawContactQueries(
                 ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, rawContactId)
             )
         }
-        throw IllegalArgumentException("uri authority is unknown")
+        // uri authority is unknown
+        return null
     }
 }

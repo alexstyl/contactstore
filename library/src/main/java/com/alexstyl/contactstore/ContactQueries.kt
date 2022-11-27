@@ -99,7 +99,7 @@ internal class ContactQueries(
     ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = Contacts.CONTENT_FILTER_URI.buildUpon()
-                .appendEncodedPath(name)
+                .appendPath(name)
                 .build(),
             projection = ContactsQuery.projection(displayNameStyle),
             sortOrder = ContactsQuery.sortOrder(displayNameStyle),
@@ -143,7 +143,7 @@ internal class ContactQueries(
     ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = EmailColumns.CONTENT_FILTER_URI.buildUpon()
-                .appendEncodedPath(mailAddress)
+                .appendPath(mailAddress)
                 .build(),
             projection = FilterQuery.projection(displayNameStyle),
             sortOrder = FilterQuery.sortOrder(displayNameStyle)
@@ -166,7 +166,7 @@ internal class ContactQueries(
     ): Flow<List<PartialContact>> {
         return contentResolver.runQueryFlow(
             contentUri = ContactsContract.PhoneLookup.CONTENT_FILTER_URI.buildUpon()
-                .appendEncodedPath(phoneNumber)
+                .appendPath(phoneNumber)
                 .build(),
             projection = arrayOf(
                 PHONE_LOOKUP_CONTACT_ID,

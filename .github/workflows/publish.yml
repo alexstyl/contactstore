@@ -1,12 +1,12 @@
 name: Publish to Maven
 
 jobs:
-  test:
+  publish-to-maven:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-        -
+
       - name: set up JDK 11
         uses: actions/setup-java@v2
         with:

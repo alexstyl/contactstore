@@ -4,7 +4,6 @@ import com.alexstyl.contactstore.ExperimentalContactStoreApi
 import com.alexstyl.contactstore.GroupMembership
 import com.alexstyl.contactstore.GroupsPredicate
 import com.alexstyl.contactstore.ImmutableContactGroup
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -32,14 +31,14 @@ internal class FetchGroupTestStoreTest {
             ImmutableContactGroup(
                 groupId = 0,
                 title = "GroupA",
+                contactCount = 0,
                 note = "Note",
-                contactCount = 0
             ),
             ImmutableContactGroup(
                 groupId = 1,
                 title = "GroupB",
                 contactCount = 0,
-                note = null
+                note = null,
             )
         )
     }
@@ -65,8 +64,8 @@ internal class FetchGroupTestStoreTest {
             ImmutableContactGroup(
                 groupId = 0,
                 title = "GroupA",
+                contactCount = 0,
                 note = "Note",
-                contactCount = 0
             )
         )
     }
@@ -97,8 +96,8 @@ internal class FetchGroupTestStoreTest {
             ImmutableContactGroup(
                 groupId = 0,
                 title = "GroupA",
+                contactCount = 2,
                 note = "Note",
-                contactCount = 2
             ),
         )
     }
@@ -127,8 +126,8 @@ internal class FetchGroupTestStoreTest {
             ImmutableContactGroup(
                 groupId = 0,
                 title = "GroupA",
+                contactCount = 0,
                 note = "Note",
-                contactCount = 0
             ),
         )
     }
@@ -158,14 +157,14 @@ internal class FetchGroupTestStoreTest {
             ImmutableContactGroup(
                 groupId = 0,
                 title = "GroupA",
+                contactCount = 0,
                 note = "Note",
-                contactCount = 0
             ),
             ImmutableContactGroup(
                 groupId = 1,
                 title = "GroupB",
                 contactCount = 0,
-                note = null
+                note = null,
             )
         )
     }

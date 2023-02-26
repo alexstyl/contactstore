@@ -1,9 +1,7 @@
 package com.alexstyl.contactstore
 
 import android.content.ContentProviderOperation
-import android.content.ContentProviderOperation.newDelete
-import android.content.ContentProviderOperation.newInsert
-import android.content.ContentProviderOperation.newUpdate
+import android.content.ContentProviderOperation.*
 import android.provider.ContactsContract.Groups
 
 internal class GroupOperationsFactory {
@@ -12,6 +10,8 @@ internal class GroupOperationsFactory {
             newInsert(Groups.CONTENT_URI)
                 .withValue(Groups.TITLE, group.title)
                 .withValue(Groups.NOTES, group.note)
+                .withValue(Groups.ACCOUNT_NAME, group.account?.name)
+                .withValue(Groups.ACCOUNT_TYPE, group.account?.type)
                 .build()
         )
     }

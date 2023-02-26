@@ -4,12 +4,17 @@ import android.accounts.Account
 
 public fun SaveRequest.insert(
     intoAccount: Account,
-    builder: MutableContactBuilder.() -> Unit
-): Unit = insert(InternetAccount(intoAccount.name, intoAccount.type), builder)
+    builder: MutableContactBuilder.() -> Unit,
+) {
+    insert(
+        intoAccount = InternetAccount(intoAccount.name, intoAccount.type),
+        builder = builder
+    )
+}
 
 public fun SaveRequest.insert(
     intoAccount: InternetAccount? = null,
-    builder: MutableContactBuilder.() -> Unit
+    builder: MutableContactBuilder.() -> Unit,
 ) {
     val values = MutableContactBuilder().apply(builder)
     insert(
@@ -47,10 +52,27 @@ public fun SaveRequest.insert(
         })
 }
 
-public fun SaveRequest.insertGroup(builder: MutableContactGroupBuilder.() -> Unit) {
+public fun SaveRequest.insertGroup(
+    intoAccount: Account,
+    builder: MutableContactGroupBuilder.() -> Unit,
+) {
+    insertGroup(
+        intoAccount = InternetAccount(name = intoAccount.name, type = intoAccount.type),
+        builder = builder
+    )
+}
+
+/**
+ * Creates a new contact group in the given [InternetAccount]. Passing null will stored the group locally on the device.
+ */
+public fun SaveRequest.insertGroup(
+    intoAccount: InternetAccount? = null,
+    builder: MutableContactGroupBuilder.() -> Unit,
+) {
     val values = MutableContactGroupBuilder().apply(builder)
     insertGroup(MutableContactGroup().apply {
         note = values.note
         title = values.title
+        account = intoAccount
     })
 }

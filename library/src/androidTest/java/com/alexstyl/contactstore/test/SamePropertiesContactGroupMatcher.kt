@@ -28,6 +28,7 @@ private class SamePropertiesContactGroupMatcher(
                 append("Title = \"$title\"")
                 append(" contactCount = $contactCount")
                 append(" note = \"$note\"")
+                append(" account = \"$account\"")
             }
         }
     }
@@ -45,6 +46,10 @@ private class SamePropertiesContactGroupMatcher(
                 }
                 contactCount != expected.contactCount -> {
                     mismatchDescription.appendText("contactCount was $contactCount")
+                    false
+                }
+                account != expected.account -> {
+                    mismatchDescription.appendText("account was $account")
                     false
                 }
                 else -> true

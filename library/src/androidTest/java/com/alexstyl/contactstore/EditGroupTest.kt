@@ -9,8 +9,9 @@ import org.junit.Test
 internal class EditGroupTest : ContactStoreTestBase() {
     @Test
     fun createNewGroup(): Unit = runBlocking {
+        val account = InternetAccount("test@test.com", "test.com")
         store.execute {
-            insertGroup {
+            insertGroup(intoAccount = account) {
                 note = "Note"
                 title = "GroupTitle"
             }
@@ -21,7 +22,8 @@ internal class EditGroupTest : ContactStoreTestBase() {
             groupId = 12312,
             title = "GroupTitle",
             contactCount = 0,
-            note = "Note"
+            note = "Note",
+            account = account
         )
 
         assertThat(actual, samePropertiesAs(expected))
@@ -44,9 +46,9 @@ internal class EditGroupTest : ContactStoreTestBase() {
 
         val expected = ImmutableContactGroup(
             groupId = -1,
-            note = "Updated Note",
             title = "Updated Title",
             contactCount = 0,
+            note = "Updated Note",
         )
 
         assertThat(actual, samePropertiesAs(expected))
@@ -62,5 +64,4 @@ internal class EditGroupTest : ContactStoreTestBase() {
 
         assertThat(actual.isEmpty(), equalTo(true))
     }
-
 }

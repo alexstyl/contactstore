@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class ContactGroupQueries(
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
 ) {
     fun queryGroups(
-        predicate: GroupsPredicate?
+        predicate: GroupsPredicate?,
     ): Flow<List<ContactGroup>> {
         return query(predicate)
             .mapEachRow {
@@ -22,11 +22,18 @@ internal class ContactGroupQueries(
                 val title = it[Groups.TITLE]
                 val contactCount = it[Groups.SUMMARY_COUNT].toInt()
                 val note = it[Groups.NOTES]
+                val accountType = it[Groups.ACCOUNT_TYPE]
+                val accountName = it[Groups.ACCOUNT_NAME]
                 ImmutableContactGroup(
                     groupId = id,
                     title = title,
                     contactCount = contactCount,
                     note = note,
+                    account = if (accountType.isBlank() && accountName.isBlank()) {
+                        null
+                    } else {
+                        InternetAccount(name = accountName, type = accountType)
+                    },
                 )
             }
     }
@@ -39,7 +46,9 @@ internal class ContactGroupQueries(
                     Groups._ID,
                     Groups.TITLE,
                     Groups.SUMMARY_COUNT,
-                    Groups.NOTES
+                    Groups.NOTES,
+                    Groups.ACCOUNT_TYPE,
+                    Groups.ACCOUNT_NAME,
                 ),
                 selection = selection(from = predicate)
             )

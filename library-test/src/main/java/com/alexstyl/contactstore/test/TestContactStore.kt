@@ -257,10 +257,11 @@ public class TestContactStore(
                     ImmutableContactGroup(
                         groupId = group.groupId,
                         title = group.title,
-                        note = group.note,
                         contactCount = contacts.count { contact ->
                             contact.groups.any { membership -> membership.groupId == group.groupId }
-                        }
+                        },
+                        note = group.note,
+                        account = group.internetAccount
                     )
                 }
         }

@@ -34,10 +34,12 @@ internal class EditGroupTest : ContactStoreTestBase() {
         val group = buildStoreContactGroup {
             note = "Note"
             title = "GroupTitle"
+            account = null
         }
         val updatedCopy = group.mutableCopy {
             note = "Updated Note"
             title = "Updated Title"
+            account = InternetAccount("test@test.com", "test.com")
         }
         store.execute {
             updateGroup(updatedCopy)
@@ -49,6 +51,7 @@ internal class EditGroupTest : ContactStoreTestBase() {
             title = "Updated Title",
             contactCount = 0,
             note = "Updated Note",
+            account = InternetAccount("test@test.com", "test.com")
         )
 
         assertThat(actual, samePropertiesAs(expected))

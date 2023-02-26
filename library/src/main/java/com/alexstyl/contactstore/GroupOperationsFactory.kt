@@ -21,6 +21,8 @@ internal class GroupOperationsFactory {
             newUpdate(Groups.CONTENT_URI)
                 .withValue(Groups.TITLE, group.title)
                 .withValue(Groups.NOTES, group.note)
+                .withValue(Groups.ACCOUNT_TYPE, group.account?.type)
+                .withValue(Groups.ACCOUNT_NAME, group.account?.name)
                 .withSelection("${Groups._ID} = ${group.groupId}", null)
                 .build()
         )
